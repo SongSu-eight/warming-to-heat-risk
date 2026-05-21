@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>When Average Warming Becomes Daily Risk</title>
+
+  <link rel="stylesheet" href="style.css" />
+
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <script src="https://unpkg.com/scrollama"></script>
+</head>
+
+<body>
+  <header class="hero">
+    <p class="eyebrow">CMIP6 Climate Projection • 2020–2070</p>
+    <h1>When Average Warming Becomes Daily Risk</h1>
+    <p class="subtitle">
+      A 1°C average increase can sound small. But what happens when that warming
+      turns into more extreme hot days?
+    </p>
+  </header>
+
+  <main class="scrolly">
+    <section class="story">
+      <div class="step" data-step="0">
+        <h2>2020 is our baseline.</h2>
+        <p>
+          We start from 2020 and compare future CMIP6 projections through 2070.
+          The first view shows average temperature change from that baseline.
+        </p>
+      </div>
+
+      <div class="step" data-step="1">
+        <h2>Average warming is meaningful.</h2>
+        <p>
+          Even a small increase in average temperature shifts the climate that
+          people, infrastructure, and ecosystems are used to.
+        </p>
+      </div>
+
+      <div class="step" data-step="2">
+        <h2>But averages smooth over the days people actually feel.</h2>
+        <p>
+          A year can look only moderately warmer on average while still having
+          many more days above dangerous heat thresholds.
+        </p>
+      </div>
+
+      <div class="step" data-step="3">
+        <h2>Higher emissions can make extreme heat more visible.</h2>
+        <p>
+          Instead of only asking how much warmer a state becomes, we ask how many
+          more extreme hot days people may experience.
+        </p>
+      </div>
+
+      <div class="step" data-step="4">
+        <h2>Explore the future yourself.</h2>
+        <p>
+          Change the year, emissions scenario, and metric to compare how average
+          warming and extreme hot days tell different stories.
+        </p>
+      </div>
+    </section>
+
+    <section class="graphic">
+      <div class="sticky-viz">
+        <div class="viz-header">
+          <div>
+            <p class="eyebrow">Interactive map</p>
+            <h2 id="chart-title">Average temperature change from 2020</h2>
+          </div>
+
+          <div class="controls">
+            <label>
+              Scenario
+              <select id="scenario-select">
+                <option value="ssp126">Low emissions</option>
+                <option value="ssp245" selected>Medium emissions</option>
+                <option value="ssp585">High emissions</option>
+              </select>
+            </label>
+
+            <label>
+              Year
+              <input id="year-slider" type="range" min="2020" max="2070" value="2070" />
+              <span id="year-label">2070</span>
+            </label>
+
+            <label>
+              Metric
+              <select id="metric-select">
+                <option value="tas_change_from_2020_c">Average warming</option>
+                <option value="hot_days_35c_change_from_2020">More 35°C+ days</option>
+                <option value="hot_days_35c">Total 35°C+ days</option>
+              </select>
+            </label>
+          </div>
+        </div>
+
+        <svg id="map"></svg>
+
+        <div class="legend-row">
+          <div id="legend"></div>
+          <p id="map-note">
+            Hover over a state to see details.
+          </p>
+        </div>
+
+        <div id="state-card" class="state-card">
+          <h3>Hover over a state</h3>
+          <p>Select a state to compare average warming and extreme heat.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <section class="closing">
+    <h2>Takeaway</h2>
+    <p>
+      Average warming helps us see the long-term climate shift. Extreme hot days
+      help us understand how that shift may become part of daily life.
+    </p>
+  </section>
+
+  <script src="main.js"></script>
+</body>
+</html>
