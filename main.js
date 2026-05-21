@@ -14,7 +14,13 @@ const scenarioLabels = {
 
 const metricLabels = {
   tas_change_from_2020_c: "Average temperature change from 2020",
-  hot_days_35c_change_from_2020: "Increase in 35°C+ days from 2020",
+  hot_days_35c_change_from_2020: "Additional 35°C+ days compared with 2020",
+  hot_days_35c: "Total 35°C+ days",
+};
+
+const metricShortLabels = {
+  tas_change_from_2020_c: "Average warming",
+  hot_days_35c_change_from_2020: "Additional 35°C+ days",
   hot_days_35c: "Total 35°C+ days",
 };
 
@@ -24,12 +30,76 @@ const metricUnits = {
   hot_days_35c: "days",
 };
 
-const stateNameFix = {
-  "District of Columbia": "District of Columbia",
-};
+const stepSettings = [
+  {
+    year: 2020,
+    scenario: "ssp245",
+    metric: "tas_change_from_2020_c",
+    title: "2020 baseline",
+    subtitle:
+      "The map starts at the baseline year. Future values are compared with this starting point.",
+  },
+  {
+    year: 2020,
+    scenario: "ssp245",
+    metric: "tas_change_from_2020_c",
+    title: "2020 baseline: no change yet",
+    subtitle:
+      "Using a baseline helps us ask a simple question: how much does each place change from here?",
+  },
+  {
+    year: 2070,
+    scenario: "ssp245",
+    metric: "tas_change_from_2020_c",
+    title: "Average temperature change by 2070",
+    subtitle:
+      "By 2070, average warming becomes visible across many states under medium emissions.",
+  },
+  {
+    year: 2070,
+    scenario: "ssp585",
+    metric: "tas_change_from_2020_c",
+    title: "Higher emissions, stronger average warming",
+    subtitle:
+      "The same year can look different under different emissions futures.",
+  },
+  {
+    year: 2070,
+    scenario: "ssp245",
+    metric: "hot_days_35c_change_from_2020",
+    title: "Additional 35°C+ days by 2070",
+    subtitle:
+      "Averages smooth over extreme days. This map counts how many more days exceed 35°C compared with 2020.",
+  },
+  {
+    year: 2070,
+    scenario: "ssp245",
+    metric: "hot_days_35c_change_from_2020",
+    title: "Extreme heat does not rise evenly",
+    subtitle:
+      "Some states gain many more extreme hot days than others, even when average warming may look similar.",
+  },
+  {
+    year: 2070,
+    scenario: "ssp585",
+    metric: "hot_days_35c_change_from_2020",
+    title: "High emissions make the heat story sharper",
+    subtitle:
+      "Under higher emissions, the change is not only a warmer average. It can mean more days crossing a heat threshold.",
+  },
+  {
+    year: 2070,
+    scenario: "ssp585",
+    metric: "hot_days_35c_change_from_2020",
+    title: "Explore the map yourself",
+    subtitle:
+      "Use the controls to compare year, scenario, and metric. Hover over states to see details.",
+  },
+];
 
 let statesGeo;
 let stateData;
+
 let currentStep = 0;
 
 let currentState = {
@@ -40,6 +110,7 @@ let currentState = {
 
 const svg = d3.select("#map");
 const title = d3.select("#chart-title");
+const subtitle = d3.select("#chart-subtitle");
 const stateCard = d3.select("#state-card");
 
 const scenarioSelect = d3.select("#scenario-select");
@@ -48,13 +119,13 @@ const yearLabel = d3.select("#year-label");
 const metricSelect = d3.select("#metric-select");
 
 const width = 900;
-const height = 560;
+const height = 520;
 
 svg.attr("viewBox", `0 0 ${width} ${height}`);
 
 const projection = d3.geoAlbersUsa()
   .translate([width / 2, height / 2])
-  .scale(1150);
+  .scale(1120);
 
 const path = d3.geoPath(projection);
 
@@ -70,9 +141,7 @@ async function init() {
   ]);
 
   statesGeo = states;
-
-  const merged = mergeClimateRows(tasRows, heatRows);
-  stateData = merged;
+  stateData = mergeClimateRows(tasRows, heatRows);
 
   setupControls();
   setupScroll();
@@ -80,7 +149,7 @@ async function init() {
 }
 
 function mergeClimateRows(tasRows, heatRows) {
-  const key = (d) => `${d.state}|${d.year}|${d.scenario}`;
+  const key = (d) => `${normalizeStateName(d.state)}|${d.year}|${d.scenario}`;
 
   const tasMap = new Map(tasRows.map((d) => [key(d), d]));
 
@@ -99,17 +168,20 @@ function mergeClimateRows(tasRows, heatRows) {
 function setupControls() {
   scenarioSelect.on("change", (event) => {
     currentState.scenario = event.target.value;
+    updateManualTitle();
     updateMap();
   });
 
   yearSlider.on("input", (event) => {
     currentState.year = +event.target.value;
     yearLabel.text(currentState.year);
+    updateManualTitle();
     updateMap();
   });
 
   metricSelect.on("change", (event) => {
     currentState.metric = event.target.value;
+    updateManualTitle();
     updateMap();
   });
 }
@@ -120,7 +192,7 @@ function setupScroll() {
   scroller
     .setup({
       step: ".step",
-      offset: 0.55,
+      offset: 0.6,
       debug: false,
     })
     .onStepEnter((response) => {
@@ -137,36 +209,28 @@ function setupScroll() {
 function updateStep(step) {
   currentStep = step;
 
-  if (step === 0) {
-    currentState.year = 2020;
-    currentState.scenario = "ssp245";
-    currentState.metric = "tas_change_from_2020_c";
-  }
+  const setting = stepSettings[step];
 
-  if (step === 1) {
-    currentState.year = 2070;
-    currentState.scenario = "ssp245";
-    currentState.metric = "tas_change_from_2020_c";
-  }
+  currentState.year = setting.year;
+  currentState.scenario = setting.scenario;
+  currentState.metric = setting.metric;
 
-  if (step === 2) {
-    currentState.year = 2070;
-    currentState.scenario = "ssp245";
-    currentState.metric = "hot_days_35c_change_from_2020";
-  }
+  title.text(setting.title);
+  subtitle.text(setting.subtitle);
 
-  if (step === 3) {
-    currentState.year = 2070;
-    currentState.scenario = "ssp585";
-    currentState.metric = "hot_days_35c_change_from_2020";
-  }
-
-  if (step === 4) {
-    // Keep current values and let user explore.
-  }
+  d3.select("body").classed("explore-mode", step === 7);
 
   syncControls();
   updateMap();
+}
+
+function updateManualTitle() {
+  if (currentStep !== 7) return;
+
+  title.text(`${metricLabels[currentState.metric]} in ${currentState.year}`);
+  subtitle.text(
+    `${scenarioLabels[currentState.scenario]} scenario. Hover over a state to compare average warming and extreme heat.`
+  );
 }
 
 function syncControls() {
@@ -182,7 +246,9 @@ function updateMap() {
     d.scenario === currentState.scenario
   );
 
-  const dataByState = new Map(filtered.map((d) => [normalizeStateName(d.state), d]));
+  const dataByState = new Map(
+    filtered.map((d) => [normalizeStateName(d.state), d])
+  );
 
   const metric = currentState.metric;
   const values = filtered
@@ -190,8 +256,6 @@ function updateMap() {
     .filter((v) => Number.isFinite(v));
 
   const color = getColorScale(metric, values);
-
-  title.text(`${metricLabels[metric]} in ${currentState.year}`);
 
   mapG.selectAll("path")
     .data(statesGeo.features, getFeatureStateName)
@@ -215,11 +279,11 @@ function updateMap() {
       const row = dataByState.get(normalizeStateName(stateName));
       const value = row?.[metric];
 
-      if (!Number.isFinite(value)) return "#eee";
+      if (!Number.isFinite(value)) return "#eeeeee";
       return color(value);
     });
 
-  drawLegend(color, metric, values);
+  drawLegend(color, metric);
 }
 
 function getColorScale(metric, values) {
@@ -228,7 +292,7 @@ function getColorScale(metric, values) {
 
     return d3.scaleDiverging()
       .domain([-maxAbs, 0, maxAbs])
-      .interpolator(d3.interpolateRdBu)
+      .interpolator((t) => d3.interpolateRdBu(1 - t))
       .clamp(true);
   }
 
@@ -240,9 +304,9 @@ function getColorScale(metric, values) {
     .clamp(true);
 }
 
-function drawLegend(color, metric, values) {
-  const legendWidth = 260;
-  const legendHeight = 46;
+function drawLegend(color, metric) {
+  const legendWidth = 280;
+  const legendHeight = 48;
 
   const legend = d3.select("#legend")
     .html("")
@@ -260,16 +324,18 @@ function drawLegend(color, metric, values) {
     .attr("y1", "0%")
     .attr("y2", "0%");
 
-  const stops = d3.range(0, 1.01, 0.1);
+  const domain = color.domain();
+  const start = domain[0];
+  const end = domain[domain.length - 1];
 
-  let domain = color.domain();
+  const stops = d3.range(0, 1.01, 0.1);
 
   gradient.selectAll("stop")
     .data(stops)
     .join("stop")
     .attr("offset", (d) => `${d * 100}%`)
     .attr("stop-color", (d) => {
-      const value = domain[0] + d * (domain[domain.length - 1] - domain[0]);
+      const value = start + d * (end - start);
       return color(value);
     });
 
@@ -281,8 +347,6 @@ function drawLegend(color, metric, values) {
     .attr("rx", 6)
     .attr("fill", `url(#${gradientId})`);
 
-  const min = domain[0];
-  const max = domain[domain.length - 1];
   const unit = metricUnits[metric];
 
   legend.append("text")
@@ -290,7 +354,7 @@ function drawLegend(color, metric, values) {
     .attr("y", 38)
     .attr("font-size", 11)
     .attr("fill", "#555")
-    .text(formatValue(min, unit));
+    .text(formatValue(start, unit));
 
   legend.append("text")
     .attr("x", legendWidth - 8)
@@ -298,7 +362,7 @@ function drawLegend(color, metric, values) {
     .attr("text-anchor", "end")
     .attr("font-size", 11)
     .attr("fill", "#555")
-    .text(formatValue(max, unit));
+    .text(formatValue(end, unit));
 }
 
 function showStateCard(stateName, row, metric) {
@@ -318,10 +382,10 @@ function showStateCard(stateName, row, metric) {
   stateCard.html(`
     <h3>${stateName}</h3>
     <p><strong>${scenarioLabels[currentState.scenario]}</strong>, ${currentState.year}</p>
-    <p>${metricLabels[metric]}: <strong>${formatValue(metricValue, metricUnits[metric])}</strong></p>
+    <p>${metricShortLabels[metric]}: <strong>${formatValue(metricValue, metricUnits[metric])}</strong></p>
     <p>Average warming from 2020: <strong>${formatValue(avgWarming, "°C")}</strong></p>
-    <p>35°C+ days: <strong>${formatValue(hotDays, "days")}</strong></p>
-    <p>Change in 35°C+ days from 2020: <strong>${formatValue(hotDaysChange, "days")}</strong></p>
+    <p>Total 35°C+ days: <strong>${formatValue(hotDays, "days")}</strong></p>
+    <p>Additional 35°C+ days from 2020: <strong>${formatValue(hotDaysChange, "days")}</strong></p>
   `);
 }
 
@@ -334,7 +398,7 @@ function getFeatureStateName(feature) {
 }
 
 function normalizeStateName(name) {
-  return stateNameFix[name] || name;
+  return String(name).trim();
 }
 
 function formatValue(value, unit) {
