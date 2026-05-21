@@ -36,72 +36,72 @@ const stepSettings = [
     scenario: "ssp245",
     metric: "tas_change_from_2020_c",
     title: "2020 baseline",
-    subtitle: "...",
+    subtitle:
+      "The map starts at the baseline year. Future values are compared with this starting point.",
     highlight: null,
-    animation: "anim-shimmer",
   },
   {
     year: 2020,
     scenario: "ssp245",
     metric: "tas_change_from_2020_c",
     title: "2020 baseline: no change yet",
-    subtitle: "...",
+    subtitle:
+      "Using a baseline helps us ask a simple question: how much does each place change from here?",
     highlight: null,
-    animation: "anim-baseline",
   },
   {
     year: 2070,
     scenario: "ssp245",
     metric: "tas_change_from_2020_c",
     title: "Average temperature change by 2070",
-    subtitle: "...",
+    subtitle:
+      "By 2070, average warming becomes visible across many states under medium emissions.",
     highlight: null,
-    animation: "anim-warming",
   },
   {
     year: 2070,
     scenario: "ssp585",
     metric: "tas_change_from_2020_c",
     title: "Higher emissions, stronger average warming",
-    subtitle: "...",
+    subtitle:
+      "The same year can look different under different emissions futures.",
     highlight: null,
-    animation: "anim-pathways",
   },
   {
     year: 2070,
     scenario: "ssp245",
     metric: "hot_days_35c_change_from_2020",
     title: "Additional 35°C+ days by 2070",
-    subtitle: "...",
+    subtitle:
+      "Averages smooth over extreme days. This map counts how many more days exceed 35°C compared with 2020.",
     highlight: null,
-    animation: "anim-sun",
   },
   {
     year: 2070,
     scenario: "ssp245",
     metric: "hot_days_35c_change_from_2020",
     title: "Extreme heat does not rise evenly",
-    subtitle: "...",
+    subtitle:
+      "Some states gain many more extreme hot days than others, even when average warming may look similar.",
     highlight: "top",
-    animation: "anim-hotspots",
   },
   {
     year: 2070,
     scenario: "ssp585",
     metric: "hot_days_35c_change_from_2020",
     title: "High emissions make the heat story sharper",
-    subtitle: "...",
+    subtitle:
+      "Under higher emissions, the change is not only a warmer average. It can mean more days crossing a heat threshold.",
     highlight: "top",
-    animation: "anim-warning",
   },
   {
     year: 2070,
     scenario: "ssp585",
     metric: "hot_days_35c_change_from_2020",
     title: "Explore the map yourself",
-    subtitle: "...",
+    subtitle:
+      "Use the controls to compare year, scenario, and metric. Hover over states to see details.",
     highlight: null,
-    animation: "anim-explore",
   },
 ];
 
@@ -228,28 +228,9 @@ function updateStep(step) {
 
   d3.select("body").classed("explore-mode", step === 7);
 
-  setAtmosphereAnimation(setting.animation);
-
   syncControls();
   pulseViz();
   updateMap();
-}
-
-function setAtmosphereAnimation(animationClass) {
-  const classes = [
-    "anim-shimmer",
-    "anim-baseline",
-    "anim-warming",
-    "anim-pathways",
-    "anim-sun",
-    "anim-hotspots",
-    "anim-warning",
-    "anim-explore",
-  ];
-
-  d3.select("body")
-    .classed(classes.join(" "), false)
-    .classed(animationClass, true);
 }
 
 function pulseViz() {
