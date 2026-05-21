@@ -3,164 +3,322 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
   <title>When Average Warming Becomes Daily Risk</title>
+  <style>
+    /* ===== reset & base ===== */
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: #1a1a1a;
+      line-height: 1.6;
+      background: #fafafa;
+    }
+    h1, h2, h3 { font-weight: 600; line-height: 1.25; }
+    a { color: #c0392b; }
 
-  <link rel="stylesheet" href="style.css" />
+    /* ===== hero ===== */
+    #hero {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(180deg, #fff8f0 0%, #ffeadb 100%);
+      text-align: center;
+      padding: 0 24px;
+    }
+    .hero-inner h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      margin: 0 0 24px;
+    }
+    .subtitle {
+      font-size: 1.2rem;
+      max-width: 640px;
+      margin: 0 auto 48px;
+      color: #555;
+    }
+    .scroll-cue {
+      font-size: 0.9rem;
+      color: #888;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
 
-  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
-  <script src="https://unpkg.com/scrollama"></script>
+    /* ===== scrollytelling sections (1 & 2) ===== */
+    .scrolly {
+      position: relative;
+      display: flex;
+      padding: 80px 0;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .sticky-graphic {
+      position: sticky;
+      top: 10vh;
+      width: 60%;
+      height: 80vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 24px;
+    }
+    .scroll-text {
+      width: 40%;
+      padding: 0 24px;
+    }
+    .step {
+      min-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .step h2 { font-size: 2rem; margin-bottom: 16px; }
+    .step h3 { font-size: 1.3rem; margin-bottom: 12px; color: #444; }
+    .step p  { font-size: 1.05rem; color: #333; }
+
+    /* ===== non-scrolly sections (3, 4, 5) ===== */
+    #section-3, #section-4, #section-5 {
+      padding: 100px 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .section-header { max-width: 720px; margin: 0 auto 48px; text-align: center; }
+    .section-header h2 { font-size: 2rem; }
+    .section-header p  { font-size: 1.05rem; color: #444; }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    .three-col {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    /* ===== placeholders (replace with real charts) ===== */
+    .placeholder {
+      width: 100%;
+      height: 70vh;
+      border: 2px dashed #c8b8a8;
+      border-radius: 8px;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #999;
+      font-family: monospace;
+      font-size: 0.95rem;
+      text-align: center;
+      padding: 24px;
+    }
+    .placeholder.small { height: 360px; }
+
+    /* ===== footer ===== */
+    footer {
+      padding: 40px 24px;
+      text-align: center;
+      font-size: 0.85rem;
+      color: #888;
+      border-top: 1px solid #eee;
+      margin-top: 80px;
+    }
+
+    /* ===== responsive: stack on narrow screens ===== */
+    @media (max-width: 768px) {
+      .scrolly { flex-direction: column; }
+      .sticky-graphic, .scroll-text { width: 100%; }
+      .sticky-graphic { height: 60vh; position: sticky; top: 0; }
+      .two-col, .three-col { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
-
 <body>
-  <header class="top-header">
-    <p class="eyebrow">CMIP6 Climate Projection • 2020–2070</p>
-    <h1>When Average Warming Becomes Daily Risk</h1>
-    <p class="subtitle">
-        From average warming to additional 35°C+ days across U.S. states.
-    </p>
-  </header>
 
-  <main class="scrolly">
-    <section class="graphic">
-      <div class="sticky-viz">
-        <div class="viz-header">
-          <div class="viz-title-block">
-            <p class="eyebrow">Interactive map</p>
-            <h2 id="chart-title">2020 baseline</h2>
-            <p id="chart-subtitle">
-              The map starts at the baseline year, before future changes accumulate.
-            </p>
-          </div>
-
-          <div class="controls">
-            <label>
-              Scenario
-              <select id="scenario-select">
-                <option value="ssp126">Low emissions</option>
-                <option value="ssp245" selected>Medium emissions</option>
-                <option value="ssp585">High emissions</option>
-              </select>
-            </label>
-
-            <label>
-              Year
-              <input id="year-slider" type="range" min="2020" max="2070" value="2070" />
-              <span id="year-label">2070</span>
-            </label>
-
-            <label>
-              Metric
-              <select id="metric-select">
-                <option value="tas_change_from_2020_c">Average warming</option>
-                <option value="hot_days_35c_change_from_2020">Additional 35°C+ days</option>
-                <option value="hot_days_35c">Total 35°C+ days</option>
-              </select>
-            </label>
-          </div>
-        </div>
-
-        <div class="map-wrap">
-          <svg id="map" aria-label="U.S. climate projection map"></svg>
-        </div>
-
-        <div class="legend-row">
-          <div id="legend"></div>
-          <p id="map-note">
-            Hover over a state to see details.
-          </p>
-        </div>
-
-        <div id="state-card" class="state-card">
-          <h3>Hover over a state</h3>
-          <p>Select a state to compare average warming and extreme heat.</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="story">
-      <div class="step" data-step="0">
-        <p class="step-number">Step 1</p>
-        <h2>A one-degree change can sound small.</h2>
-        <p>
-          Climate change is not only about the average number. It is also about
-          how often people cross uncomfortable or dangerous heat thresholds.
-        </p>
-      </div>
-
-      <div class="step" data-step="1">
-        <p class="step-number">Step 2</p>
-        <h2>We start from 2020.</h2>
-        <p>
-          This project uses 2020 as a baseline. Every future value is compared
-          with this starting point, so we can see how each place changes over time.
-        </p>
-      </div>
-
-      <div class="step" data-step="2">
-        <p class="step-number">Step 3</p>
-        <h2>Average warming is meaningful.</h2>
-        <p>
-          By 2070, average temperature changes across many states. Even gradual
-          warming matters because it shifts the climate people and ecosystems are used to.
-        </p>
-      </div>
-
-      <div class="step" data-step="3">
-        <p class="step-number">Step 4</p>
-        <h2>The future depends on emissions.</h2>
-        <p>
-          Low, medium, and high emissions do not lead to the same map. By mid-century,
-          higher emissions can push more places into stronger warming.
-        </p>
-      </div>
-
-      <div class="step" data-step="4">
-        <p class="step-number">Step 5</p>
-        <h2>But averages hide the days people feel.</h2>
-        <p>
-          A yearly average smooths over extreme days. When we count days above 35°C,
-          the future becomes more personal.
-        </p>
-      </div>
-
-      <div class="step" data-step="5">
-        <p class="step-number">Step 6</p>
-        <h2>Extreme heat does not rise evenly.</h2>
-        <p>
-          Some states gain many more 35°C+ days than others. Similar average warming
-          can still lead to very different lived heat exposure.
-        </p>
-      </div>
-
-      <div class="step" data-step="6">
-        <p class="step-number">Step 7</p>
-        <h2>High emissions make the heat story sharper.</h2>
-        <p>
-          Under higher emissions, the change is not only a warmer average. It can also
-          mean more days when heat crosses a threshold.
-        </p>
-      </div>
-
-      <div class="step" data-step="7">
-        <p class="step-number">Explore</p>
-        <h2>Explore your own climate future.</h2>
-        <p>
-          Choose a year, emissions scenario, and metric. Compare average warming with
-          additional 35°C+ days to see how the story changes by place.
-        </p>
-      </div>
-    </section>
-  </main>
-
-  <section class="closing">
-    <h2>Takeaway</h2>
-    <p>
-      Average warming helps us see the long-term climate shift. Extreme hot days
-      help us understand how that shift may become part of daily life.
-    </p>
+  <!-- ============ HERO ============ -->
+  <section id="hero">
+    <div class="hero-inner">
+      <h1>When Average Warming<br/>Becomes Daily Risk</h1>
+      <p class="subtitle">
+        A 1&deg;C average increase sounds small.
+        But what if it means many more days when the heat is higher than normal?
+      </p>
+      <p class="scroll-cue">scroll &darr;</p>
+    </div>
   </section>
 
-  <script src="main.js"></script>
+<!-- ============ SECTION 1: AND ============ -->
+
+  <!-- 1a: intro -->
+  <section class="scrolly" id="section-1a">
+    <div class="sticky-graphic">
+      <div class="placeholder" id="map-avg-temp">
+        [ Animated line plot of average temperature in the United States from 2020 to 2070. ]
+      </div>
+    </div>
+    <div class="scroll-text">
+      <div class="step" data-step="1-intro">
+        <h2>First, the average temperature change.</h2>
+        <p>
+          how average temperature across the U.S shifts under high emission scenarios.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 1b: scenario toggle -->
+  <section class="scrolly" id="section-1b">
+    <div class="sticky-graphic">
+      <div class="placeholder" id="map-avg-temp-scenario">
+        [ Animated US choropleth: annual avg temperature change + interactive line plot (user can select one to three state to see the change from 2020 to 2070) ]
+      </div>
+    </div>
+    <div class="scroll-text">
+      <div class="step" data-step="1-scenario">
+        <h3>The average temperature change in US choropleth</h3>
+        <p>
+          You can see the average temperature change in each state across different years.
+        </p>
+      </div>
+    </div>
+  </section>
+
+<!-- ============ SECTION 2: BUT ============ -->
+  <section id="section-2" class="text-only">
+    <div class="text-only-inner">
+      <div class="step" data-step="2-turn">
+        <h2>But averages hide the days you actually feel.</h2>
+        <p>
+          An annual average smooths out the days people remember &mdash;
+          when school sports are cancelled, when AC runs all night,
+          when outdoor work becomes dangerous.
+        </p>
+      </div>
+      <div class="step" data-step="2-extreme">
+        <h3>Count the days that are hotter than normal instead.</h3>
+        <p>
+          Switching from <em>average temperature</em> to <em>number of
+          extreme hot days</em> reveals a much sharper picture of the
+          same future.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SECTION 3: scenario surprise ============ -->
+  <section id="section-3">
+    <div class="section-header">
+      <h2>Averages look close. Extremes don&rsquo;t.</h2>
+      <p>
+        Average warming can look slow and abstract.
+        But when we count extreme hot days, the change becomes easier to see and feel.
+      </p>
+    </div>
+    <div class="large-chart">
+      <div class="placeholder small" id="chart-avg-line">
+        [ Animated line chart: US annual avg temperature & count of extreme hot days ]
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SECTION 4: THEREFORE / explore ============ -->
+  <section id="section-4">
+    <div class="section-header">
+      <h2>Now look at your state.</h2>
+      <p>
+        Pick a state to see how its average warming compares to its
+        change in extreme heat days, side by side.
+      </p>
+      <div class="placeholder small" id="state-picker">
+        [ Animated + Interactive US choropleth: count of extreme hot days ]
+      </div>
+    </div>
+    <div class="three-col">
+      <div class="placeholder small" id="state-warming">
+        [ Animated line plot of average temperature change for selected state ]
+      </div>
+      <div class="placeholder small" id="state-hotdays">
+        [ Animated line plot of extreme hot days change for selected state ]
+      </div>
+      <div class="placeholder small" id="state-fingerprint">
+        [ CONSIDERING... ]
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SECTION 5: broader risk ============ -->
+  <section id="section-5">
+    <div class="section-header">
+      <h2>Heat is only the first signal.</h2>
+      <p>
+        Extreme heat interacts with water, soil, humidity, and wind.
+        Toggle through other climate-risk layers to see the broader
+        picture.
+      </p>
+      <div class="placeholder" id="risk-toggle">
+        [ Toggle: heat &middot; warm nights &middot; drought &middot;
+        heavy rain &middot; humid heat &middot; fire weather ]
+      </div>
+    </div>
+    <div class="placeholder" id="map-risk">
+      [ Risk-layer map ]
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer>
+    <p>
+      DSC 106 Final Project &middot; Data: CMIP6 climate projections &middot;
+      <a href="https://github.com/SongSu-eight/warming-to-heat-risk">GitHub</a>
+    </p>
+  </footer>
+
+  <!-- Libraries (CDN) -->
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="https://unpkg.com/scrollama"></script>
+  <script>
+    // ============================================================
+    // scrollytelling controller — wires Scrollama to step elements
+    // ============================================================
+    const scroller = scrollama();
+
+    scroller
+      .setup({
+        step: ".step",
+        offset: 0.5,
+        debug: false,   // set to true to see the trigger line
+      })
+      .onStepEnter(handleStepEnter)
+      .onStepExit(handleStepExit);
+
+    window.addEventListener("resize", scroller.resize);
+
+    function handleStepEnter({ element, index, direction }) {
+      const step = element.dataset.step;
+      console.log("[enter]", step, direction);
+
+      switch (step) {
+        case "1-intro":
+          // renderAvgTempMap({ scenario: "medium" });
+          break;
+        case "1-scenario":
+          // updateAvgTempMap({ scenario: "high" });
+          break;
+        case "2-turn":
+          // crossfadeMap({ metric: "avg-temp" });
+          break;
+        case "2-extreme":
+          // crossfadeMap({ metric: "hot-days" });
+          break;
+      }
+    }
+
+    function handleStepExit({ element, direction }) {
+      // optional cleanup hook
+    }
+
+    console.log("[init] page ready, scrollama armed");
+  </script>
 </body>
 </html>
