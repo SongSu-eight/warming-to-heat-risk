@@ -282,7 +282,7 @@ function updateMap() {
       (enter) => enter.append("path")
         .attr("class", "state")
         .attr("d", path)
-        .attr("fill", "#eeeeee")
+        .attr("fill", "#e3e8ea")
         .on("mousemove", function (event, feature) {
           const stateName = getFeatureStateName(feature);
           const row = dataByState.get(normalizeStateName(stateName));
@@ -306,7 +306,7 @@ function updateMap() {
       const row = dataByState.get(normalizeStateName(stateName));
       const value = row?.[metric];
 
-      if (!Number.isFinite(value)) return "#eeeeee";
+      if (!Number.isFinite(value)) return "#e3e8ea";
       return color(value);
     })
     .attr("opacity", (feature) => {
@@ -335,7 +335,7 @@ function getColorScale(metric, values) {
 
   return d3.scaleSequential()
     .domain([0, maxValue])
-    .interpolator(d3.interpolateOrRd)
+    .interpolator(d3.interpolateYlOrRd)
     .clamp(true);
 }
 
