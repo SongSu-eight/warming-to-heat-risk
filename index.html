@@ -136,7 +136,7 @@
         <p class="step-number">09 · Explore</p>
         <h2>Explore the difference yourself.</h2>
         <p>
-          Change the year, scenario, and metric to compare average warming with extreme hot days.
+          Change the year, scenario, and metric to compare average warming with extreme hot days. Click a state to update the detail section below.
         </p>
       </article>
     </div>
@@ -147,19 +147,44 @@
       <p class="eyebrow">Daily life detail</p>
       <h2>Now look at your state.</h2>
       <p>
-        Pick a state to compare average warming with extreme hot days, then see when those hot days fall during the year.
+        Choose a state to compare average warming with extreme hot days, then see when those hot days fall during the year.
       </p>
     </div>
 
+    <div class="state-picker-row">
+      <label for="state-picker">Choose a state</label>
+      <select id="state-picker">
+        <option value="">Select a state...</option>
+      </select>
+    </div>
+
     <div class="detail-grid">
-      <div class="placeholder-viz large" id="state-map-placeholder">
-        <span>[ Selected state detail will connect to the map above ]</span>
-        <small>click a state in the main map</small>
+      <div class="selected-state-panel" id="selected-state-panel">
+        <p class="eyebrow">Selected state snapshot</p>
+        <h3 id="snapshot-state-title">No state selected yet</h3>
+        <p id="snapshot-state-text">
+          Choose a state here, or click a state in the main map, to connect the national story to a local daily-life summary.
+        </p>
+
+        <div class="snapshot-metrics">
+          <div>
+            <span>Scenario</span>
+            <strong id="snapshot-scenario">—</strong>
+          </div>
+          <div>
+            <span>Year</span>
+            <strong id="snapshot-year">—</strong>
+          </div>
+          <div>
+            <span>Current metric</span>
+            <strong id="snapshot-metric">—</strong>
+          </div>
+        </div>
       </div>
 
       <aside class="daily-card" id="daily-life-card">
         <p class="eyebrow">Selected state</p>
-        <h3 id="selected-state-title">Click a state on the map.</h3>
+        <h3 id="selected-state-title">Choose a state.</h3>
         <p id="selected-state-summary">
           The card will translate average warming and extreme hot days into a daily-life statement.
         </p>
@@ -186,9 +211,8 @@
           Extreme heat is not spread evenly across the year. The monthly view will show which months carry the most hot days.
         </p>
       </div>
-      <div class="placeholder-viz" id="monthly-chart-placeholder">
-        <span>[ Monthly hot-day bar chart ]</span>
-        <small>summer / monthly zoom-in comes after the main map</small>
+      <div class="monthly-chart-card">
+        <svg id="monthly-chart" role="img" aria-label="Monthly extreme hot day bar chart"></svg>
       </div>
     </div>
   </section>

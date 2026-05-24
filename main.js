@@ -4,6 +4,7 @@ const files = {
   states: `${DATA_PATH}us_states.geojson`,
   stateTas: `${DATA_PATH}state_annual_tas_cmip6_2020_2070.csv`,
   stateHeat: `${DATA_PATH}state_annual_extreme_heat_cmip6_2020_2070.csv`,
+  monthlyHeat: `${DATA_PATH}state_monthly_heat_life_combined_cmip6_2020_2070.csv`,
 };
 
 const scenarioLabels = {
@@ -146,6 +147,7 @@ const stepSettings = [
 let statesGeo;
 let stateData = [];
 let tasData = [];
+let monthlyData = [];
 let currentStep = 0;
 
 let currentState = {
@@ -158,6 +160,8 @@ let currentState = {
 let selectedStateName = null;
 
 const svg = d3.select("#main-chart");
+const monthlySvg = d3.select("#monthly-chart");
+
 const title = d3.select("#chart-title");
 const subtitle = d3.select("#chart-subtitle");
 const stickyViz = d3.select(".sticky-viz");
@@ -169,12 +173,19 @@ const scenarioSelect = d3.select("#scenario-select");
 const yearSlider = d3.select("#year-slider");
 const yearLabel = d3.select("#year-label");
 const metricSelect = d3.select("#metric-select");
+const statePicker = d3.select("#state-picker");
 
 const selectedStateTitle = d3.select("#selected-state-title");
 const selectedStateSummary = d3.select("#selected-state-summary");
 const selectedStateWarming = d3.select("#selected-state-warming");
 const selectedStateHotdays = d3.select("#selected-state-hotdays");
 const selectedStateWeeks = d3.select("#selected-state-weeks");
+
+const snapshotStateTitle = d3.select("#snapshot-state-title");
+const snapshotStateText = d3.select("#snapshot-state-text");
+const snapshotScenario = d3.select("#snapshot-scenario");
+const snapshotYear = d3.select("#snapshot-year");
+const snapshotMetric = d3.select("#snapshot-metric");
 
 const width = 920;
 const height = 540;
@@ -195,17 +206,20 @@ async function init() {
     return;
   }
 
-  const [states, tasRows, heatRows] = await Promise.all([
+  const [states, tasRows, heatRows, monthlyRows] = await Promise.all([
     d3.json(files.states),
     d3.csv(files.stateTas, d3.autoType),
     d3.csv(files.stateHeat, d3.autoType),
+    d3.csv(files.monthlyHeat, d3.autoType),
   ]);
 
   statesGeo = states;
   tasData = tasRows;
   stateData = mergeClimateRows(tasRows, heatRows);
+  monthlyData = monthlyRows;
 
   setupControls();
+  setupStatePicker();
   setupScroll();
   setupInitialSelectedStateCard();
   updateStep(0);
@@ -232,6 +246,7 @@ function setupControls() {
     currentState.scenario = event.target.value;
     updateManualTitle();
     updateMainView();
+    updateSelectedStateFromCurrentView();
   });
 
   yearSlider.on("input", (event) => {
@@ -239,13 +254,63 @@ function setupControls() {
     yearLabel.text(currentState.year);
     updateManualTitle();
     updateMainView();
+    updateSelectedStateFromCurrentView();
   });
 
   metricSelect.on("change", (event) => {
     currentState.metric = event.target.value;
     updateManualTitle();
     updateMainView();
+    updateSelectedStateFromCurrentView();
   });
+}
+
+function setupStatePicker() {
+  if (statePicker.empty()) return;
+
+  const stateNames = Array.from(
+    new Set(stateData.map((d) => normalizeStateName(d.state)))
+  ).sort(d3.ascending);
+
+  statePicker
+    .selectAll("option.state-option")
+    .data(stateNames)
+    .join("option")
+    .attr("class", "state-option")
+    .attr("value", (d) => d)
+    .text((d) => d);
+
+  statePicker.on("change", (event) => {
+    const stateName = event.target.value;
+    if (!stateName) return;
+
+    selectedStateName = stateName;
+    updateSelectedStateFromCurrentView();
+  });
+}
+
+function updateSelectedStateFromCurrentView() {
+  if (!selectedStateName) return;
+
+  const rows = stateData.filter((d) =>
+    d.year === currentState.year &&
+    d.scenario === currentState.scenario
+  );
+
+  const dataByState = new Map(
+    rows.map((d) => [normalizeStateName(d.state), d])
+  );
+
+  const row = dataByState.get(selectedStateName);
+  updateSelectedStateCard(selectedStateName, row);
+
+  if (!statePicker.empty()) {
+    statePicker.property("value", selectedStateName);
+  }
+
+  if (currentState.view === "map") {
+    renderMap();
+  }
 }
 
 function setupScroll() {
@@ -288,6 +353,7 @@ function updateStep(step) {
   syncControls();
   pulseViz();
   updateMainView();
+  updateSelectedStateFromCurrentView();
 }
 
 function updateMainView() {
@@ -579,6 +645,11 @@ function renderMap() {
       const row = dataByState.get(normalizeStateName(stateName));
 
       selectedStateName = normalizeStateName(stateName);
+
+      if (!statePicker.empty()) {
+        statePicker.property("value", selectedStateName);
+      }
+
       updateSelectedStateCard(stateName, row);
       renderMap();
     })
@@ -608,6 +679,162 @@ function renderMap() {
     const selectedRow = dataByState.get(selectedStateName);
     updateSelectedStateCard(selectedStateName, selectedRow);
   }
+}
+
+function renderMonthlyChart(stateName) {
+  if (monthlySvg.empty()) return;
+
+  const chartWidth = 720;
+  const chartHeight = 260;
+  const margin = { top: 24, right: 24, bottom: 42, left: 48 };
+  const innerWidth = chartWidth - margin.left - margin.right;
+  const innerHeight = chartHeight - margin.top - margin.bottom;
+
+  monthlySvg.attr("viewBox", `0 0 ${chartWidth} ${chartHeight}`);
+  monthlySvg.selectAll("*").remove();
+
+  if (!stateName) {
+    monthlySvg.append("text")
+      .attr("class", "monthly-empty-text")
+      .attr("x", chartWidth / 2)
+      .attr("y", chartHeight / 2)
+      .text("Choose a state to see monthly 35°C+ days.");
+    return;
+  }
+
+  const rows = monthlyData
+    .filter((d) =>
+      normalizeStateName(d.state) === normalizeStateName(stateName) &&
+      d.year === currentState.year &&
+      d.scenario === currentState.scenario
+    )
+    .map((d) => ({
+      ...d,
+      monthNumber: getMonthNumber(d),
+      hotDays: getMonthlyHotDaysValue(d),
+    }))
+    .filter((d) =>
+      Number.isFinite(d.monthNumber) &&
+      Number.isFinite(d.hotDays)
+    )
+    .sort((a, b) => d3.ascending(a.monthNumber, b.monthNumber));
+
+  if (!rows.length) {
+    monthlySvg.append("text")
+      .attr("class", "monthly-empty-text")
+      .attr("x", chartWidth / 2)
+      .attr("y", chartHeight / 2)
+      .text(`No monthly data available for ${stateName}.`);
+    return;
+  }
+
+  const x = d3.scaleBand()
+    .domain(d3.range(1, 13))
+    .range([0, innerWidth])
+    .padding(0.22);
+
+  const y = d3.scaleLinear()
+    .domain([0, Math.max(1, d3.max(rows, (d) => d.hotDays))])
+    .nice()
+    .range([innerHeight, 0]);
+
+  const g = monthlySvg.append("g")
+    .attr("transform", `translate(${margin.left},${margin.top})`);
+
+  g.append("g")
+    .attr("class", "grid")
+    .call(
+      d3.axisLeft(y)
+        .ticks(4)
+        .tickSize(-innerWidth)
+        .tickFormat("")
+    )
+    .selectAll("line")
+    .attr("stroke", "rgba(23, 32, 42, 0.10)");
+
+  g.select(".grid .domain").remove();
+
+  g.append("g")
+    .attr("class", "axis")
+    .attr("transform", `translate(0,${innerHeight})`)
+    .call(
+      d3.axisBottom(x)
+        .tickFormat((d) => monthShortName(d))
+    );
+
+  g.append("g")
+    .attr("class", "axis")
+    .call(
+      d3.axisLeft(y)
+        .ticks(4)
+        .tickFormat((d) => `${d}`)
+    );
+
+  g.append("text")
+    .attr("x", 0)
+    .attr("y", -8)
+    .attr("fill", "#5f6b73")
+    .attr("font-size", 12)
+    .attr("font-weight", 800)
+    .text(`${stateName}: monthly 35°C+ days in ${currentState.year}`);
+
+  g.append("text")
+    .attr("x", innerWidth)
+    .attr("y", -8)
+    .attr("text-anchor", "end")
+    .attr("fill", "#8f2f1b")
+    .attr("font-size", 12)
+    .attr("font-weight", 800)
+    .text(scenarioLabels[currentState.scenario]);
+
+  g.selectAll(".month-bar")
+    .data(rows, (d) => d.monthNumber)
+    .join(
+      (enter) =>
+        enter.append("rect")
+          .attr("class", "month-bar")
+          .attr("x", (d) => x(d.monthNumber))
+          .attr("width", x.bandwidth())
+          .attr("y", innerHeight)
+          .attr("height", 0)
+          .call((enter) =>
+            enter.transition()
+              .duration(650)
+              .ease(d3.easeCubicOut)
+              .attr("y", (d) => y(d.hotDays))
+              .attr("height", (d) => innerHeight - y(d.hotDays))
+          ),
+      (update) =>
+        update.call((update) =>
+          update.transition()
+            .duration(650)
+            .ease(d3.easeCubicOut)
+            .attr("x", (d) => x(d.monthNumber))
+            .attr("width", x.bandwidth())
+            .attr("y", (d) => y(d.hotDays))
+            .attr("height", (d) => innerHeight - y(d.hotDays))
+        ),
+      (exit) =>
+        exit.call((exit) =>
+          exit.transition()
+            .duration(300)
+            .attr("y", innerHeight)
+            .attr("height", 0)
+            .remove()
+        )
+    );
+
+  g.selectAll(".bar-label")
+    .data(rows.filter((d) => d.hotDays > 0), (d) => d.monthNumber)
+    .join("text")
+    .attr("class", "bar-label")
+    .attr("x", (d) => x(d.monthNumber) + x.bandwidth() / 2)
+    .attr("y", (d) => y(d.hotDays) - 6)
+    .attr("text-anchor", "middle")
+    .attr("fill", "#5f6b73")
+    .attr("font-size", 10)
+    .attr("font-weight", 800)
+    .text((d) => d3.format(".0f")(d.hotDays));
 }
 
 function getColorScale(metric, values) {
@@ -777,13 +1004,25 @@ function setupInitialSelectedStateCard() {
     return;
   }
 
-  selectedStateTitle.text("Click a state on the map.");
+  selectedStateTitle.text("Choose a state.");
   selectedStateSummary.text(
-    "The card will translate average warming and extreme hot days into a daily-life statement."
+    "Use the dropdown above or click a state in the main map to translate average warming and extreme hot days into a daily-life statement."
   );
   selectedStateWarming.text("[ +X °C ]");
   selectedStateHotdays.text("[ +Y days ]");
   selectedStateWeeks.text("[ about Z extra weeks ]");
+
+  if (!snapshotStateTitle.empty()) {
+    snapshotStateTitle.text("No state selected yet");
+    snapshotStateText.text(
+      "Choose a state here, or click a state in the main map, to connect the national story to a local daily-life summary."
+    );
+    snapshotScenario.text("—");
+    snapshotYear.text("—");
+    snapshotMetric.text("—");
+  }
+
+  renderMonthlyChart(null);
 }
 
 function updateSelectedStateCard(stateName, row) {
@@ -803,6 +1042,16 @@ function updateSelectedStateCard(stateName, row) {
     selectedStateWarming.text("N/A");
     selectedStateHotdays.text("N/A");
     selectedStateWeeks.text("N/A");
+
+    if (!snapshotStateTitle.empty()) {
+      snapshotStateTitle.text(stateName);
+      snapshotStateText.text("No data available for this state.");
+      snapshotScenario.text("—");
+      snapshotYear.text("—");
+      snapshotMetric.text("—");
+    }
+
+    renderMonthlyChart(null);
     return;
   }
 
@@ -819,6 +1068,50 @@ function updateSelectedStateCard(stateName, row) {
   selectedStateWarming.text(formatValue(avgWarming, "°C"));
   selectedStateHotdays.text(formatValue(hotDaysChange, "days"));
   selectedStateWeeks.text(formatWeeks(weeks));
+
+  if (!snapshotStateTitle.empty()) {
+    snapshotStateTitle.text(stateName);
+    snapshotStateText.text(
+      `${stateName} connects the national pattern to a local question: how many more days cross the 35°C threshold?`
+    );
+    snapshotScenario.text(scenarioLabels[currentState.scenario]);
+    snapshotYear.text(currentState.year);
+    snapshotMetric.text(metricShortLabels[currentState.metric]);
+  }
+
+  renderMonthlyChart(stateName);
+}
+
+function getMonthNumber(d) {
+  if (Number.isFinite(d.month)) return d.month;
+  if (Number.isFinite(d.month_number)) return d.month_number;
+
+  if (typeof d.month === "string") {
+    const parsed = +d.month;
+    if (Number.isFinite(parsed)) return parsed;
+  }
+
+  return NaN;
+}
+
+function getMonthlyHotDaysValue(d) {
+  const possibleColumns = [
+    "hot_days_35c",
+    "monthly_hot_days_35c",
+    "hot_days_35c_count",
+    "days_35c",
+  ];
+
+  for (const col of possibleColumns) {
+    if (Number.isFinite(d[col])) return d[col];
+  }
+
+  return NaN;
+}
+
+function monthShortName(monthNumber) {
+  const names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  return names[monthNumber - 1] || monthNumber;
 }
 
 function getFeatureStateName(feature) {
