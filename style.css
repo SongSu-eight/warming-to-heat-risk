@@ -33,8 +33,6 @@ a {
   color: var(--accent-dark);
 }
 
-/* ---------- Hero ---------- */
-
 .hero-section {
   min-height: 100vh;
   display: grid;
@@ -83,8 +81,6 @@ a {
   text-transform: uppercase;
 }
 
-/* ---------- Scrollytelling ---------- */
-
 .scrolly {
   display: grid;
   grid-template-columns: minmax(540px, 58%) minmax(360px, 42%);
@@ -97,18 +93,19 @@ a {
 
 .graphic {
   position: sticky;
-  top: 2rem;
-  height: calc(100vh - 4rem);
+  top: 1.25rem;
+  height: calc(100vh - 2.5rem);
   align-self: start;
 }
 
 .sticky-viz {
   height: 100%;
+  min-height: 0;
   display: grid;
-  grid-template-rows: auto minmax(300px, 1fr) auto auto;
-  gap: 0.8rem;
+  grid-template-rows: auto minmax(360px, 1fr) auto;
+  gap: 0.55rem;
   overflow: hidden;
-  padding: 1rem;
+  padding: 0.85rem;
   border: 1px solid var(--border);
   border-radius: 24px;
   background: var(--card);
@@ -130,102 +127,134 @@ a {
 .viz-header h2 {
   margin: 0;
   color: var(--text);
-  font-size: clamp(1.25rem, 1.8vw, 1.8rem);
+  font-size: clamp(1.05rem, 1.45vw, 1.45rem);
   line-height: 1.08;
   letter-spacing: -0.045em;
 }
 
 #chart-subtitle {
   max-width: 640px;
-  margin: 0.4rem 0 0;
+  margin: 0.3rem 0 0;
   color: var(--muted);
-  font-size: 0.9rem;
-  line-height: 1.4;
+  font-size: 0.78rem;
+  line-height: 1.32;
 }
 
-.map-wrap {
+.chart-wrap {
   min-height: 0;
+  height: 100%;
   display: grid;
   place-items: stretch;
 }
 
-.placeholder-viz {
-  min-height: 260px;
-  display: grid;
-  place-items: center;
-  align-content: center;
-  gap: 0.55rem;
-  padding: 2rem;
-  border: 2px dashed rgba(143, 47, 27, 0.28);
-  border-radius: 22px;
-  background:
-    radial-gradient(circle at 50% 30%, rgba(196, 81, 44, 0.08), transparent 18rem),
-    rgba(255, 255, 255, 0.72);
-  color: #8b8f93;
-  text-align: center;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+#main-chart {
+  width: 100%;
+  height: 100%;
+  min-height: 420px;
+  display: block;
 }
 
-.placeholder-viz span {
-  font-size: clamp(0.95rem, 1.25vw, 1.2rem);
-  line-height: 1.5;
+.state {
+  stroke: #ffffff;
+  stroke-width: 0.8;
+  cursor: pointer;
+  transition:
+    opacity 0.15s ease,
+    stroke-width 0.15s ease;
 }
 
-.placeholder-viz small {
-  max-width: 520px;
-  color: var(--muted);
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  font-weight: 700;
+.state:hover {
+  stroke: #17202a;
+  stroke-width: 1.6;
 }
 
-.placeholder-viz.large {
-  min-height: 430px;
+.state.highlighted {
+  stroke: #17202a;
+  stroke-width: 1.8;
+}
+
+.state.selected {
+  stroke: #17202a;
+  stroke-width: 2.4;
+}
+
+.axis path,
+.axis line {
+  stroke: rgba(23, 32, 42, 0.22);
+}
+
+.axis text {
+  fill: var(--muted);
+  font-size: 11px;
+}
+
+.grid-line {
+  stroke: rgba(23, 32, 42, 0.08);
+  shape-rendering: crispEdges;
+}
+
+.line-label {
+  font-size: 12px;
+  font-weight: 800;
+  fill: var(--text);
 }
 
 .legend-row {
   display: flex;
   align-items: center;
-  gap: 0.9rem;
+  gap: 0.65rem;
   flex-wrap: wrap;
 }
 
 .placeholder-legend {
-  min-width: 220px;
-  padding: 0.5rem 0.7rem;
+  min-width: 200px;
+  padding: 0.38rem 0.6rem;
   border-radius: 999px;
   background: white;
   border: 1px solid var(--border);
   color: var(--muted);
-  font-size: 0.78rem;
+  font-size: 0.72rem;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+}
+
+#legend svg {
+  display: block;
 }
 
 #map-note {
   margin: 0;
   color: var(--muted);
-  font-size: 0.82rem;
+  font-size: 0.75rem;
 }
 
-.state-card {
-  padding: 0.8rem 0.9rem;
-  border-radius: 16px;
-  background: var(--heat-soft);
-  border: 1px solid rgba(196, 81, 44, 0.18);
-}
-
-.state-card h3 {
-  margin: 0 0 0.25rem;
-  font-size: 0.95rem;
-}
-
-.state-card p {
-  margin: 0.12rem 0;
-  color: #3f474e;
+.tooltip {
+  position: fixed;
+  z-index: 1000;
+  max-width: 260px;
+  padding: 0.75rem 0.85rem;
+  border-radius: 14px;
+  background: rgba(23, 32, 42, 0.94);
+  color: white;
+  box-shadow: 0 12px 32px rgba(23, 32, 42, 0.28);
+  pointer-events: none;
   font-size: 0.82rem;
   line-height: 1.35;
 }
 
-/* ---------- Controls ---------- */
+.tooltip h3 {
+  margin: 0 0 0.35rem;
+  font-size: 0.95rem;
+  color: white;
+}
+
+.tooltip p {
+  margin: 0.16rem 0;
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.tooltip strong {
+  color: #ffd0ba;
+}
 
 .controls {
   display: none;
@@ -269,8 +298,6 @@ input[type="range"] {
   color: var(--text);
   font-size: 0.82rem;
 }
-
-/* ---------- Story text ---------- */
 
 .story {
   min-height: 100vh;
@@ -337,8 +364,6 @@ input[type="range"] {
   }
 }
 
-/* ---------- Detail section ---------- */
-
 .detail-section {
   max-width: 1320px;
   margin: 0 auto;
@@ -371,6 +396,39 @@ input[type="range"] {
   grid-template-columns: minmax(0, 1.25fr) minmax(320px, 0.75fr);
   gap: 1.25rem;
   align-items: stretch;
+}
+
+.placeholder-viz {
+  min-height: 260px;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 0.55rem;
+  padding: 2rem;
+  border: 2px dashed rgba(143, 47, 27, 0.28);
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 50% 30%, rgba(196, 81, 44, 0.08), transparent 18rem),
+    rgba(255, 255, 255, 0.72);
+  color: #8b8f93;
+  text-align: center;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+}
+
+.placeholder-viz span {
+  font-size: clamp(0.95rem, 1.25vw, 1.2rem);
+  line-height: 1.5;
+}
+
+.placeholder-viz small {
+  max-width: 520px;
+  color: var(--muted);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-weight: 700;
+}
+
+.placeholder-viz.large {
+  min-height: 430px;
 }
 
 .daily-card {
@@ -430,8 +488,6 @@ input[type="range"] {
   line-height: 1.6;
 }
 
-/* ---------- Closing and footer ---------- */
-
 .closing {
   padding: 5rem 8vw 6rem;
   background: #17202a;
@@ -469,8 +525,6 @@ footer p {
   margin: 0;
 }
 
-/* ---------- Responsive ---------- */
-
 @media (max-width: 1050px) {
   .scrolly,
   .detail-grid,
@@ -485,7 +539,7 @@ footer p {
   }
 
   .sticky-viz {
-    min-height: 680px;
+    min-height: 620px;
   }
 
   .step {
@@ -522,9 +576,13 @@ footer p {
   }
 
   .sticky-viz {
-    min-height: 620px;
-    padding: 0.85rem;
+    min-height: 560px;
+    padding: 0.75rem;
     border-radius: 18px;
+  }
+
+  #main-chart {
+    min-height: 360px;
   }
 
   .placeholder-viz {

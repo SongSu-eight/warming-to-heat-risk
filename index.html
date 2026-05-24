@@ -7,7 +7,6 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <!-- ============ HERO ============ -->
   <section id="hero" class="hero-section">
     <div class="hero-inner">
       <p class="eyebrow">CMIP6 climate projections · 2020–2070</p>
@@ -19,16 +18,15 @@
     </div>
   </section>
 
-  <!-- ============ BIG PICTURE SCROLLYTELLING ============ -->
   <section id="main-story" class="scrolly" aria-label="Average warming to extreme hot days story">
     <div class="graphic">
       <div class="sticky-viz" id="main-viz-card">
         <div class="viz-header">
           <div class="viz-title-block">
             <p class="eyebrow">Big picture</p>
-            <h2 id="chart-title">Start with average temperature</h2>
+            <h2 id="chart-title">Start with the average</h2>
             <p id="chart-subtitle">
-              We use 2020 as the baseline, then compare projected change across the United States.
+              Average temperature changes gradually over time, especially under higher emissions.
             </p>
           </div>
 
@@ -58,85 +56,84 @@
           </div>
         </div>
 
-        <div class="map-wrap">
-          <div class="placeholder-viz" id="main-map-placeholder">
-            <span>[ Sticky US choropleth map ]</span>
-            <small>average warming &rarr; extreme hot days</small>
-          </div>
-          <!-- Later replacement: <svg id="map"></svg> -->
+        <div class="chart-wrap">
+          <svg id="main-chart" role="img" aria-label="Climate projection visualization"></svg>
         </div>
 
         <div class="legend-row">
           <div id="legend" class="placeholder-legend">[ legend ]</div>
-          <p id="map-note">Scroll to see the map change from average warming to daily heat risk.</p>
-        </div>
-
-        <div id="state-card" class="state-card">
-          <h3>State detail</h3>
-          <p>Hover or select a state later to compare average warming with extreme hot days.</p>
+          <p id="map-note">Scroll to move from a national trend line to state-level daily heat risk.</p>
         </div>
       </div>
     </div>
 
     <div class="story">
       <article class="step" data-step="0">
-        <p class="step-number">01 · Baseline</p>
+        <p class="step-number">01 · Trend</p>
         <h2>Start with the average.</h2>
+        <p>
+          National average temperature changes gradually over time, and the pathways separate more clearly by mid-century.
+        </p>
+      </article>
+
+      <article class="step" data-step="1">
+        <p class="step-number">02 · Baseline</p>
+        <h2>Now place that trend on the map.</h2>
         <p>
           We use 2020 as the baseline, then compare how average temperature changes across the United States.
         </p>
       </article>
 
-      <article class="step" data-step="1">
-        <p class="step-number">02 · Future view</p>
+      <article class="step" data-step="2">
+        <p class="step-number">03 · Future view</p>
         <h2>By 2070, the map gets warmer.</h2>
         <p>
           Average warming becomes visible across many states, even before looking at individual hot days.
         </p>
       </article>
 
-      <article class="step" data-step="2">
-        <p class="step-number">03 · Scenario</p>
+      <article class="step" data-step="3">
+        <p class="step-number">04 · Scenario</p>
         <h2>Emissions change the picture.</h2>
         <p>
           Under higher emissions, the same future year shows stronger warming across more of the country.
         </p>
       </article>
 
-      <article class="step" data-step="3">
-        <p class="step-number">04 · Daily experience</p>
+      <article class="step" data-step="4">
+        <p class="step-number">05 · Daily experience</p>
         <h2>A yearly average misses the hardest days.</h2>
         <p>
           People experience heat as specific days: cancelled outdoor practice, longer AC use, or riskier outdoor work.
         </p>
       </article>
 
-      <article class="step" data-step="4">
-        <p class="step-number">05 · Heat threshold</p>
+      <article class="step" data-step="5">
+        <p class="step-number">06 · Heat threshold</p>
         <h2>Count extreme hot days instead.</h2>
         <p>
-          We count how many more days cross 35°C, turning average warming into a measure of daily heat risk.
+          We count how many more days cross 35&deg;C, turning average warming into a measure of daily heat risk.
         </p>
       </article>
 
-      <article class="step" data-step="5">
-        <p class="step-number">06 · Uneven risk</p>
+      <article class="step" data-step="6">
+        <p class="step-number">07 · Uneven risk</p>
         <h2>The pattern becomes sharper.</h2>
         <p>
           Some states gain many more extreme hot days than others, making the risk easier to compare.
         </p>
       </article>
 
-      <article class="step" data-step="6">
-        <p class="step-number">07 · Higher emissions</p>
+      <article class="step" data-step="7">
+        <p class="step-number">08 · Higher emissions</p>
         <h2>More warming means more risky days.</h2>
         <p>
           Under high emissions, the change is not only a warmer average. It is more days people have to live through.
         </p>
       </article>
 
-      <article class="step" data-step="7">
-        <p class="step-number">08 · Explore</p>
+      <article class="step" data-step="8">
+        <p class="step-number">09 · Explore</p>
         <h2>Explore the difference yourself.</h2>
         <p>
           Change the year, scenario, and metric to compare average warming with extreme hot days.
@@ -145,39 +142,38 @@
     </div>
   </section>
 
-  <!-- ============ STATE DETAIL / DAILY LIFE ============ -->
   <section id="state-detail" class="detail-section">
     <div class="section-header">
       <p class="eyebrow">Daily life detail</p>
       <h2>Now look at your state.</h2>
       <p>
-        Pick a state to see how its average warming compares with its change in extreme hot days. Later, this section can zoom into summer and monthly patterns.
+        Pick a state to compare average warming with extreme hot days, then see when those hot days fall during the year.
       </p>
     </div>
 
     <div class="detail-grid">
       <div class="placeholder-viz large" id="state-map-placeholder">
-        <span>[ Interactive state selector / US map ]</span>
-        <small>click or hover a state</small>
+        <span>[ Selected state detail will connect to the map above ]</span>
+        <small>click a state in the main map</small>
       </div>
 
       <aside class="daily-card" id="daily-life-card">
         <p class="eyebrow">Selected state</p>
-        <h3>What changes when hot days add up?</h3>
-        <p>
-          In the final version, this card will translate extreme hot days into a daily-life statement, such as extra weeks of dangerous heat.
+        <h3 id="selected-state-title">Click a state on the map.</h3>
+        <p id="selected-state-summary">
+          The card will translate average warming and extreme hot days into a daily-life statement.
         </p>
         <div class="stat-row">
           <span>Average warming</span>
-          <strong>[ +X &deg;C ]</strong>
+          <strong id="selected-state-warming">[ +X &deg;C ]</strong>
         </div>
         <div class="stat-row">
           <span>Additional 35&deg;C+ days</span>
-          <strong>[ +Y days ]</strong>
+          <strong id="selected-state-hotdays">[ +Y days ]</strong>
         </div>
         <div class="stat-row">
           <span>Daily-life framing</span>
-          <strong>[ about Z extra weeks ]</strong>
+          <strong id="selected-state-weeks">[ about Z extra weeks ]</strong>
         </div>
       </aside>
     </div>
@@ -187,7 +183,7 @@
         <p class="eyebrow">Next layer</p>
         <h3>Where do those hot days fall during the year?</h3>
         <p>
-          After the big-picture map is stable, we can use the monthly dataset here to narrow the scope to summer and show which months carry the heat.
+          Extreme heat is not spread evenly across the year. The monthly view will show which months carry the most hot days.
         </p>
       </div>
       <div class="placeholder-viz" id="monthly-chart-placeholder">
@@ -197,7 +193,6 @@
     </div>
   </section>
 
-  <!-- ============ CLOSING ============ -->
   <section id="closing" class="closing">
     <p class="eyebrow">Takeaway</p>
     <h2>Average warming describes the climate. Extreme hot days describe the days people live through.</h2>
@@ -212,6 +207,8 @@
       <a href="https://github.com/SongSu-eight/warming-to-heat-risk">GitHub</a>
     </p>
   </footer>
+
+  <div id="tooltip" class="tooltip" hidden></div>
 
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <script src="https://unpkg.com/scrollama"></script>
