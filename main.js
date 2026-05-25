@@ -129,7 +129,7 @@ const stepSettings = [
     subtitle:
       "This section will connect extra hot days to daily-life impacts.",
     note:
-      "Impact placeholder: add daily-life examples or supporting visuals here.",
+      "daily-life examples",
   },
   {
     view: "map",
@@ -366,6 +366,13 @@ function updateStep(step) {
 function updateMainView() {
   cancelMapAnimation();
   hideTooltip();
+
+  // step8-move summary
+  svg.style("display", null);
+  d3.select(".chart-wrap").selectAll(".impact-fill").remove();
+  const summaryEl = document.getElementById("trend-summary");
+  if (summaryEl) summaryEl.style.display = ""; 
+  // step8-move summary
 
   const setting = stepSettings[currentStep];
 
@@ -904,59 +911,104 @@ function renderCompareLineChart() {
     .text("Both lines are normalized so different units can be compared.");
 }
 
+// step8impact
 function renderImpactPlaceholder() {
   hideMapYearOverlay();
+
+  // 彻底清掉 summary 残留(不靠 class 过渡,直接 DOM 操作)
+  const summaryEl = document.getElementById("trend-summary");
+  if (summaryEl) {
+    summaryEl.classList.remove("is-active", "is-visible");
+    summaryEl.style.display = "none";
+    const rowsEl = document.getElementById("trend-summary-rows");
+    if (rowsEl) rowsEl.innerHTML = "";
+  }
+
   setVizMode("impact-placeholder");
   svg.selectAll("*").remove();
   legendContainer.html("");
 
-  const g = svg.append("g")
-    .attr("opacity", 0);
+  title.text("What changes when hot days add up?");
+  subtitle.text("Four daily-life impacts of the extra heat days projected for California by 2050.");
 
-  g.append("rect")
-    .attr("class", "impact-placeholder-box")
-    .attr("x", 90)
-    .attr("y", 95)
-    .attr("width", width - 180)
-    .attr("height", height - 190)
-    .attr("rx", 26);
+  svg.style("display", "none");
 
-  g.append("text")
-    .attr("x", width / 2)
-    .attr("y", height / 2 - 42)
-    .attr("text-anchor", "middle")
-    .attr("fill", "#8f2f1b")
-    .attr("font-size", 13)
-    .attr("font-weight", 900)
-    .attr("letter-spacing", "0.14em")
-    .text("IMPACT PLACEHOLDER");
+  const chartWrap = d3.select(".chart-wrap");
+  chartWrap.selectAll(".impact-fill").remove();
 
-  g.append("text")
-    .attr("x", width / 2)
-    .attr("y", height / 2)
-    .attr("text-anchor", "middle")
-    .attr("fill", "#17202a")
-    .attr("font-size", 30)
-    .attr("font-weight", 900)
-    .text("What changes when hot days add up?");
+  const container = chartWrap.append("div")
+    .attr("class", "impact-fill")
+    .style("opacity", 0);
 
-  g.append("text")
-    .attr("x", width / 2)
-    .attr("y", height / 2 + 42)
-    .attr("text-anchor", "middle")
-    .attr("fill", "#5f6b73")
-    .attr("font-size", 16)
-    .text("Add icons, examples, or a small interaction here.");
+  container.html(`
+    <div class="impact-viz-content">
+      <div class="impact-viz-rows">
+        <div class="impact-viz-row">
+          <div class="ivr-num">01</div>
+          <div class="ivr-body">
+            <div class="ivr-head">
+              <span class="ivr-label">SLEEP</span>
+              <span class="ivr-stat">&minus;11 <span class="ivr-unit">hrs / yr</span></span>
+            </div>
+            <p class="ivr-desc">Warm nights shorten sleep. By 2099 the gap could double &mdash; the West Coast hit roughly twice as hard as inland.</p>
+            <p class="ivr-cite">Minor et al. (2022), <i>One Earth</i></p>
+          </div>
+        </div>
 
-  g.transition()
+        <div class="impact-viz-row">
+          <div class="ivr-num">02</div>
+          <div class="ivr-body">
+            <div class="ivr-head">
+              <span class="ivr-label">LEARNING</span>
+              <span class="ivr-stat">&minus;5% <span class="ivr-unit">of a school year</span></span>
+            </div>
+            <p class="ivr-desc">Days above 90&deg;F lower PSAT scores. Without AC the loss is ~30% larger, and 3&times; larger for Black and Hispanic students.</p>
+            <p class="ivr-cite">Park, Goodman et al. (2020), <i>AEJ</i></p>
+          </div>
+        </div>
+
+        <div class="impact-viz-row">
+          <div class="ivr-num">03</div>
+          <div class="ivr-body">
+            <div class="ivr-head">
+              <span class="ivr-label">COOLING COST</span>
+              <span class="ivr-stat">+$200 <span class="ivr-unit">/ summer</span></span>
+            </div>
+            <p class="ivr-desc">AC alone can add $72&ndash;$108 a month per household &mdash; and 1 in 5 low-income U.S. households have no AC at all.</p>
+            <p class="ivr-cite">U.S. EIA (2024)</p>
+          </div>
+        </div>
+
+        <div class="impact-viz-row">
+          <div class="ivr-num">04</div>
+          <div class="ivr-body">
+            <div class="ivr-head">
+              <span class="ivr-label">ER VISITS</span>
+              <span class="ivr-stat">+35k <span class="ivr-unit">/ summer statewide</span></span>
+            </div>
+            <p class="ivr-desc">Hot days drive cardiovascular, respiratory, and mental-health ER visits &mdash; costing roughly $1B per summer nationally.</p>
+            <p class="ivr-cite">Stanford / UCSD (2025)</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="impact-viz-equity">
+        <span class="ive-tag">BUT NOT EVERYONE FEELS IT EQUALLY</span>
+        <p>Low-income students lose <em>3&times;</em> more learning. Outdoor workers lose <em>14%</em> of their labor capacity above 90&deg;F. <em>1 in 5</em> households can't afford to turn on AC.</p>
+      </div>
+    </div>
+  `);
+
+  container.transition()
     .duration(500)
-    .attr("opacity", 1);
+    .style("opacity", 1);
 
   legendContainer
     .append("div")
     .attr("class", "legend-caption")
-    .text("Placeholder for daily-life impact layer.");
+    .text("The impact of high emissions down to 2070 on people's lives");
 }
+// step8impact
 
 function getNationalAverageRows() {
   const grouped = d3.rollups(
