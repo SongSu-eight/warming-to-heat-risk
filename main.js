@@ -948,22 +948,24 @@ function renderImpactPlaceholder() {
           <div class="ivr-body">
             <div class="ivr-head">
               <span class="ivr-label">SLEEP</span>
-              <span class="ivr-stat">&minus;11 <span class="ivr-unit">hrs / yr</span></span>
+              <span class="ivr-stat">&minus;14.08 <span class="ivr-unit">mins / warm night</span></span>
             </div>
-            <p class="ivr-desc">Warm nights shorten sleep. By 2099 the gap could double &mdash; the West Coast hit roughly twice as hard as inland.</p>
+            <p class="ivr-desc">On very warm nights above 30°C, sleep declines by about 14 minutes. More frequent hot nights can make people fall asleep later and wake up earlier, compressing the sleep period and reducing sleep quality.</p>
             <p class="ivr-cite">Minor et al. (2022), <i>One Earth</i></p>
           </div>
         </div>
+
+
 
         <div class="impact-viz-row">
           <div class="ivr-num">02</div>
           <div class="ivr-body">
             <div class="ivr-head">
               <span class="ivr-label">LEARNING</span>
-              <span class="ivr-stat">&minus;5% <span class="ivr-unit">of a school year</span></span>
+              <span class="ivr-stat">&minus;1% <span class="ivr-unit">/ +0.56°C</span></span>
             </div>
-            <p class="ivr-desc">Days above 90&deg;F lower PSAT scores. Without AC the loss is ~30% larger, and 3&times; larger for Black and Hispanic students.</p>
-            <p class="ivr-cite">Park, Goodman et al. (2020), <i>AEJ</i></p>
+            <p class="ivr-desc">Without air conditioning, a 0.56°C hotter school year reduces that year's learning by about 1%. Hot school days also disproportionately affect minority students, accounting for roughly 5% of the racial achievement gap.</p>
+            <p class="ivr-cite">Park et al. (2020), <i>American Economic Journal: Economic Policy</i></p>
           </div>
         </div>
 
@@ -972,9 +974,9 @@ function renderImpactPlaceholder() {
           <div class="ivr-body">
             <div class="ivr-head">
               <span class="ivr-label">COOLING COST</span>
-              <span class="ivr-stat">+$200 <span class="ivr-unit">/ summer</span></span>
+              <span class="ivr-stat">+3% <span class="ivr-unit">/ household</span></span>
             </div>
-            <p class="ivr-desc">AC alone can add $72&ndash;$108 a month per household &mdash; and 1 in 5 low-income U.S. households have no AC at all.</p>
+            <p class="ivr-desc">EIA's 2024 forecast expected a 5% rise in cooling degree days to increase average U.S. household summer electricity use by about 3%.</p></p>
             <p class="ivr-cite">U.S. EIA (2024)</p>
           </div>
         </div>
@@ -984,9 +986,9 @@ function renderImpactPlaceholder() {
           <div class="ivr-body">
             <div class="ivr-head">
               <span class="ivr-label">ER VISITS</span>
-              <span class="ivr-stat">+35k <span class="ivr-unit">/ summer statewide</span></span>
+              <span class="ivr-stat">+1.5M <span class="ivr-unit">by 2050</span></span>
             </div>
-            <p class="ivr-desc">Hot days drive cardiovascular, respiratory, and mental-health ER visits &mdash; costing roughly $1B per summer nationally.</p>
+            <p class="ivr-desc">Hotter temperatures can increase emergency department visits for injuries, mental health issues, poisonings, and other heat-sensitive conditions, adding pressure to California's healthcare system.</p>
             <p class="ivr-cite">Stanford / UCSD (2025)</p>
           </div>
         </div>
@@ -994,7 +996,7 @@ function renderImpactPlaceholder() {
 
       <div class="impact-viz-equity">
         <span class="ive-tag">BUT NOT EVERYONE FEELS IT EQUALLY</span>
-        <p>Low-income students lose <em>3&times;</em> more learning. Outdoor workers lose <em>14%</em> of their labor capacity above 90&deg;F. <em>1 in 5</em> households can't afford to turn on AC.</p>
+        <p>Heat does not affect everyone equally. Students in under-resourced schools, outdoor workers, older adults, and households without reliable cooling face greater risks as hot days become more common.</p>
       </div>
     </div>
   `);
