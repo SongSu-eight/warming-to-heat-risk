@@ -928,8 +928,8 @@ function renderImpactPlaceholder() {
   svg.selectAll("*").remove();
   legendContainer.html("");
 
-  title.text("What changes when hot days add up?");
-  subtitle.text("Four daily-life impacts of the extra heat days projected for California by 2050.");
+  title.text("What changes during the extreme hot days?");
+  subtitle.text("Four daily-life impacts of extreme hot days.");
 
   svg.style("display", "none");
 
@@ -951,7 +951,7 @@ function renderImpactPlaceholder() {
               <span class="ivr-stat">&minus;14.08 <span class="ivr-unit">mins / warm night</span></span>
             </div>
             <p class="ivr-desc">On very warm nights above 30°C, sleep declines by about 14 minutes. More frequent hot nights can make people fall asleep later and wake up earlier, compressing the sleep period and reducing sleep quality.</p>
-            <p class="ivr-cite">Minor et al. (2022), <i>One Earth</i></p>
+            <p class="ivr-cite">Minor et al. (2022), <i>Rising temperatures erode human sleep globally</i></p>
           </div>
         </div>
 
@@ -965,7 +965,7 @@ function renderImpactPlaceholder() {
               <span class="ivr-stat">&minus;1% <span class="ivr-unit">/ +0.56°C</span></span>
             </div>
             <p class="ivr-desc">Without air conditioning, a 0.56°C hotter school year reduces that year's learning by about 1%. Hot school days also disproportionately affect minority students, accounting for roughly 5% of the racial achievement gap.</p>
-            <p class="ivr-cite">Park et al. (2020), <i>American Economic Journal: Economic Policy</i></p>
+            <p class="ivr-cite">Park et al. (2020), <i>Heat and learning</i></p>
           </div>
         </div>
 
@@ -977,7 +977,7 @@ function renderImpactPlaceholder() {
               <span class="ivr-stat">+3% <span class="ivr-unit">/ household</span></span>
             </div>
             <p class="ivr-desc">EIA's 2024 forecast expected a 5% rise in cooling degree days to increase average U.S. household summer electricity use by about 3%.</p></p>
-            <p class="ivr-cite">U.S. EIA (2024)</p>
+            <p class="ivr-cite">U.S. EIA (2024), <i>Typical residential electricity bills</i></p>
           </div>
         </div>
 
@@ -985,11 +985,11 @@ function renderImpactPlaceholder() {
           <div class="ivr-num">04</div>
           <div class="ivr-body">
             <div class="ivr-head">
-              <span class="ivr-label">ER VISITS</span>
+              <span class="ivr-label">EMERGENCY ROOM VISITS</span>
               <span class="ivr-stat">+1.5M <span class="ivr-unit">by 2050</span></span>
             </div>
-            <p class="ivr-desc">Hotter temperatures can increase emergency department visits for injuries, mental health issues, poisonings, and other heat-sensitive conditions, adding pressure to California's healthcare system.</p>
-            <p class="ivr-cite">Stanford / UCSD (2025)</p>
+            <p class="ivr-desc">Hotter temperatures can increase emergency department visits for injuries, mental health issues, poisonings, and other heat-sensitive conditions, adding pressure to healthcare system.</p>
+            <p class="ivr-cite">Stanford / UCSD (2025), <i>Weathering change</i>; WHO (2026), <i>Heat and health</i></p>
           </div>
         </div>
       </div>
