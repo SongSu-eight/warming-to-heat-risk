@@ -10,12 +10,41 @@
   <a class="writeup-link" href="writeup.html">Writeup</a>
   <section id="hero" class="hero-section">
     <div class="hero-inner">
-      <p class="eyebrow">CMIP6 climate projections · 2020–2070</p>
+      <p class="eyebrow">Observed history + CMIP6 climate projections · 2000–2100</p>
       <h1>When Average Warming<br />Becomes Daily Risk</h1>
       <p class="subtitle">
         A 1&deg;C average increase sounds small. But daily life changes when more days cross extreme heat thresholds.
       </p>
-      <p class="scroll-cue">scroll &darr;</p>
+
+      <div class="expectation-intro" id="expectation-intro">
+        <p class="expectation-prompt">Let's predict how your hometown state might feel by the end of this century.</p>
+        <div class="expectation-form" aria-label="Hometown climate expectation form">
+          <label class="expectation-field">
+            <span>Your hometown state</span>
+            <input id="hometown-state-input" type="text" placeholder="Your hometown state" autocomplete="off" aria-autocomplete="list" aria-controls="state-suggestions" />
+            <div id="state-suggestions" class="state-suggestions" role="listbox" aria-label="State suggestions"></div>
+          </label>
+
+          <label class="expectation-field">
+            <span>Expectation</span>
+            <input id="expectation-temp-input" type="number" step="0.1" placeholder="Average °C by 2100" inputmode="decimal" />
+          </label>
+        </div>
+        <p class="intro-form-note" id="intro-form-note"><em>Please enter your information to continue.</em></p>
+      </div>
+
+      <p class="scroll-cue intro-locked-cue" id="intro-scroll-cue">complete the boxes to continue</p>
+    </div>
+  </section>
+
+  <section id="expectation-result" class="expectation-result" aria-live="polite" hidden>
+    <div class="expectation-result-card">
+      <div class="expectation-result-copy">
+        <p class="eyebrow">Your forecast check</p>
+        <h2 id="expectation-result-title">Your expectation compared with CMIP6 projections</h2>
+        <p id="expectation-result-text"></p>
+      </div>
+      <div class="expectation-result-values" id="expectation-result-values"></div>
     </div>
   </section>
 
@@ -27,7 +56,7 @@
             <p class="eyebrow">Big picture</p>
             <h2 id="chart-title">Start with the average</h2>
             <p id="chart-subtitle">
-              Average temperature changes gradually over time, especially under higher emissions.
+              Observed temperature anchors the 2020 baseline, then CMIP6 scenarios show delta change through 2100.
             </p>
           </div>
 
@@ -42,16 +71,15 @@
             </label>
 
             <label>
-              Year <span id="year-label">2070</span>
-              <input id="year-slider" type="range" min="2020" max="2070" step="1" value="2070" />
+              Year <span id="year-label">2100</span>
+              <input id="year-slider" type="range" min="2020" max="2100" step="1" value="2100" />
             </label>
 
             <label>
               Metric
               <select id="metric-select">
-                <option value="tas_change_from_2020_c">Average warming</option>
-                <option value="hot_days_35c_change_from_2020">Additional days above 35&deg;C</option>
-                <option value="hot_days_35c">Total days above 35&deg;C</option>
+                <option value="summer_tas_c_change_from_observed_2020">Average warming delta</option>
+                <option value="summer_hot_days_35c_change_from_observed_2020">Additional 35&deg;C+ days delta</option>
               </select>
             </label>
           </div>
@@ -63,7 +91,7 @@
           <div id="map-year-overlay" class="map-year-overlay">2020</div>
 
         <div id="trend-summary" class="trend-summary" aria-live="polite">
-          <p class="trend-summary-label">2020 → 2070 net change</p>
+          <p class="trend-summary-label">Scenario change by 2100</p>
           <div id="trend-summary-rows" class="trend-summary-rows"></div>
         </div>
 
@@ -74,31 +102,31 @@
 
         <div class="legend-row">
           <div id="legend" class="placeholder-legend">[ legend ]</div>
-          <p id="map-note">Scroll to move from a national trend line to state-level daily heat risk.</p>
+          <p id="map-note">Scroll to move from a national trend line to state-level daily heat-risk delta.</p>
         </div>
       </div>
     </div>
 
     <div class="story">
       <article class="step" data-step="0">
-        <p class="step-number">01 · Trend</p>
+        <p class="step-number">01 · Average temperature</p>
         <h2>Start with the average.</h2>
         <p>
-          National average temperature changes gradually over time, and the pathways separate more clearly by mid-century.
+          The grey line shows observed annual average temperature from 2000 to 2020. Colored lines show projected CMIP6 average temperature through 2100.
         </p>
       </article>
 
       <article class="step" data-step="1">
-        <p class="step-number">02 · Baseline</p>
+        <p class="step-number">02 · Baseline map</p>
         <h2>Now place that trend on the map.</h2>
         <p>
-          We use 2020 as the baseline, then animate how average temperature changes across the United States under high emissions.
+          We use observed 2020 as the baseline, then animate how average temperature changes across the United States under high emissions.
         </p>
       </article>
 
       <article class="step" data-step="2">
         <p class="step-number">03 · Future view</p>
-        <h2>By 2070, the map gets warmer.</h2>
+        <h2>By 2100, the map gets warmer.</h2>
         <p>
           Under high emissions, average warming becomes visible across many states, even before looking at individual hot days.
         </p>
@@ -114,11 +142,11 @@
       </article>
 
       <article class="step" data-step="4">
-        <p class="step-number">05 · Compare</p>
-        <h2>Small average changes can hide larger daily changes.</h2>
+        <p class="step-number">05 · Translation</p>
+        <h2>A few degrees can fill a calendar.</h2>
         <p>
-          Average temperature rises gradually, but the number of days above 35&deg;C can grow faster.
-          Counting these days makes the risk easier to understand.
+          Average temperature change is measured in degrees, but daily risk is felt as extra days.
+          Here, we translate average summer warming into additional 35&deg;C+ summer days.
         </p>
       </article>
 
@@ -127,7 +155,7 @@
         <h2>Count days above 35&deg;C instead.</h2>
         <p>
           Here, a day above 35&deg;C means the daily high temperature crosses 35&deg;C.
-          We count how many more of these days occur compared with 2020, turning average warming into a measure of daily heat risk.
+          We count the delta in these days compared with observed 2020, turning average warming into a measure of daily heat-risk delta.
         </p>
       </article>
 
@@ -135,7 +163,7 @@
         <p class="step-number">07 · Uneven risk</p>
         <h2>Days above 35&deg;C do not increase evenly.</h2>
         <p>
-          By 2070, the largest increases appear in states that already sit near this heat threshold.
+          By 2100, the largest increases appear in states that already sit near this heat threshold.
           The same average-warming future can create very different daily heat risks.
         </p>
       </article>
@@ -192,7 +220,7 @@
             <strong id="snapshot-year">—</strong>
           </div>
           <div>
-            <span>Current metric</span>
+            <span>Current delta metric</span>
             <strong id="snapshot-metric">—</strong>
           </div>
         </div>
@@ -205,11 +233,11 @@
           The card will translate average warming and extreme hot days into a daily-life statement.
         </p>
         <div class="stat-row">
-          <span>Average warming</span>
+          <span>Average warming delta</span>
           <strong id="selected-state-warming">[ +X &deg;C ]</strong>
         </div>
         <div class="stat-row">
-          <span>Additional days above 35&deg;C</span>
+          <span>Additional 35&deg;C+ days delta</span>
           <strong id="selected-state-hotdays">[ +Y days ]</strong>
         </div>
         <div class="stat-row">
@@ -224,7 +252,7 @@
         <p class="eyebrow">Next layer</p>
         <h3>Where do those hot days fall during the year?</h3>
         <p>
-          Extreme heat is not spread evenly across the year. The monthly view shows which months carry the most hot days.
+          Extreme-heat changes are not spread evenly across the year. The monthly view shows which months carry the largest 35°C+ day deltas.
         </p>
       </div>
 
@@ -236,9 +264,9 @@
 
   <section id="closing" class="closing">
     <p class="eyebrow">Takeaway</p>
-    <h2>Average warming describes the climate. Extreme hot days describe the days people live through.</h2>
+    <h2>Average warming delta describes the climate shift. Extreme hot-day delta describes the days people live through.</h2>
     <p>
-      A small average change can still mean many more days above an extreme heat threshold. That is where climate change becomes daily risk.
+      A small average-temperature delta can still mean many more days above an extreme heat threshold. That is where climate change becomes daily risk.
     </p>
   </section>
 

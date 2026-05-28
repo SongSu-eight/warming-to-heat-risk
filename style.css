@@ -1082,3 +1082,335 @@ body.no-tooltip .state {
   font-size: 1rem;
   line-height: 1.7;
 }
+.line-annotation-label {
+  paint-order: stroke;
+  stroke: rgba(255, 255, 255, 0.82);
+  stroke-width: 3px;
+  stroke-linejoin: round;
+}
+
+.baseline-label {
+  paint-order: stroke;
+  stroke: rgba(255, 255, 255, 0.85);
+  stroke-width: 3px;
+  stroke-linejoin: round;
+}
+
+.tooltip .tooltip-muted {
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 0.74rem;
+}
+
+/* Plot 01 polish: compact card + cleaner caption */
+.trend-summary {
+  top: 0.75rem;
+  left: 0.85rem;
+  width: min(310px, calc(100% - 1.7rem));
+  padding: 0.62rem 0.78rem;
+  border-radius: 16px;
+  background: rgba(255, 247, 235, 0.92);
+  border: 1px solid rgba(196, 81, 44, 0.16);
+  box-shadow: 0 10px 24px rgba(40, 55, 70, 0.10);
+  backdrop-filter: blur(8px);
+}
+.trend-summary-label {
+  margin-bottom: 0.32rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.13em;
+}
+.trend-summary-rows {
+  gap: 0.02rem;
+}
+.trend-summary-row {
+  display: grid;
+  grid-template-columns: 9px 1fr auto;
+  gap: 0.42rem;
+  font-size: 0.75rem;
+  line-height: 1.25;
+}
+.trend-summary-row .dot {
+  width: 7px;
+  height: 7px;
+  align-self: center;
+}
+.trend-summary-row .name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.trend-summary-row .value {
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.line-caption {
+  width: 100%;
+  padding: 0.55rem 0.75rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid rgba(23, 32, 42, 0.10);
+  color: var(--muted);
+  box-shadow: 0 6px 18px rgba(40,55,70,0.06);
+}
+.line-caption .legend-caption {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 0.72rem;
+  line-height: 1.3;
+  font-weight: 700;
+  color: #65717a;
+}
+
+/* Intro expectation gate */
+body.intro-locked {
+  overflow: hidden;
+  height: 100vh;
+  overscroll-behavior: none;
+}
+
+.hero-section {
+  padding-top: 2.2rem;
+  padding-bottom: 2rem;
+}
+
+.hero-inner {
+  max-width: 1120px;
+}
+
+.hero-section h1 {
+  font-size: clamp(2.65rem, 6.1vw, 5.45rem);
+}
+
+.hero-section .subtitle {
+  margin-top: 1.05rem;
+}
+
+.expectation-intro {
+  width: min(980px, 92vw);
+  margin: 1.6rem auto 0;
+  padding: 1rem;
+  border: 1px solid rgba(143, 47, 27, 0.16);
+  border-radius: 26px;
+  background: rgba(255, 255, 255, 0.62);
+  box-shadow: 0 14px 36px rgba(40, 55, 70, 0.10);
+  backdrop-filter: blur(12px);
+}
+
+.expectation-prompt {
+  margin: 0 0 0.85rem;
+  color: var(--text);
+  font-size: clamp(1rem, 1.3vw, 1.2rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.expectation-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(220px, 1fr));
+  gap: 0.85rem;
+}
+
+.expectation-field {
+  position: relative;
+  display: grid;
+  gap: 0.35rem;
+  text-align: left;
+}
+
+.expectation-field span {
+  color: var(--accent-dark);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.expectation-field input {
+  width: 100%;
+  min-height: 3.25rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid rgba(23, 32, 42, 0.16);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--text);
+  font: inherit;
+  font-size: 1rem;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  outline: none;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+}
+
+.expectation-field input:focus {
+  border-color: rgba(196, 81, 44, 0.46);
+  box-shadow: 0 0 0 4px rgba(196, 81, 44, 0.11);
+}
+
+.expectation-field input.is-invalid {
+  border-color: rgba(143, 47, 27, 0.65);
+  box-shadow: 0 0 0 4px rgba(196, 81, 44, 0.13);
+}
+
+.state-suggestions {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 0.35rem);
+  z-index: 30;
+  display: none;
+  max-height: 15.5rem;
+  overflow: hidden;
+  padding: 0.35rem;
+  border: 1px solid rgba(23, 32, 42, 0.14);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 18px 34px rgba(40, 55, 70, 0.16);
+}
+
+.state-suggestions.is-open {
+  display: grid;
+  gap: 0.18rem;
+}
+
+.state-suggestion-item {
+  width: 100%;
+  padding: 0.72rem 0.85rem;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 750;
+  text-align: left;
+  cursor: pointer;
+}
+
+.state-suggestion-item:hover,
+.state-suggestion-item:focus-visible {
+  background: rgba(196, 81, 44, 0.10);
+  outline: none;
+}
+
+.intro-form-note {
+  min-height: 1.1rem;
+  margin: 0.72rem 0 0;
+  color: #7e878d;
+  font-size: 0.88rem;
+}
+
+.intro-locked-cue {
+  margin-top: 1.55rem;
+}
+
+body.intro-complete .intro-locked-cue {
+  color: #888;
+}
+
+.expectation-result {
+  min-height: 100vh;
+  max-width: 1380px;
+  margin: 0 auto;
+  padding: clamp(2rem, 5vh, 4rem) 4vw;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.expectation-result[hidden] {
+  display: none;
+}
+
+.expectation-result-card {
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(360px, 1.08fr) minmax(380px, 0.92fr);
+  gap: 1.2rem;
+  align-items: stretch;
+  padding: clamp(1.6rem, 3vw, 2.4rem);
+  border: 1px solid rgba(143, 47, 27, 0.16);
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 18px 46px rgba(40, 55, 70, 0.11);
+}
+
+.expectation-result-copy {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: min(54vh, 520px);
+}
+
+.expectation-result-copy h2 {
+  max-width: 780px;
+  margin: 0;
+  color: var(--text);
+  font-size: clamp(2rem, 3.2vw, 3.2rem);
+  line-height: 1.03;
+  letter-spacing: -0.058em;
+}
+
+.expectation-result-copy p:not(.eyebrow) {
+  max-width: 760px;
+  margin: 1rem 0 0;
+  color: var(--muted);
+  font-size: 1.02rem;
+  line-height: 1.62;
+}
+
+.expectation-result-values {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.expectation-value-card {
+  display: grid;
+  align-content: center;
+  min-height: 96px;
+  padding: 0.85rem;
+  border: 1px solid rgba(23, 32, 42, 0.10);
+  border-radius: 20px;
+  background: rgba(247, 249, 249, 0.86);
+}
+
+.expectation-value-card.is-closest {
+  border-color: rgba(196, 81, 44, 0.35);
+  background: rgba(255, 243, 223, 0.95);
+  box-shadow: inset 0 0 0 1px rgba(196, 81, 44, 0.08);
+}
+
+.expectation-value-card span {
+  color: var(--muted);
+  font-size: 0.7rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.expectation-value-card strong {
+  margin-top: 0.22rem;
+  color: var(--text);
+  font-size: clamp(1.35rem, 2vw, 2rem);
+  letter-spacing: -0.04em;
+}
+
+.expectation-value-card small {
+  margin-top: 0.2rem;
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.25;
+}
+
+@media (max-width: 860px) {
+  .expectation-form,
+  .expectation-result-card,
+  .expectation-result-values {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-section {
+    min-height: auto;
+    padding-top: 4.5rem;
+    padding-bottom: 3rem;
+  }
+}
