@@ -64,7 +64,7 @@ const stepSettings = [
     year: 2100,
     scenario: "ssp585",
     metric: "summer_hot_days_35c_change_from_observed_2020",
-    title: "But average warming becomes days on a calendar",
+    title: "But average warming shows up as days on a calendar",
     subtitle:
       "The macro trend shows that average temperature rises across the U.S. But average °C is only the first layer: heat is felt as the number of days that cross an extreme threshold.",
     note:
@@ -119,7 +119,7 @@ const stepSettings = [
     year: 2100,
     scenario: "ssp585",
     metric: "summer_hot_days_35c_change_from_observed_2020",
-    title: "The darkest states are not random outliers",
+    title: "The darkest red states are not random outliers",
     subtitle:
       "Scroll one step further and the map highlights the states with the largest added summer 35°C+ days. Possible reasons include starting closer to the 35°C threshold, hotter summer baselines, and regional warming that pushes more days across the line.",
     note:
@@ -379,13 +379,23 @@ function setupStateChangeContinue() {
   });
 }
 
-function setupIntroExpectation() {
-  knownStateNames = Array.from(
-    new Set([
-      ...allMonthlyData.map((d) => normalizeStateName(d.state)),
-      ...stateData.map((d) => normalizeStateName(d.state)),
-    ].filter(Boolean))
+function getIntroEligibleStateNames() {
+  const candidates = Array.from(
+    new Set(
+      stateData
+        .map((d) => normalizeStateName(d.state))
+        .filter(Boolean)
+    )
   ).sort(d3.ascending);
+
+  return candidates.filter((stateName) => {
+    const projections = getStateAlignedEndCenturyProjections(stateName);
+    return projections && projections.length > 0;
+  });
+}
+
+function setupIntroExpectation() {
+  knownStateNames = getIntroEligibleStateNames();
 
   if (hometownStateInput.empty() || expectationTempInput.empty()) return;
 
@@ -432,10 +442,11 @@ function setupIntroExpectation() {
 
 function renderStateSuggestions(query) {
   if (stateSuggestions.empty()) return;
+
   const cleaned = normalizeStateName(query || "").toLowerCase();
+
   const matches = knownStateNames
-    .filter((name) => !cleaned || name.toLowerCase().includes(cleaned))
-    .slice(0, 5);
+    .filter((stateName) => stateName.toLowerCase().includes(cleaned));
 
   stateSuggestions
     .classed("is-open", Boolean(matches.length) && !introCompleted)
@@ -470,18 +481,39 @@ function trySubmitIntroExpectation() {
 }
 
 function setupScrollGate() {
+  const isInsideStateSuggestions = (target) => {
+    const suggestionsNode = document.querySelector("#state-suggestions");
+    return (
+      suggestionsNode &&
+      suggestionsNode.classList.contains("is-open") &&
+      suggestionsNode.contains(target)
+    );
+  };
+
   const blockScroll = (event) => {
     if (introCompleted) return;
+
+    if (isInsideStateSuggestions(event.target)) {
+      return;
+    }
+
     const heroBottom = document.querySelector("#hero")?.getBoundingClientRect().bottom ?? 0;
     if (heroBottom <= 6) return;
+
     event.preventDefault();
     window.scrollTo({ top: 0, behavior: "auto" });
   };
 
   window.addEventListener("wheel", blockScroll, { passive: false });
   window.addEventListener("touchmove", blockScroll, { passive: false });
+
   window.addEventListener("keydown", (event) => {
     if (introCompleted) return;
+
+    if (isInsideStateSuggestions(event.target)) {
+      return;
+    }
+
     const keys = ["ArrowDown", "PageDown", " ", "Spacebar", "End"];
     if (keys.includes(event.key)) {
       event.preventDefault();
@@ -624,7 +656,10 @@ function renderExpectationResult(result) {
   const scenarioPhrase = closest.label.toLowerCase();
   const diffAbs = Math.abs(closest.diff);
   const direction = closest.diff > 0 ? "higher than" : "lower than";
-  const diffText = diffAbs < 0.05 ? "almost exactly the same as" : `${d3.format(".1f")(diffAbs)}°C ${direction}`;
+  const diffText =
+    diffAbs < 0.05
+      ? "almost exactly the same as"
+      : `${d3.format(".1f")(diffAbs)}°C ${direction}`;
 
   let titleText;
   if (status === "correct") {
@@ -639,11 +674,14 @@ function renderExpectationResult(result) {
 
   let emissionContext;
   if (closest.scenario === "ssp585") {
-    emissionContext = "This value is projected under the high-emissions pathway, a more extreme future with continued warming pressure.";
+    emissionContext =
+      "This value is projected under the high-emissions pathway, a more extreme future with continued warming pressure.";
   } else if (closest.scenario === "ssp126") {
-    emissionContext = "This value is projected under the low-emissions pathway, a more optimistic mitigation future.";
+    emissionContext =
+      "This value is projected under the low-emissions pathway, a more optimistic mitigation future.";
   } else {
-    emissionContext = "This value is projected under the medium-emissions pathway, a moderated future between low and high emissions.";
+    emissionContext =
+      "This value is projected under the medium-emissions pathway, a moderated future between low and high emissions.";
   }
 
   let comparisonSentence;
@@ -657,33 +695,131 @@ function renderExpectationResult(result) {
   expectationResultTitle.text(titleText);
   expectationResultText.text(`${comparisonSentence} ${emissionContext}`);
 
-  const cards = [
-    {
-      key: "you",
-      label: "Your expectation",
-      value: expectation,
-      note: "Average annual temperature",
-      closest: false,
-    },
-    ...projections.map((d) => ({
-      key: d.scenario,
-      label: d.label,
-      value: d.value,
-      note: d.scenario === closest.scenario ? "Closest projection" : "Baseline-aligned projection",
-      closest: d.scenario === closest.scenario,
-    })),
-  ];
+  const formatTemp = (v) => `${d3.format(".1f")(v)}°C`;
 
-  expectationResultValues
-    .selectAll("div.expectation-value-card")
-    .data(cards, (d) => d.key)
-    .join("div")
-    .attr("class", (d) => `expectation-value-card${d.closest ? " is-closest" : ""}`)
-    .html((d) => `
-      <span>${d.label}</span>
-      <strong>${d3.format(".1f")(d.value)}°C</strong>
-      <small>${d.note}</small>
-    `);
+  const projectionValues = projections.map((d) => d.value);
+  const allValues = [expectation, ...projectionValues];
+
+  const rawMin = d3.min(allValues);
+  const rawMax = d3.max(allValues);
+  const spread = Math.max(4, rawMax - rawMin);
+
+  const domainMin = Math.max(0, Math.floor((rawMin - spread * 0.18) / 2) * 2);
+  const domainMax = Math.ceil((rawMax + spread * 0.18) / 2) * 2;
+  const domainSpan = Math.max(1, domainMax - domainMin);
+
+  const clampPct = (v) => Math.max(0, Math.min(100, v));
+  const toPct = (v) => clampPct(((v - domainMin) / domainSpan) * 100);
+
+  const expectationPct = toPct(expectation);
+  const projectionMin = d3.min(projectionValues);
+  const projectionMax = d3.max(projectionValues);
+  const bandBottom = toPct(projectionMin);
+  const bandTop = toPct(projectionMax);
+  const bandHeight = Math.max(3, bandTop - bandBottom);
+
+  const gapText =
+    closest.diff >= 0
+      ? `+${d3.format(".1f")(closest.diff)}°C above`
+      : `${d3.format(".1f")(closest.diff)}°C below`;
+
+  const tickMarkup = projections
+    .map(
+      (d) => `
+      <div
+        class="thermometer-projection-tick tick-${d.scenario}${d.scenario === closest.scenario ? " is-closest" : ""}"
+        style="bottom: calc(${toPct(d.value)}% + 46px);"
+        aria-hidden="true"
+      ></div>
+    `
+    )
+    .join("");
+
+  const legendMarkup = projections
+    .map(
+      (d) => `
+      <div class="thermometer-legend-row${d.scenario === closest.scenario ? " is-closest" : ""}">
+        <span class="thermometer-swatch swatch-${d.scenario}"></span>
+        <div class="thermometer-legend-copy">
+          <strong>${d.label}</strong>
+          <small>
+            ${formatTemp(d.value)}
+            ${d.scenario === closest.scenario ? " · closest projection" : ""}
+          </small>
+        </div>
+      </div>
+    `
+    )
+    .join("");
+
+  expectationResultValues.html(`
+    <div class="thermometer-panel">
+      <div class="thermometer-panel-heading">Where does your expectation land?</div>
+
+      <div class="thermometer-wrap">
+        <div class="thermometer-figure">
+          <div class="thermometer-scale-label thermometer-scale-top">${formatTemp(domainMax)}</div>
+
+          <div class="thermometer-meter">
+            <div class="thermometer-track">
+              <div
+                class="thermometer-projection-band"
+                style="bottom: ${bandBottom}%; height: ${bandHeight}%;"
+                aria-hidden="true"
+              ></div>
+
+              <div
+                class="thermometer-liquid"
+                style="height: ${Math.max(expectationPct, 6)}%;"
+                aria-hidden="true"
+              ></div>
+            </div>
+
+            ${tickMarkup}
+
+            <div
+              class="thermometer-user-marker"
+              style="bottom: calc(${expectationPct}% + 46px);"
+            >
+              <span class="thermometer-user-line"></span>
+              <div class="thermometer-user-bubble">
+                <span>Your expectation</span>
+                <strong>${formatTemp(expectation)}</strong>
+              </div>
+            </div>
+
+            <div class="thermometer-bulb" aria-hidden="true"></div>
+          </div>
+
+          <div class="thermometer-scale-label thermometer-scale-bottom">${formatTemp(domainMin)}</div>
+        </div>
+
+        <div class="thermometer-side">
+          <div class="thermometer-you-card">
+            <span>Your expectation</span>
+            <strong>${formatTemp(expectation)}</strong>
+            <small>Compared against 2100 temperature projections</small>
+          </div>
+
+          <div class="thermometer-range-note">
+            Projection range:
+            <strong>${formatTemp(projectionMin)} – ${formatTemp(projectionMax)}</strong>
+          </div>
+
+          <div class="thermometer-legend">
+            ${legendMarkup}
+          </div>
+        </div>
+      </div>
+
+      <p class="thermometer-summary">
+        Closest projection:
+        <strong>${closest.label}</strong>
+        at <strong>${formatTemp(closest.value)}</strong>.
+        Your expectation is <strong>${gapText}</strong> that closest projection.
+      </p>
+    </div>
+  `);
 }
 
 
@@ -716,7 +852,7 @@ function renderStateChangeFollowup(result) {
   stateChangeResultSection.attr("hidden", null);
   stateChangeTitle.text(titleText);
   stateChangeText.text(bodyText);
-  stateChangeNote.text("High-emissions pathway · baseline-aligned 5-year rolling annual average · color shows °C change since 2020");
+  stateChangeNote.text("High-emissions pathway · baseline-aligned 5-year rolling annual average");
 
   const cards = selectedIsTop
     ? [{ role: "Your state + largest increase", kind: "selected top", ...selected }]
@@ -874,10 +1010,20 @@ function stateChangeSliderKeydown(event) {
 }
 
 function renderStateShapeCards(cards) {
-  const maxChange = d3.max(cards.flatMap((d) => d.series.map((row) => row.change))) || 1;
-  const color = d3.scaleSequential()
-    .domain([0, Math.max(0.1, maxChange)])
-    .interpolator(d3.interpolateOrRd);
+  const allChanges = cards.flatMap((d) =>
+    d.series
+      .map((row) => row.change)
+      .filter((value) => Number.isFinite(value))
+  );
+
+  const maxAbsChange = Math.max(
+    0.1,
+    d3.max(allChanges, (value) => Math.abs(value)) || 1
+  );
+
+  const color = d3.scaleDiverging()
+    .domain([-maxAbsChange, 0, maxAbsChange])
+    .interpolator((t) => d3.interpolateRdBu(1 - t));
 
   const cardsWrap = stateChangeBlocks
     .append("div")
@@ -891,6 +1037,7 @@ function renderStateShapeCards(cards) {
 
   card.html((d) => {
     const final = d.series.find((row) => row.year === END_YEAR) || d.series[d.series.length - 1];
+
     return `
       <div class="state-change-card-header">
         <div>
@@ -899,13 +1046,16 @@ function renderStateShapeCards(cards) {
         </div>
         <div class="state-change-year-pill" data-role="year">2020</div>
       </div>
+
       <div class="state-shape-stage">
         <svg class="state-shape-svg" viewBox="0 0 320 190" role="img" aria-label="${d.stateName} map shape"></svg>
       </div>
+
       <div class="state-change-value-row">
         <strong data-role="value">+0.0</strong>
         <small>°C since 2020</small>
       </div>
+
       <p class="state-change-state-note">By 2100: ${d3.format("+.1f")(final.change)}°C baseline-aligned change from 2020.</p>
     `;
   });
@@ -938,12 +1088,12 @@ function renderStateShapeCards(cards) {
       .attr("class", "state-shape-path")
       .attr("d", path)
       .attr("transform", `translate(${tx},${ty}) scale(${scale})`)
-      .attr("fill", "#f3f0ed")
+      .attr("fill", color(0))
       .attr("stroke", "rgba(23,32,42,0.28)")
       .attr("stroke-width", 1 / scale);
   });
 
-  stateChangeBlocks.datum({ color });
+  stateChangeBlocks.datum({ color, maxAbsChange });
 }
 
 function startStateChangeLoop(cards, years) {
@@ -1078,18 +1228,32 @@ function toggleStateChangePlayback() {
 
 function updateStateChangeMapCards(cards, year) {
   const meta = stateChangeBlocks.datum() || {};
-  const allMax = d3.max(cards.flatMap((d) => d.series.map((row) => row.change))) || 1;
-  const color = meta.color || d3.scaleSequential().domain([0, Math.max(0.1, allMax)]).interpolator(d3.interpolateOrRd);
+
+  const allChanges = cards.flatMap((d) =>
+    d.series
+      .map((row) => row.change)
+      .filter((value) => Number.isFinite(value))
+  );
+
+  const maxAbsChange = meta.maxAbsChange || Math.max(
+    0.1,
+    d3.max(allChanges, (value) => Math.abs(value)) || 1
+  );
+
+  const color = meta.color || d3.scaleDiverging()
+    .domain([-maxAbsChange, 0, maxAbsChange])
+    .interpolator((t) => d3.interpolateRdBu(1 - t));
 
   stateChangeBlocks
     .selectAll("div.state-change-state-card")
     .each(function(d) {
       const card = d3.select(this);
       const row = getNearestYearRow(d.series, year);
-      const change = Math.max(0, row.change || 0);
+      const change = Number.isFinite(row?.change) ? row.change : 0;
 
       card.select('[data-role="year"]').text(row.year);
       card.select('[data-role="value"]').text(d3.format("+.1f")(change));
+
       card.select("path.state-shape-path")
         .transition()
         .duration(260)
@@ -3541,16 +3705,18 @@ function renderThresholdExplanation() {
   const merged = new Map();
   candidatePanels.forEach((d) => {
     if (!d || !d.stateName) return;
+
     const key = normalizeStateName(d.stateName);
     const finalRow = getNearestYearRow(d.series, END_YEAR) || d.series?.[d.series.length - 1];
     const finalDays = Math.max(0, finalRow?.days ?? 0);
-    const existing = merged.get(key);
+
     const role = d.kind?.includes("top-hotday")
       ? "Most summer 35°C+ days added"
       : d.kind?.includes("top-temperature")
         ? "Fastest average-temperature increase"
         : "Your state";
 
+    const existing = merged.get(key);
     if (existing) {
       existing.roles.push(role);
       existing.label = existing.roles.join(" + ");
@@ -3572,6 +3738,35 @@ function renderThresholdExplanation() {
     mapNote.text("No state threshold comparison available.");
     return;
   }
+
+  const defs = svg.append("defs");
+
+  defs.append("marker")
+    .attr("id", "threshold-ladder-arrow-soft")
+    .attr("viewBox", "0 0 12 12")
+    .attr("refX", 10)
+    .attr("refY", 6)
+    .attr("markerWidth", 8)
+    .attr("markerHeight", 8)
+    .attr("orient", "auto")
+    .append("path")
+    .attr("d", "M 1 1 L 11 6 L 1 11 Z")
+    .attr("fill", "#c4512c");
+
+  const glow = defs.append("filter")
+    .attr("id", "threshold-soft-glow")
+    .attr("x", "-40%")
+    .attr("y", "-40%")
+    .attr("width", "180%")
+    .attr("height", "180%");
+
+  glow.append("feGaussianBlur")
+    .attr("stdDeviation", 3)
+    .attr("result", "coloredBlur");
+
+  const merge = glow.append("feMerge");
+  merge.append("feMergeNode").attr("in", "coloredBlur");
+  merge.append("feMergeNode").attr("in", "SourceGraphic");
 
   const g = svg.append("g")
     .attr("class", "threshold-explanation-viz immersive-threshold-ladder");
@@ -3602,57 +3797,73 @@ function renderThresholdExplanation() {
   intro.append("tspan")
     .attr("x", 54)
     .text("Starting heat + warming shift determines how many days cross the fixed 35°C line.");
+
   intro.append("tspan")
     .attr("x", 54)
     .attr("dy", 17)
-    .text("This explains why Plot 03’s fastest-warming state may differ from the state adding the most summer 35°C+ days.");
+    .text("This explains why the fastest-warming state may differ from the state adding the most 35°C+ days.");
 
   const panelCount = panels.length;
   const panelW = panelCount === 1 ? 330 : panelCount === 2 ? 280 : 220;
-  const gap = panelCount === 1 ? 0 : panelCount === 2 ? 86 : 56;
+  const gap = panelCount === 1 ? 0 : panelCount === 2 ? 86 : 58;
   const startX = (width - panelCount * panelW - (panelCount - 1) * gap) / 2;
-  const topY = 225;
-  const ladderH = 205;
-  const thresholdY = topY + 70;
-  const baseYMax = topY + ladderH - 34;
-  const baseYMin = thresholdY + 22;
 
-  // A conceptual scale: more added days means the state is drawn closer to the 35°C threshold.
+  const topY = 225;
+  const ladderH = 210;
+  const thresholdY = topY + 68;
+  const baseYMax = topY + ladderH - 32;
+  const baseYMin = thresholdY + 32;
+
   const closeness = d3.scaleLinear()
     .domain([0, maxValue])
     .range([baseYMax, baseYMin])
     .clamp(true);
+
   const pushLen = d3.scaleLinear()
     .domain([0, maxValue])
-    .range([42, 128])
+    .range([46, 124])
     .clamp(true);
+
   const color = d3.scaleSequential()
     .domain([0, maxValue])
     .interpolator(d3.interpolateOrRd);
 
+  const thresholdLineStart = startX - 22;
+  const thresholdLineEnd = startX + panelCount * panelW + (panelCount - 1) * gap + 22;
+
   g.append("line")
-    .attr("x1", startX - 18)
-    .attr("x2", startX + panelCount * panelW + (panelCount - 1) * gap + 18)
+    .attr("x1", thresholdLineStart)
+    .attr("x2", thresholdLineEnd)
     .attr("y1", thresholdY)
     .attr("y2", thresholdY)
     .attr("stroke", "#8f2f1b")
-    .attr("stroke-width", 1.8)
-    .attr("stroke-dasharray", "6 6")
-    .attr("opacity", 0.82);
+    .attr("stroke-width", 1.35)
+    .attr("stroke-dasharray", "5 8")
+    .attr("stroke-linecap", "round")
+    .attr("opacity", 0.7);
 
   g.append("text")
-    .attr("x", startX + panelCount * panelW + (panelCount - 1) * gap + 18)
-    .attr("y", thresholdY - 10)
+    .attr("x", thresholdLineEnd)
+    .attr("y", thresholdY - 11)
     .attr("text-anchor", "end")
     .attr("fill", "#8f2f1b")
-    .attr("font-size", 11.5)
+    .attr("font-size", 11)
     .attr("font-weight", 900)
+    .attr("letter-spacing", "0.03em")
     .text("35°C threshold");
 
   const panel = g.selectAll("g.threshold-ladder-panel")
     .data(panels)
     .join("g")
-    .attr("class", (d) => `threshold-ladder-panel ${d.kind?.includes("top-hotday") ? "is-hotday-top" : d.kind?.includes("top-temperature") ? "is-temp-top" : "is-selected"}`)
+    .attr("class", (d) =>
+      `threshold-ladder-panel ${
+        d.kind?.includes("top-hotday")
+          ? "is-hotday-top"
+          : d.kind?.includes("top-temperature")
+            ? "is-temp-top"
+            : "is-selected"
+      }`
+    )
     .attr("transform", (d, i) => `translate(${startX + i * (panelW + gap)},0)`)
     .attr("opacity", 0);
 
@@ -3660,8 +3871,7 @@ function renderThresholdExplanation() {
     const group = d3.select(this);
     const cx = panelW / 2;
     const baseY = closeness(d.finalDays);
-    const futureY = Math.min(baseY - pushLen(d.finalDays), thresholdY - 28);
-    const stateColor = color(d.finalDays);
+    const futureY = Math.min(baseY - pushLen(d.finalDays), thresholdY - 24);
 
     group.append("text")
       .attr("x", cx)
@@ -3678,7 +3888,7 @@ function renderThresholdExplanation() {
         .attr("y", topY - 82)
         .attr("text-anchor", "middle")
         .attr("fill", d.kind?.includes("top-hotday") ? "#8f2f1b" : "#5f6b73")
-        .attr("font-size", 10.5)
+        .attr("font-size", 10.2)
         .attr("font-weight", 850)
         .attr("letter-spacing", "0.04em"),
       d.label.toUpperCase(),
@@ -3686,67 +3896,93 @@ function renderThresholdExplanation() {
       12
     );
 
-    // subtle vertical guide
-    group.append("line")
-      .attr("x1", cx)
-      .attr("x2", cx)
-      .attr("y1", thresholdY - 18)
-      .attr("y2", baseYMax + 20)
-      .attr("stroke", "rgba(23,32,42,0.12)")
-      .attr("stroke-width", 2)
-      .attr("stroke-linecap", "round");
+    const arrowColor = "#c4512c";
+    const dotR = 5.6;
+    const arrowStartY = baseY - 8;
+    const arrowEndY = futureY + 14;
 
+    // Starting heat dot.
     group.append("circle")
       .attr("cx", cx)
       .attr("cy", baseY)
-      .attr("r", 9)
-      .attr("fill", "#7a858d")
-      .attr("stroke", "rgba(255,255,255,0.8)")
-      .attr("stroke-width", 2);
+      .attr("r", dotR)
+      .attr("fill", "#7f8a91")
+      .attr("stroke", "rgba(255,255,255,0.95)")
+      .attr("stroke-width", 1.8);
 
-    const arrow = group.append("line")
+    // Warming push arrow, aligned with the two dots.
+    group.append("line")
       .attr("x1", cx)
       .attr("x2", cx)
-      .attr("y1", baseY - 15)
-      .attr("y2", baseY - 15)
-      .attr("stroke", stateColor)
-      .attr("stroke-width", 8)
+      .attr("y1", arrowStartY)
+      .attr("y2", arrowStartY)
+      .attr("stroke", arrowColor)
+      .attr("stroke-width", 3.1)
       .attr("stroke-linecap", "round")
-      .attr("marker-end", "url(#threshold-ladder-arrow)");
-
-    arrow.transition()
-      .delay(280)
-      .duration(780)
+      .attr("filter", "url(#threshold-soft-glow)")
+      .transition()
+      .delay(260)
+      .duration(760)
       .ease(d3.easeCubicOut)
-      .attr("y2", futureY);
+      .attr("y2", arrowEndY);
 
+    group.append("path")
+      .attr("d", "M -5 5 L 0 -5 L 5 5 Z")
+      .attr("transform", `translate(${cx},${futureY + 9})`)
+      .attr("fill", arrowColor)
+      .attr("filter", "url(#threshold-soft-glow)")
+      .attr("opacity", 0)
+      .transition()
+      .delay(760)
+      .duration(220)
+      .attr("opacity", 1);
+
+    // Future heat dot.
     group.append("circle")
       .attr("cx", cx)
       .attr("cy", futureY)
-      .attr("r", 11)
-      .attr("fill", stateColor)
-      .attr("stroke", "rgba(255,255,255,0.86)")
-      .attr("stroke-width", 2.2)
+      .attr("r", dotR + 0.5)
+      .attr("fill", arrowColor)
+      .attr("stroke", "rgba(255,255,255,0.95)")
+      .attr("stroke-width", 1.9)
       .attr("opacity", 0)
       .transition()
-      .delay(720)
+      .delay(690)
       .duration(360)
       .attr("opacity", 1);
 
-    const aboveH = Math.max(0, thresholdY - futureY);
-    group.append("rect")
-      .attr("x", cx + 23)
-      .attr("y", thresholdY)
-      .attr("width", 17)
-      .attr("height", 0)
-      .attr("rx", 8)
-      .attr("fill", stateColor)
-      .attr("opacity", 0.28)
-      .transition()
-      .delay(640)
-      .duration(620)
-      .attr("y", thresholdY - aboveH)
-      .attr("height", aboveH);
+    // Only show the part above the 35°C threshold.
+    const crossingX = cx + 34;
+    const crossingWidth = 10;
+    const crossingHeight = Math.max(0, thresholdY - futureY);
+
+    if (crossingHeight > 0) {
+      group.append("rect")
+        .attr("x", crossingX - crossingWidth / 2)
+        .attr("y", thresholdY)
+        .attr("width", crossingWidth)
+        .attr("height", 0)
+        .attr("rx", 5)
+        .attr("fill", "#b33a2b")
+        .attr("opacity", 0.86)
+        .attr("filter", "url(#threshold-soft-glow)")
+        .transition()
+        .delay(640)
+        .duration(620)
+        .ease(d3.easeCubicOut)
+        .attr("y", futureY)
+        .attr("height", crossingHeight);
+    }
+
+    // Small threshold tick near the crossing bar.
+    group.append("line")
+      .attr("x1", crossingX - 11)
+      .attr("x2", crossingX + 11)
+      .attr("y1", thresholdY)
+      .attr("y2", thresholdY)
+      .attr("stroke", "#8f2f1b")
+      .attr("stroke-width", 1.15)
+      .attr("opacity", 0.72);
 
     group.append("text")
       .attr("x", cx)
@@ -3762,23 +3998,10 @@ function renderThresholdExplanation() {
       .attr("y", baseYMax + 61)
       .attr("text-anchor", "middle")
       .attr("fill", "#5f6b73")
-      .attr("font-size", 11.5)
+      .attr("font-size", 11.2)
       .attr("font-weight", 750)
       .text("5-year avg. added summer 35°C+ days");
   });
-
-  const defs = svg.append("defs");
-  defs.append("marker")
-    .attr("id", "threshold-ladder-arrow")
-    .attr("viewBox", "0 0 10 10")
-    .attr("refX", 8)
-    .attr("refY", 5)
-    .attr("markerWidth", 6)
-    .attr("markerHeight", 6)
-    .attr("orient", "auto")
-    .append("path")
-    .attr("d", "M 0 0 L 10 5 L 0 10 z")
-    .attr("fill", "#8f2f1b");
 
   panel.transition()
     .delay((d, i) => 130 + i * 180)
@@ -3802,7 +4025,7 @@ function renderThresholdExplanation() {
   legendContainer
     .append("div")
     .attr("class", "legend-caption")
-    .text("Conceptual ladder: grey dot = starting heat, arrow = warming push, red fill = crossing 35°C. Values use baseline-aligned summer 35°C+ day changes.");
+    .text("Conceptual ladder: grey dot = starting heat, arrow = warming push, red segment = days crossing 35°C. Values use baseline-aligned summer 35°C+ day changes.");
 }
 
 function wrapSvgText(textSelection, text, maxWidth, lineHeight = 14) {
@@ -4051,6 +4274,46 @@ function renderCompareLineChart() {
 }
 
 // step8impact
+
+function renderImpactSourceCards() {
+  const step = document.querySelector('.step[data-step="7"]');
+  if (!step || step.classList.contains('step--impact-sources-ready')) return;
+
+  step.classList.add('step--impact-sources', 'step--impact-sources-ready');
+  step.innerHTML = `
+    <p class="step-number">08 · Impact</p>
+    <h2>Sources behind these impacts</h2>
+    <p class="impact-source-intro">Click a source card to open the study or report behind each daily-life example.</p>
+    <div class="impact-source-links" aria-label="Impact source links">
+      <a class="impact-source-card source-oneearth" href="https://www.cell.com/one-earth/fulltext/S2590-3322%2822%2900209-3" target="_blank" rel="noopener noreferrer">
+        <span>01 · Sleep</span>
+        <strong>Heat and sleep</strong>
+        <small>One Earth · Minor et al. (2022)</small>
+      </a>
+      <a class="impact-source-card source-aea" href="https://www.aeaweb.org/articles?id=10.1257%2Fpol.20180612" target="_blank" rel="noopener noreferrer">
+        <span>02 · Learning</span>
+        <strong>Heat and learning</strong>
+        <small>American Economic Association · Park et al. (2020)</small>
+      </a>
+      <a class="impact-source-card source-eia" href="https://www.eia.gov/todayinenergy/detail.php?id=62303" target="_blank" rel="noopener noreferrer">
+        <span>03 · Cooling cost</span>
+        <strong>Heat and cooling cost</strong>
+        <small>U.S. Energy Information Administration</small>
+      </a>
+      <a class="impact-source-card source-ucsd" href="https://today.ucsd.edu/story/weathering-change-fewer-cold-fatalities-more-heat-emergencies-in-california" target="_blank" rel="noopener noreferrer">
+        <span>04 · Health</span>
+        <strong>Heat and health emergencies</strong>
+        <small>UC San Diego Today</small>
+      </a>
+      <a class="impact-source-card source-who" href="https://www.who.int/news-room/fact-sheets/detail/climate-change-heat-and-health" target="_blank" rel="noopener noreferrer">
+        <span>Extra context</span>
+        <strong>Climate change, heat and health</strong>
+        <small>World Health Organization</small>
+      </a>
+    </div>
+  `;
+}
+
 function renderImpactPlaceholder() {
   hideMapYearOverlay();
 
@@ -4066,8 +4329,9 @@ function renderImpactPlaceholder() {
   svg.selectAll("*").remove();
   legendContainer.html("");
 
-  title.text("What changes when summer 35°C+ days add up?");
-  subtitle.text("Four daily-life impacts of the extra heat days projected for California by 2050.");
+  title.text("What changes during the extreme hot days?");
+  subtitle.text("Four daily-life impacts of extreme hot days.");
+  renderImpactSourceCards();
 
   svg.style("display", "none");
 
@@ -4075,21 +4339,25 @@ function renderImpactPlaceholder() {
   chartWrap.selectAll(".impact-fill").remove();
 
   const container = chartWrap.append("div")
-    .attr("class", "impact-fill")
+    .attr("class", "impact-fill impact-fill--clean")
     .style("opacity", 0);
 
   container.html(`
-    <div class="impact-viz-content">
-      <div class="impact-viz-rows">
+    <div class="impact-clean-content">
+      <div class="impact-viz-rows impact-clean-rows">
         <div class="impact-viz-row">
           <div class="ivr-num">01</div>
           <div class="ivr-body">
             <div class="ivr-head">
               <span class="ivr-label">SLEEP</span>
-              <span class="ivr-stat">&minus;11 <span class="ivr-unit">hrs / yr</span></span>
+              <span class="ivr-stat">&minus;14.08 <span class="ivr-unit">mins / warm night</span></span>
             </div>
-            <p class="ivr-desc">Warm nights shorten sleep. By 2099 the gap could double &mdash; the West Coast hit roughly twice as hard as inland.</p>
-            <p class="ivr-cite">Minor et al. (2022), <i>One Earth</i></p>
+            <p class="ivr-desc">
+              On very warm nights above 30&deg;C, sleep declines by about 14 minutes.
+              More frequent hot nights can make people fall asleep later and wake up earlier,
+              compressing the sleep period and reducing sleep quality.
+            </p>
+            <p class="ivr-cite">Minor et al. (2022), <i>Rising temperatures erode human sleep globally</i></p>
           </div>
         </div>
 
@@ -4098,10 +4366,14 @@ function renderImpactPlaceholder() {
           <div class="ivr-body">
             <div class="ivr-head">
               <span class="ivr-label">LEARNING</span>
-              <span class="ivr-stat">&minus;5% <span class="ivr-unit">of a school year</span></span>
+              <span class="ivr-stat">&minus;1% <span class="ivr-unit">/ +0.56&deg;C</span></span>
             </div>
-            <p class="ivr-desc">Days above 90&deg;F lower PSAT scores. Without AC the loss is ~30% larger, and 3&times; larger for Black and Hispanic students.</p>
-            <p class="ivr-cite">Park, Goodman et al. (2020), <i>AEJ</i></p>
+            <p class="ivr-desc">
+              Without air conditioning, a 0.56&deg;C hotter school year reduces that year's
+              learning by about 1%. Hot school days also disproportionately affect minority
+              students, accounting for roughly 5% of the racial achievement gap.
+            </p>
+            <p class="ivr-cite">Park et al. (2020), <i>Heat and learning</i></p>
           </div>
         </div>
 
@@ -4110,10 +4382,13 @@ function renderImpactPlaceholder() {
           <div class="ivr-body">
             <div class="ivr-head">
               <span class="ivr-label">COOLING COST</span>
-              <span class="ivr-stat">+$200 <span class="ivr-unit">/ summer</span></span>
+              <span class="ivr-stat">+3% <span class="ivr-unit">/ household</span></span>
             </div>
-            <p class="ivr-desc">AC alone can add $72&ndash;$108 a month per household &mdash; and 1 in 5 low-income U.S. households have no AC at all.</p>
-            <p class="ivr-cite">U.S. EIA (2024)</p>
+            <p class="ivr-desc">
+              EIA's 2024 forecast expected a 5% rise in cooling degree days to increase
+              average U.S. household summer electricity use by about 3%.
+            </p>
+            <p class="ivr-cite">U.S. EIA (2024), <i>Typical residential electricity bills</i></p>
           </div>
         </div>
 
@@ -4121,32 +4396,36 @@ function renderImpactPlaceholder() {
           <div class="ivr-num">04</div>
           <div class="ivr-body">
             <div class="ivr-head">
-              <span class="ivr-label">ER VISITS</span>
-              <span class="ivr-stat">+35k <span class="ivr-unit">/ summer statewide</span></span>
+              <span class="ivr-label">EMERGENCY ROOM VISITS</span>
+              <span class="ivr-stat">+1.5M <span class="ivr-unit">by 2050</span></span>
             </div>
-            <p class="ivr-desc">Summer 35°C+ days drive cardiovascular, respiratory, and mental-health ER visits &mdash; costing roughly $1B per summer nationally.</p>
-            <p class="ivr-cite">Stanford / UCSD (2025)</p>
+            <p class="ivr-desc">
+              Hotter temperatures can increase emergency department visits for injuries,
+              mental health issues, poisonings, and other heat-sensitive conditions,
+              adding pressure to the healthcare system.
+            </p>
+            <p class="ivr-cite">Stanford / UCSD (2025), <i>Weathering change</i>; WHO, <i>Heat and health</i></p>
           </div>
         </div>
       </div>
 
-      <div class="impact-viz-equity">
-        <span class="ive-tag">BUT NOT EVERYONE FEELS IT EQUALLY</span>
-        <p>Low-income students lose <em>3&times;</em> more learning. Outdoor workers lose <em>14%</em> of their labor capacity above 90&deg;F. <em>1 in 5</em> households can't afford to turn on AC.</p>
+      <div class="impact-equity-callout">
+        <div class="impact-equity-title">BUT NOT EVERYONE FEELS IT EQUALLY</div>
+        <p class="impact-equity-body">
+          Heat does not affect everyone equally. Students in under-resourced schools, outdoor workers,
+          older adults, and households without reliable cooling face greater risks as hot days become more common.
+        </p>
       </div>
     </div>
   `);
 
   container.transition()
-    .duration(500)
+    .duration(420)
     .style("opacity", 1);
 
-  legendContainer
-    .append("div")
-    .attr("class", "legend-caption")
-    .text("The impact of high emissions by 2100 on people's lives");
+  legendContainer.html("");
+  mapNote.text("");
 }
-// step8impact
 
 function addCenteredRollingAverage(rows, valueKey = "value", windowSize = 5) {
   const halfWindow = Math.floor(windowSize / 2);
@@ -4691,12 +4970,11 @@ function getColorScale(metric, values) {
   }
 
   if (metric === "summer_hot_days_35c_change_from_observed_2020") {
-    return d3.scaleSequential()
-      .domain([0, 25])
-      .interpolator(d3.interpolateYlOrRd)
+    return d3.scaleLinear()
+      .domain([0, 12.5, 25])
+      .range(["#fffaf2", "#f9b36c", "#990026"])
       .clamp(true);
   }
-
 
   const maxValue = d3.max(values) || 1;
 
@@ -4732,12 +5010,24 @@ function drawLegend(color, metric) {
   const start = domain[0];
   const end = domain[domain.length - 1];
 
-  d3.range(0, 1.01, 0.1).forEach((d) => {
-    const value = start + d * (end - start);
-    gradient.append("stop")
-      .attr("offset", `${d * 100}%`)
-      .attr("stop-color", color(value));
-  });
+  if (metric === "summer_hot_days_35c_change_from_observed_2020") {
+    [
+      { offset: "0%", color: "#fffaf2" },
+      { offset: "50%", color: "#f9b36c" },
+      { offset: "100%", color: "#990026" },
+    ].forEach((stop) => {
+      gradient.append("stop")
+        .attr("offset", stop.offset)
+        .attr("stop-color", stop.color);
+    });
+  } else {
+    d3.range(0, 1.01, 0.1).forEach((d) => {
+      const value = start + d * (end - start);
+      gradient.append("stop")
+        .attr("offset", `${d * 100}%`)
+        .attr("stop-color", color(value));
+    });
+  }
 
   legend.append("rect")
     .attr("x", 8)
