@@ -250,7 +250,7 @@
     </div>
   </section>
 
-  <section id="main-story" class="scrolly" aria-label="Average warming to summer 35°C+ days story">
+  <section id="main-story" class="scrolly" aria-label="Average warming to summer very hot days story">
     <div class="graphic">
       <div class="sticky-viz" id="main-viz-card">
         <div class="viz-header">
@@ -258,7 +258,7 @@
             <p class="eyebrow">Big picture</p>
             <h2 id="chart-title">Start with the average</h2>
             <p id="chart-subtitle">
-              Observed temperature anchors the 2020 baseline, then CMIP6 scenarios show delta change through 2100.
+              Observed temperature anchors the 2020 baseline, then CMIP6 scenarios show how conditions change through 2100.
             </p>
           </div>
 
@@ -280,9 +280,17 @@
             <label>
               Metric
               <select id="metric-select">
-                <option value="summer_tas_c_change_from_observed_2020">Average warming delta</option>
-                <option value="summer_hot_days_35c_change_from_observed_2020">Additional 35&deg;C+ days delta</option>
+                <option value="summer_tas_c_change_from_observed_2020">Avg warming change</option>
+                <option value="summer_hot_days_35c_change_from_observed_2020">Extra very hot days</option>
               </select>
+            </label>
+
+            <label class="bubble-toggle-label">
+              Exposure bubbles
+              <span class="bubble-toggle-control">
+                <input id="bubble-toggle" type="checkbox" />
+                <span>Show bubbles</span>
+              </span>
             </label>
           </div>
         </div>
@@ -322,23 +330,23 @@
         <p class="step-number">02 · But</p>
         <h2>Averages hide threshold-crossing days.</h2>
         <p>
-          People do not experience a yearly average directly. Heat is felt when daily maximum temperatures cross dangerous thresholds, so we translate warming into additional summer days above 35°C.
+          People do not experience a yearly average directly. Heat is felt when daily maximum temperatures cross dangerous thresholds, so we translate warming into extra very hot summer days.
         </p>
       </article>
 
       <article class="step" data-step="2">
         <p class="step-number">03 · But</p>
-        <h2>Extra 35°C+ days do not land evenly across states.</h2>
+        <h2>Extra very hot days do not land evenly across states.</h2>
         <p>
-          Under high emissions, compare your hometown state with the state projected to gain the most baseline-aligned 5-year average summer 35°C+ days by 2100.
+          Under high emissions, compare your hometown state with the state projected to gain the most baseline-aligned 5-year average summer very hot days by 2100.
         </p>
       </article>
 
       <article class="step" data-step="3">
         <p class="step-number">04 · Therefore</p>
-        <h2>Track baseline-aligned additional summer 35°C+ days.</h2>
+        <h2>Track baseline-aligned additional summer very hot days.</h2>
         <p>
-          A fixed 35°C threshold turns small shifts in daily maximum temperature into more threshold-crossing days. That is why we track additional summer 35°C+ days directly after aligning CMIP6 futures to the observed 2020 baseline.
+          A fixed 35°C threshold turns small shifts in daily maximum temperature into more threshold-crossing days. That is why we track additional summer very hot days directly after aligning CMIP6 futures to the observed 2020 baseline.
         </p>
       </article>
 
@@ -354,7 +362,7 @@
         <p class="step-number">06 · Therefore</p>
         <h2>Carry your selected state into exposure.</h2>
         <p>
-          For your selected state, exposure-days are built from added 35°C+ days and projected population. The view compares your state with the highest-exposure benchmark; if your state is already the highest, it stands alone as the benchmark.
+          For your selected state, exposure-days are built from added very hot days and projected population. The view compares your state with the highest-exposure benchmark; if your state is already the highest, it stands alone as the benchmark.
         </p>
       </article>
 
@@ -367,10 +375,10 @@
       </article>
 
       <article class="step" data-step="7">
-        <p class="step-number">08 · Context</p>
-        <h2>Some groups and systems may face different pressure.</h2>
+        <p class="step-number">08 · Impact</p>
+        <h2>Common knowledge on the left, sourced impacts on the right.</h2>
         <p>
-          Older adults, cooling demand, humidity, hot-dry risk, and crops help interpret why extra 35°C+ days matter. These are proxies and context, not direct predictions of health outcomes, electricity bills, drought severity, or crop yield.
+          Orange cards show common-knowledge context and proxy layers; blue cards show source-backed daily-life examples.
         </p>
       </article>
 
@@ -389,7 +397,7 @@
       <p class="eyebrow">Daily life detail</p>
       <h2>Now look at your state.</h2>
       <p>
-        Choose a state to compare average warming with summer 35°C+ days, then see when those summer 35°C+ days fall during the year.
+        Choose a state to compare warming with summer very hot days, then see which months gain the most very hot days.
       </p>
     </div>
 
@@ -418,7 +426,7 @@
             <strong id="snapshot-year">—</strong>
           </div>
           <div>
-            <span>Current delta metric</span>
+            <span>Current metric</span>
             <strong id="snapshot-metric">—</strong>
           </div>
         </div>
@@ -428,14 +436,14 @@
         <p class="eyebrow">Selected state</p>
         <h3 id="selected-state-title">Choose a state.</h3>
         <p id="selected-state-summary">
-          The card will translate average warming and summer 35°C+ days into a daily-life statement.
+          The card will translate average warming and summer very hot days into a daily-life statement.
         </p>
         <div class="stat-row">
-          <span>Average warming delta</span>
+          <span>Avg warming change</span>
           <strong id="selected-state-warming">[ +X &deg;C ]</strong>
         </div>
         <div class="stat-row">
-          <span>Additional 35&deg;C+ days delta</span>
+          <span>Extra very hot days</span>
           <strong id="selected-state-hotdays">[ +Y days ]</strong>
         </div>
         <div class="stat-row">
@@ -448,9 +456,9 @@
     <div class="monthly-panel">
       <div>
         <p class="eyebrow">Next layer</p>
-        <h3>Where do those summer 35°C+ days fall during the year?</h3>
+        <h3>Where do those summer very hot days fall during the year?</h3>
         <p>
-          Extreme-heat changes are not spread evenly across the year. The monthly view shows which months carry the largest 35°C+ day deltas.
+          Extreme-heat changes are not spread evenly across the year. The monthly view shows which months carry the biggest increases in very hot days.
         </p>
       </div>
 
@@ -462,7 +470,7 @@
 
   <section id="closing" class="closing">
     <p class="eyebrow">Takeaway</p>
-    <h2>Average warming delta describes the climate shift. Summer 35°C+ day delta describes the days people live through.</h2>
+    <h2>Avg warming change describes the climate shift. Summer 35°C+ day delta describes the days people live through.</h2>
     <p>
       A small average-temperature delta can still mean many more days above an extreme heat threshold. That is where climate change becomes daily risk.
     </p>
