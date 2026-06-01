@@ -3027,3 +3027,2953 @@ input[type="range"] {
     margin-right: 0 !important;
   }
 }
+
+
+
+
+/* Hero factory-smoke background — toned down so it does not cover the title */
+.hero-section {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background:
+    linear-gradient(180deg, #fff8f0 0%, #f6e3d1 58%, #e9c7a3 100%);
+}
+
+.hero-emissions-bg {
+  position: absolute;
+  top: -2.5rem;
+  left: -2px;
+  right: -2px;
+  bottom: -10rem;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.16;
+  transform: scale(1.08);
+  transform-origin: center top;
+}
+
+.hero-emissions-bg svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.hero-inner {
+  position: relative;
+  z-index: 2;
+}
+
+.hero-section h1,
+.hero-section .subtitle,
+.hero-section .eyebrow {
+  position: relative;
+  z-index: 3;
+}
+
+.expectation-intro {
+  position: relative;
+  z-index: 4;
+  background: rgba(255, 248, 240, 0.82);
+  backdrop-filter: blur(14px);
+}
+
+.hero-smoke-canopy,
+.hero-plumes,
+.hero-factory-silhouette {
+  fill: #050606;
+}
+
+.hero-smoke-canopy {
+  opacity: 0.88;
+}
+
+.hero-plumes {
+  opacity: 0.78;
+}
+
+.hero-factory-silhouette {
+  opacity: 0.95;
+}
+
+.hero-horizon-lines line {
+  stroke: #050606;
+  stroke-width: 3;
+}
+
+.hero-smoke-contours,
+.hero-plume-contours {
+  fill: none;
+  stroke: rgba(255, 248, 240, 0.95);
+  stroke-width: 4.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.9;
+}
+
+.hero-plume-contours {
+  stroke-width: 3.5;
+  opacity: 0.75;
+}
+
+@media (max-width: 860px) {
+  .hero-emissions-bg {
+    top: -1.5rem;
+    left: -2px;
+    right: -2px;
+    bottom: -7rem;
+    opacity: 0.14;
+    transform: scale(1.05);
+  }
+}
+
+/* =========================================================
+   FINAL HERO + INTRO DROPDOWN OVERRIDES
+   Added after factory-smoke background refinement.
+   ========================================================= */
+
+/* Keep the factory/smoke SVG as a soft background layer. */
+.hero-section {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background:
+    linear-gradient(180deg, #fff8f0 0%, #f6e3d1 58%, #e9c7a3 100%);
+}
+
+.hero-emissions-bg {
+  position: absolute;
+  top: -2.5rem;
+  left: -2px;
+  right: -2px;
+  bottom: -10rem;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.16;
+  transform: scale(1.08);
+  transform-origin: center top;
+}
+
+.hero-emissions-bg svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.hero-inner {
+  position: relative;
+  z-index: 2;
+}
+
+.hero-section h1,
+.hero-section .subtitle,
+.hero-section .eyebrow {
+  position: relative;
+  z-index: 3;
+}
+
+/* Slightly stronger text contrast now that the hero has a background illustration. */
+.hero-section .eyebrow {
+  color: #9a321e;
+  text-shadow: 0 1px 10px rgba(255, 248, 240, 0.75);
+}
+
+.hero-section h1 {
+  color: #14202c;
+  text-shadow: 0 2px 18px rgba(255, 248, 240, 0.72);
+}
+
+.hero-section .subtitle {
+  color: #53616c;
+  text-shadow: 0 1px 10px rgba(255, 248, 240, 0.78);
+}
+
+.expectation-intro {
+  position: relative;
+  z-index: 4;
+  overflow: visible;
+  background: rgba(255, 248, 240, 0.88);
+  border: 1px solid rgba(143, 47, 27, 0.10);
+  box-shadow: 0 24px 70px rgba(80, 52, 35, 0.12);
+  backdrop-filter: blur(16px);
+}
+
+.expectation-form,
+.expectation-field {
+  overflow: visible;
+}
+
+.expectation-prompt {
+  color: #17202b;
+}
+
+.expectation-field span {
+  color: #9a321e;
+}
+
+.intro-form-note {
+  color: #68747b;
+}
+
+.intro-locked-cue,
+.scroll-cue {
+  color: rgba(70, 78, 84, 0.72);
+  text-shadow: 0 1px 8px rgba(255, 248, 240, 0.65);
+}
+
+/* State suggestions dropdown with vertical scrollbar */
+.state-suggestions {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 0.35rem);
+  z-index: 1000;
+
+  display: none;
+  max-height: 230px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+
+  padding: 0.35rem;
+  border: 1px solid rgba(143, 47, 27, 0.14);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 18px 34px rgba(40, 55, 70, 0.16);
+  backdrop-filter: blur(12px);
+}
+
+.state-suggestions.is-open {
+  display: block;
+}
+
+.state-suggestion-item {
+  display: block;
+  width: 100%;
+  padding: 0.72rem 0.85rem;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 750;
+  text-align: left;
+  cursor: pointer;
+}
+
+.state-suggestion-item:hover,
+.state-suggestion-item:focus-visible {
+  background: rgba(196, 81, 44, 0.10);
+  color: var(--accent-dark);
+  outline: none;
+}
+
+/* Visible scrollbar styling */
+.state-suggestions::-webkit-scrollbar {
+  width: 8px;
+}
+
+.state-suggestions::-webkit-scrollbar-track {
+  background: rgba(244, 226, 209, 0.7);
+  border-radius: 999px;
+}
+
+.state-suggestions::-webkit-scrollbar-thumb {
+  background: rgba(143, 47, 27, 0.42);
+  border-radius: 999px;
+}
+
+.state-suggestions::-webkit-scrollbar-thumb:hover {
+  background: rgba(143, 47, 27, 0.65);
+}
+
+/* Firefox scrollbar */
+.state-suggestions {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(143, 47, 27, 0.5) rgba(244, 226, 209, 0.7);
+}
+
+/* Make sure dropdown is not clipped by parent containers */
+.expectation-intro,
+.expectation-form,
+.expectation-field {
+  overflow: visible;
+}
+
+.expectation-field {
+  position: relative;
+}
+
+
+.state-suggestions {
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+}
+
+
+/* Forecast check SVG sun decoration */
+#expectation-result,
+.expectation-result {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.forecast-svg-decor {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.forecast-svg-decor svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+#expectation-result > *:not(.forecast-svg-decor),
+.expectation-result > *:not(.forecast-svg-decor) {
+  position: relative;
+  z-index: 1;
+}
+
+.forecast-sun-svg {
+  opacity: 0.58;
+  transform-origin: 1115px 155px;
+  animation: forecastSunFloat 9s ease-in-out infinite alternate,
+             forecastSunGlow 6s ease-in-out infinite;
+}
+
+.forecast-sun-ring-svg {
+  fill: none;
+  stroke: rgba(196, 81, 44, 0.11);
+  stroke-width: 2.2;
+  stroke-dasharray: 10 14;
+  stroke-linecap: round;
+  animation: forecastRingPulse 8s ease-in-out infinite;
+}
+
+.forecast-sun-ring-svg.ring-soft {
+  stroke: rgba(196, 81, 44, 0.08);
+  stroke-width: 1.8;
+  stroke-dasharray: 8 18;
+}
+
+.forecast-sun-ring-svg.ring-softer {
+  stroke: rgba(196, 81, 44, 0.05);
+  stroke-width: 1.5;
+  stroke-dasharray: 6 20;
+}
+
+.forecast-sun-ray-svg {
+  stroke: rgba(196, 81, 44, 0.10);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  animation: forecastRayPulse 7s ease-in-out infinite;
+}
+
+.forecast-heat-waves-svg {
+  fill: none;
+  stroke: rgba(196, 81, 44, 0.08);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  opacity: 0.42;
+  animation: forecastHeatDrift 8s ease-in-out infinite alternate;
+}
+
+.forecast-heat-dots-svg {
+  fill: rgba(196, 81, 44, 0.16);
+  animation: forecastDotFloat 7s ease-in-out infinite alternate;
+}
+
+.forecast-lower-glow-svg {
+  opacity: 0.7;
+}
+
+@keyframes forecastSunFloat {
+  from {
+    transform: translateX(-860px) translateY(-78px) scale(0.94);
+  }
+
+  to {
+    transform: translateX(-845px) translateY(-66px) scale(0.98);
+  }
+}
+
+@keyframes forecastSunGlow {
+  0% {
+    opacity: 0.50;
+    filter: brightness(0.98);
+  }
+
+  50% {
+    opacity: 0.66;
+    filter: brightness(1.05);
+  }
+
+  100% {
+    opacity: 0.54;
+    filter: brightness(1);
+  }
+}
+
+@keyframes forecastRingPulse {
+  0% {
+    opacity: 0.45;
+    transform: scale(0.985);
+  }
+
+  50% {
+    opacity: 0.72;
+    transform: scale(1.01);
+  }
+
+  100% {
+    opacity: 0.5;
+    transform: scale(0.992);
+  }
+}
+
+@keyframes forecastRayPulse {
+  0% {
+    opacity: 0.30;
+  }
+
+  50% {
+    opacity: 0.55;
+  }
+
+  100% {
+    opacity: 0.34;
+  }
+}
+
+@keyframes forecastHeatDrift {
+  from {
+    transform: translateY(0);
+    opacity: 0.48;
+  }
+
+  to {
+    transform: translateY(-12px);
+    opacity: 0.76;
+  }
+}
+
+@keyframes forecastDotFloat {
+  from {
+    transform: translateY(0);
+    opacity: 0.10;
+  }
+
+  to {
+    transform: translateY(-10px);
+    opacity: 0.22;
+  }
+}
+
+@media (max-width: 900px) {
+  .forecast-sun-svg {
+    opacity: 0.55;
+    transform: translateX(80px) scale(0.82);
+  }
+
+  .forecast-heat-waves-svg,
+  .forecast-heat-dots-svg {
+    opacity: 0.35;
+  }
+}
+
+/* =========================
+   Expectation result - thermometer version
+   ========================= */
+
+.expectation-result-card {
+  grid-template-columns: minmax(360px, 1.02fr) minmax(430px, 0.98fr);
+  gap: 1.3rem;
+}
+
+.expectation-result-values {
+  display: block;
+}
+
+.thermometer-panel {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 0.35rem 0.2rem 0.4rem;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.thermometer-panel-heading {
+  color: #5f7284;
+  font-size: 0.84rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.thermometer-wrap {
+  display: grid;
+  grid-template-columns: 200px minmax(0, 1fr);
+  gap: 1.2rem;
+  align-items: center;
+}
+
+.thermometer-figure {
+  position: relative;
+  height: 420px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.thermometer-scale-label {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #6a7c8f;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+}
+
+.thermometer-scale-top {
+  top: 0;
+}
+
+.thermometer-scale-bottom {
+  bottom: 0;
+}
+
+.thermometer-meter {
+  position: relative;
+  width: 120px;
+  height: 100%;
+}
+
+.thermometer-track {
+  position: absolute;
+  left: 50%;
+  bottom: 46px;
+  transform: translateX(-50%);
+  width: 30px;
+  height: 320px;
+  border-radius: 999px;
+  border: 2px solid rgba(196, 81, 44, 0.18);
+  background: linear-gradient(
+    180deg,
+    rgba(246, 237, 226, 0.92) 0%,
+    rgba(239, 226, 208, 0.96) 100%
+  );
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.36);
+}
+
+.thermometer-projection-band {
+  position: absolute;
+  left: 4px;
+  right: 4px;
+  border-radius: 999px;
+  background: linear-gradient(
+    180deg,
+    rgba(132, 177, 82, 0.25) 0%,
+    rgba(240, 183, 60, 0.26) 52%,
+    rgba(216, 107, 66, 0.26) 100%
+  );
+}
+
+.thermometer-liquid {
+  position: absolute;
+  left: 5px;
+  right: 5px;
+  bottom: 5px;
+  min-height: 10px;
+  border-radius: 999px;
+  background: linear-gradient(
+    180deg,
+    #ffd96a 0%,
+    #ef9b42 55%,
+    #cf5a36 100%
+  );
+}
+
+.thermometer-bulb {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 78px;
+  height: 78px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: rgba(255, 243, 223, 0.98);
+  border: 2px solid rgba(196, 81, 44, 0.18);
+  box-shadow: 0 8px 20px rgba(40, 55, 70, 0.08);
+}
+
+.thermometer-bulb::after {
+  content: "";
+  position: absolute;
+  inset: 12px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 36% 30%,
+    #ffe18d 0%,
+    #ef9b42 62%,
+    #cf5a36 100%
+  );
+}
+
+.thermometer-projection-tick {
+  position: absolute;
+  left: 50%;
+  width: 44px;
+  height: 2px;
+  transform: translateX(-50%);
+  background: rgba(23, 32, 42, 0.32);
+  border-radius: 999px;
+  z-index: 3;
+}
+
+.thermometer-projection-tick.is-closest {
+  width: 52px;
+  height: 3px;
+  background: #c4512c;
+}
+
+.thermometer-user-marker {
+  position: absolute;
+  right: calc(50% + 20px);
+  left: auto;
+  transform: translateY(50%);
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  gap: 0.55rem;
+  z-index: 4;
+}
+
+.thermometer-user-line {
+  display: block;
+  width: 24px;
+  height: 3px;
+  border-radius: 999px;
+  background: #17202a;
+}
+
+.thermometer-user-bubble {
+  min-width: 144px;
+  padding: 0.55rem 0.7rem;
+  border-radius: 16px;
+  background: #fffdf8;
+  border: 1px solid rgba(23, 32, 42, 0.10);
+  box-shadow: 0 8px 20px rgba(40, 55, 70, 0.08);
+  text-align: right;
+}
+
+.thermometer-user-bubble span {
+  display: block;
+  color: #6b7d90;
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.thermometer-user-bubble strong {
+  display: block;
+  margin-top: 0.12rem;
+  color: #17202a;
+  font-size: 1.15rem;
+  letter-spacing: -0.03em;
+}
+
+.thermometer-side {
+  display: flex;
+  flex-direction: column;
+  gap: 0.95rem;
+}
+
+.thermometer-you-card {
+  padding: 0.15rem 0 0.4rem;
+  border-radius: 0;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+}
+
+.thermometer-you-card span {
+  display: block;
+  color: #6b7d90;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.thermometer-you-card strong {
+  display: block;
+  margin-top: 0.22rem;
+  color: #17202a;
+  font-size: 1.9rem;
+  letter-spacing: -0.05em;
+}
+
+.thermometer-you-card small {
+  display: block;
+  margin-top: 0.28rem;
+  color: #708191;
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+
+.thermometer-range-note {
+  color: #5c6e80;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.thermometer-range-note strong {
+  color: #17202a;
+}
+
+.thermometer-legend {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.thermometer-legend-row {
+  display: grid;
+  grid-template-columns: 14px minmax(0, 1fr);
+  gap: 0.75rem;
+  align-items: start;
+  padding: 0.62rem 0;
+  border-radius: 0;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(23, 32, 42, 0.08);
+}
+
+.thermometer-legend-row.is-closest {
+  padding: 0.7rem 0.8rem;
+  border-radius: 14px;
+  background: rgba(255, 244, 230, 0.45);
+  border: 1px solid rgba(196, 81, 44, 0.18);
+}
+
+.thermometer-legend-row:last-child {
+  border-bottom: none;
+}
+
+.thermometer-swatch {
+  width: 14px;
+  height: 14px;
+  margin-top: 0.18rem;
+  border-radius: 50%;
+}
+
+.thermometer-swatch.swatch-ssp126 {
+  background: #8ab454;
+}
+
+.thermometer-swatch.swatch-ssp245 {
+  background: #efb23d;
+}
+
+.thermometer-swatch.swatch-ssp585 {
+  background: #d86b42;
+}
+
+.thermometer-legend-copy strong {
+  display: block;
+  color: #17202a;
+  font-size: 0.98rem;
+  line-height: 1.2;
+}
+
+.thermometer-legend-copy small {
+  display: block;
+  margin-top: 0.12rem;
+  color: #6d7f91;
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+
+.thermometer-summary {
+  margin: 0;
+  color: #5d7083;
+  font-size: 0.94rem;
+  line-height: 1.55;
+}
+
+.thermometer-summary strong {
+  color: #17202a;
+}
+
+/* mobile */
+@media (max-width: 980px) {
+  .thermometer-wrap {
+    grid-template-columns: 1fr;
+  }
+
+  .thermometer-figure {
+    height: 360px;
+  }
+
+  .thermometer-meter {
+    width: 150px;
+  }
+
+  .thermometer-user-bubble {
+    min-width: 132px;
+  }
+}
+
+@media (max-width: 860px) {
+  .expectation-result-card {
+    grid-template-columns: 1fr;
+  }
+
+  .thermometer-figure {
+    height: 330px;
+  }
+
+  .thermometer-track {
+    height: 250px;
+  }
+
+  .thermometer-user-marker {
+    right: calc(50% + 14px);
+    left: auto;
+  }
+
+  .thermometer-user-line {
+    width: 18px;
+  }
+
+  .thermometer-user-bubble {
+    padding: 0.5rem 0.62rem;
+  }
+
+  .thermometer-you-card strong {
+    font-size: 1.7rem;
+  }
+}
+
+
+/* State comparison diverging color legend */
+.state-change-footer {
+  width: min(980px, 88vw);
+  margin: 1.2rem auto 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  justify-items: center;
+  align-items: center;
+  gap: 0.65rem;
+  text-align: center;
+}
+
+.state-change-footer .state-change-note {
+  margin: 0;
+  width: auto;
+  text-align: center;
+}
+
+.state-change-color-legend {
+  display: grid;
+  justify-items: center;
+  gap: 0.38rem;
+  color: #6a7580;
+  font-size: 0.78rem;
+  font-weight: 750;
+}
+
+.state-change-color-legend .legend-title {
+  color: #5f6e7b;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.legend-scale-row {
+  display: grid;
+  grid-template-columns: auto 340px auto;
+  gap: 0.65rem;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.legend-gradient {
+  width: 340px;
+  height: 12px;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    #3b6ea8 0%,
+    #d8e7f2 28%,
+    #fff8f0 50%,
+    #f2b18a 72%,
+    #b3161b 100%
+  );
+  box-shadow: inset 0 0 0 1px rgba(23, 32, 42, 0.10);
+}
+
+.legend-midpoint {
+  text-align: center;
+  color: #7a8792;
+  font-size: 0.72rem;
+  font-weight: 700;
+  font-style: italic;
+}
+
+@media (max-width: 760px) {
+  .state-change-footer {
+    align-items: flex-start;
+    gap: 0.9rem;
+  }
+
+  .legend-scale-row {
+    grid-template-columns: 1fr;
+    gap: 0.35rem;
+  }
+
+  .legend-gradient {
+    width: 160px;
+  }
+}
+
+
+
+/* =========================
+   State comparison layout fix
+   Keep two states side-by-side + prevent map clipping
+   ========================= */
+
+/* Make this section slightly more compact so the maps are not pushed into the footer */
+.state-change-result {
+  min-height: 100vh;
+  padding-top: clamp(1.2rem, 2.2vh, 2.2rem);
+  padding-bottom: clamp(1.4rem, 2.5vh, 2.4rem);
+  overflow: visible;
+}
+
+.state-change-card {
+  width: min(1120px, 88vw);
+  margin-inline: auto;
+  overflow: visible;
+}
+
+/* Reduce the top card height a little */
+.state-change-copy {
+  padding: clamp(1rem, 1.8vw, 1.35rem);
+  margin-bottom: clamp(0.8rem, 1.6vh, 1.2rem);
+}
+
+.state-change-copy h2 {
+  font-size: clamp(3rem, 5.8vw, 5.9rem);
+  line-height: 0.98;
+}
+
+.state-change-copy p {
+  max-width: 980px;
+  font-size: clamp(1rem, 1.2vw, 1.22rem);
+}
+
+/* Make the slider a little more compact */
+.state-change-controls {
+  width: min(980px, 82vw);
+  margin: 0 auto clamp(1.05rem, 2vh, 1.45rem);
+  padding: clamp(0.75rem, 1.3vw, 1rem);
+  overflow: visible;
+}
+
+/* Force the two state cards to stay left-right instead of stacking */
+.state-change-map-cards {
+  width: min(1040px, 88vw);
+  margin: 0 auto;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+  gap: clamp(1.4rem, 5vw, 4.5rem);
+  align-items: start;
+  overflow: visible;
+}
+
+/* Make each card flexible and prevent internal clipping */
+.state-change-state-card,
+.state-shape-card {
+  min-width: 0;
+  overflow: visible;
+}
+
+/* Give map shapes enough vertical room */
+.state-shape-stage {
+  height: clamp(180px, 22vh, 245px);
+  min-height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+}
+
+.state-shape-svg {
+  width: min(100%, 340px);
+  height: 100%;
+  overflow: visible;
+  display: block;
+}
+
+/* Make the year pill stay near the state card, not too far outside */
+.state-change-year-pill {
+  transform: none;
+}
+
+/* Keep values visible below the shapes */
+.state-change-value-row {
+  margin-top: clamp(0.25rem, 0.8vh, 0.7rem);
+}
+
+/* Put the legend clearly below both state maps */
+.state-change-footer {
+  width: min(1040px, 88vw);
+  margin: clamp(1rem, 2vh, 1.5rem) auto 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  justify-items: center;
+  align-items: center;
+  gap: 0.65rem;
+  text-align: center;
+  position: relative;
+  z-index: 3;
+}
+
+/* Longer legend */
+.legend-scale-row {
+  display: grid;
+  grid-template-columns: auto minmax(260px, 360px) auto;
+  gap: 0.7rem;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.legend-gradient {
+  width: 100%;
+  height: 12px;
+  border-radius: 999px;
+}
+
+/* Important: override any earlier mobile rule that stacks the cards */
+@media (max-width: 900px) {
+  .state-change-map-cards {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+    gap: 1.2rem;
+  }
+
+  .state-change-copy h2 {
+    font-size: clamp(2.35rem, 8vw, 4.6rem);
+  }
+
+  .state-shape-stage {
+    height: 175px;
+    min-height: 175px;
+  }
+
+  .state-change-state-card h3 {
+    font-size: clamp(1.4rem, 4vw, 2rem);
+  }
+
+  .legend-scale-row {
+    grid-template-columns: auto minmax(200px, 280px) auto;
+  }
+}
+
+@media (max-width: 620px) {
+  .state-change-card {
+    width: 94vw;
+  }
+
+  .state-change-map-cards {
+    width: 94vw;
+    gap: 0.8rem;
+  }
+
+  .state-shape-stage {
+    height: 155px;
+    min-height: 155px;
+  }
+
+  .state-change-value-row strong {
+    font-size: clamp(2rem, 9vw, 3rem);
+  }
+
+  .state-change-state-note {
+    display: none;
+  }
+
+  .legend-scale-row {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+
+  .legend-gradient {
+    width: 240px;
+  }
+}
+/* =========================================================
+   FINAL FIX — state comparison layout
+   Fixes map/value clipping and keeps the two state maps side-by-side.
+   Add this at the very end of style.css.
+   ========================================================= */
+
+.state-change-result {
+  min-height: 100vh !important;
+  height: auto !important;
+  padding: clamp(1.4rem, 3vh, 2.6rem) clamp(1.2rem, 4vw, 4rem) clamp(2rem, 4vh, 3rem) !important;
+  display: block !important;
+  overflow: visible !important;
+}
+
+.state-change-card {
+  width: min(1180px, 90vw) !important;
+  max-width: 1180px !important;
+  min-height: auto !important;
+  max-height: none !important;
+  height: auto !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: clamp(0.95rem, 1.8vh, 1.35rem) !important;
+  overflow: visible !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+.state-change-copy {
+  width: min(1000px, 100%) !important;
+  max-width: 1000px !important;
+  margin: 0 !important;
+  padding: clamp(0.9rem, 1.6vw, 1.25rem) clamp(1rem, 2vw, 1.35rem) !important;
+  border-radius: 24px !important;
+}
+
+.state-change-copy h2 {
+  margin: 0.1rem 0 0.45rem !important;
+  font-size: clamp(2.6rem, 4.8vw, 4.7rem) !important;
+  line-height: 0.98 !important;
+}
+
+.state-change-copy p:not(.eyebrow) {
+  max-width: 980px !important;
+  font-size: clamp(0.98rem, 1.25vw, 1.12rem) !important;
+  line-height: 1.45 !important;
+}
+
+.state-change-blocks {
+  width: 100% !important;
+  min-height: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: clamp(0.9rem, 1.7vh, 1.25rem) !important;
+  overflow: visible !important;
+}
+
+.state-change-controls {
+  width: min(900px, 100%) !important;
+  max-width: 900px !important;
+  margin: 0 auto !important;
+  padding: 0.72rem 1.35rem 0.78rem 0.85rem !important;
+  align-self: center !important;
+  justify-self: center !important;
+  overflow: visible !important;
+  transform: none !important;
+}
+
+.state-change-map-cards {
+  width: min(1080px, 100%) !important;
+  margin: 0 auto !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+  gap: clamp(1.4rem, 5vw, 4.6rem) !important;
+  align-items: start !important;
+  overflow: visible !important;
+}
+
+.state-change-state-card,
+.state-change-state-card.state-shape-card,
+.state-shape-card {
+  min-width: 0 !important;
+  min-height: 0 !important;
+  height: auto !important;
+  padding: clamp(0.9rem, 1.5vw, 1.2rem) !important;
+  display: grid !important;
+  grid-template-rows: auto clamp(210px, 26vh, 285px) auto auto !important;
+  overflow: visible !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+.state-change-card-header {
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+.state-change-card-header h3 {
+  font-size: clamp(1.65rem, 2.7vw, 2.5rem) !important;
+  line-height: 1 !important;
+}
+
+.state-change-year-pill {
+  position: relative !important;
+  z-index: 2 !important;
+  min-width: 60px !important;
+  padding: 0.42rem 0.58rem !important;
+  font-size: 0.98rem !important;
+  transform: none !important;
+}
+
+.state-shape-stage {
+  position: relative !important;
+  height: auto !important;
+  min-height: 0 !important;
+  margin: 0.45rem 0 0.25rem !important;
+  display: grid !important;
+  place-items: center !important;
+  overflow: visible !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+.state-shape-svg {
+  width: min(100%, 360px) !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  max-height: 285px !important;
+  display: block !important;
+  overflow: visible !important;
+}
+
+.state-change-value-row {
+  position: relative !important;
+  z-index: 2 !important;
+  margin: 0.15rem 0 0 !important;
+  display: flex !important;
+  align-items: baseline !important;
+  gap: 0.4rem !important;
+}
+
+.state-change-value-row strong {
+  font-size: clamp(2.7rem, 5.3vw, 4.7rem) !important;
+  line-height: 0.9 !important;
+}
+
+.state-change-value-row small {
+  font-size: clamp(0.68rem, 1vw, 0.86rem) !important;
+  white-space: nowrap !important;
+}
+
+.state-change-state-note {
+  margin: 0.35rem 0 0 !important;
+  font-size: 0.78rem !important;
+  line-height: 1.28 !important;
+}
+
+.state-change-footer {
+  width: min(1080px, 100%) !important;
+  margin: clamp(1.25rem, 2vh, 1.8rem) auto 0 !important;
+  display: grid !important;
+  justify-items: center !important;
+  gap: 0.55rem !important;
+  text-align: center !important;
+  position: relative !important;
+  z-index: 5 !important;
+  clear: both !important;
+}
+
+.state-change-footer .state-change-note {
+  margin: 0 !important;
+  padding: 0 !important;
+  font-size: 0.78rem !important;
+  line-height: 1.25 !important;
+}
+
+.state-change-color-legend {
+  justify-items: center !important;
+}
+
+.legend-scale-row {
+  display: grid !important;
+  grid-template-columns: auto minmax(300px, 420px) auto !important;
+  gap: 0.7rem !important;
+  align-items: center !important;
+  white-space: nowrap !important;
+}
+
+.legend-gradient {
+  width: 100% !important;
+  height: 12px !important;
+  border-radius: 999px !important;
+}
+
+.legend-midpoint {
+  margin-top: 0.05rem !important;
+}
+
+/* Keep side-by-side even at browser zoom / narrower widths. */
+@media (max-width: 900px), (max-height: 760px) {
+  .state-change-result {
+    min-height: auto !important;
+    padding-top: 1.2rem !important;
+    padding-bottom: 1.7rem !important;
+    overflow: visible !important;
+  }
+
+  .state-change-card {
+    width: min(1180px, 94vw) !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  .state-change-copy h2 {
+    font-size: clamp(2.25rem, 6vw, 4rem) !important;
+  }
+
+  .state-change-map-cards {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+    gap: clamp(0.9rem, 3vw, 2rem) !important;
+  }
+
+  .state-change-state-card,
+  .state-change-state-card.state-shape-card {
+    grid-template-rows: auto clamp(165px, 24vh, 235px) auto auto !important;
+    padding: 0.75rem !important;
+  }
+
+  .state-shape-svg {
+    max-height: 235px !important;
+  }
+
+  .state-change-value-row strong {
+    font-size: clamp(2.1rem, 6vw, 3.5rem) !important;
+  }
+
+  .state-change-state-note {
+    display: none !important;
+  }
+
+  .legend-scale-row {
+    grid-template-columns: auto minmax(220px, 330px) auto !important;
+  }
+}
+
+@media (max-width: 620px) {
+  .state-change-card {
+    width: 96vw !important;
+  }
+
+  .state-change-map-cards {
+    width: 100% !important;
+    gap: 0.65rem !important;
+  }
+
+  .state-change-card-header span {
+    font-size: 0.55rem !important;
+  }
+
+  .state-change-card-header h3 {
+    font-size: clamp(1.2rem, 5vw, 1.65rem) !important;
+  }
+
+  .state-change-state-card,
+  .state-change-state-card.state-shape-card {
+    grid-template-rows: auto 145px auto !important;
+  }
+
+  .state-change-state-note {
+    display: none !important;
+  }
+
+  .legend-scale-row {
+    grid-template-columns: 1fr !important;
+    justify-items: center !important;
+    gap: 0.35rem !important;
+  }
+
+  .legend-gradient {
+    width: 250px !important;
+  }
+}
+
+/* =========================================================
+   CLEAN THERMOMETER FINAL OVERRIDES
+   Use only one main liquid fill for user's expectation.
+   Low / Medium / High projections are shown as colored ticks.
+   ========================================================= */
+
+/* Remove the added scale title that made the thermometer crowded. */
+.thermometer-figure::before {
+  content: none !important;
+}
+
+/* Make top/bottom numbers read as quiet axis labels. */
+.thermometer-scale-label {
+  color: rgba(95, 114, 132, 0.62) !important;
+  font-size: 0.70rem !important;
+  font-weight: 850 !important;
+  letter-spacing: 0.035em !important;
+  z-index: 6 !important;
+}
+
+.thermometer-scale-label::after {
+  content: none !important;
+}
+
+.thermometer-scale-top {
+  top: 0.10rem !important;
+}
+
+.thermometer-scale-bottom {
+  bottom: 0.12rem !important;
+}
+
+/* Clean neutral thermometer tube. */
+.thermometer-track {
+  left: 50% !important;
+  bottom: 46px !important;
+  transform: translateX(-50%) !important;
+  width: 30px !important;
+  border-radius: 999px !important;
+  border: 2px solid rgba(225, 182, 155, 0.56) !important;
+  background: rgba(255, 250, 245, 0.68) !important;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35) !important;
+  overflow: hidden !important;
+}
+
+/* Remove the second projection color block inside the tube. */
+.thermometer-projection-band {
+  opacity: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* One main liquid fill = user expectation. */
+.thermometer-liquid {
+  left: 7px !important;
+  right: 7px !important;
+  bottom: 5px !important;
+  min-height: 9px !important;
+  border-radius: 999px !important;
+  opacity: 0.95 !important;
+  background: linear-gradient(
+    0deg,
+    #ffd96a 0%,
+    #f0a545 52%,
+    #da6c3e 100%
+  ) !important;
+  box-shadow: 0 0 10px rgba(230, 142, 62, 0.18) !important;
+}
+
+/* Keep bulb as the same single user-expectation encoding. */
+.thermometer-bulb {
+  border: 2px solid rgba(225, 182, 155, 0.56) !important;
+  background: rgba(255, 243, 223, 0.98) !important;
+  box-shadow: 0 6px 18px rgba(240, 168, 70, 0.16) !important;
+}
+
+.thermometer-bulb::after {
+  inset: 12px !important;
+  background: radial-gradient(
+    circle at 35% 30%,
+    #ffd971 0%,
+    #f0a846 55%,
+    #da6d3f 100%
+  ) !important;
+}
+
+/* Projection ticks: low lower, medium middle, high upper.
+   Supports both possible JS class styles: tick-ssp126 and plain ordered ticks. */
+.thermometer-projection-tick {
+  width: 42px !important;
+  height: 3px !important;
+  border-radius: 999px !important;
+  opacity: 0.95 !important;
+  box-shadow: none !important;
+  z-index: 5 !important;
+}
+
+.thermometer-projection-tick.tick-ssp126,
+.thermometer-meter > .thermometer-projection-tick:nth-of-type(2) {
+  background: #8ab454 !important;
+}
+
+.thermometer-projection-tick.tick-ssp245,
+.thermometer-meter > .thermometer-projection-tick:nth-of-type(3) {
+  background: #efb23d !important;
+}
+
+.thermometer-projection-tick.tick-ssp585,
+.thermometer-meter > .thermometer-projection-tick:nth-of-type(4) {
+  background: #d86b42 !important;
+}
+
+.thermometer-projection-tick.is-closest {
+  width: 54px !important;
+  height: 5px !important;
+  opacity: 1 !important;
+  box-shadow: 0 0 0 3px rgba(216, 107, 66, 0.10) !important;
+}
+
+/* Keep the user marker visually separate from scenario ticks. */
+.thermometer-user-marker {
+  z-index: 7 !important;
+}
+
+.thermometer-user-line {
+  width: 28px !important;
+  height: 3px !important;
+  border-radius: 999px !important;
+  background: #17202a !important;
+}
+
+.thermometer-user-bubble {
+  background: rgba(255, 255, 255, 0.86) !important;
+  border: 1px solid rgba(223, 214, 202, 0.95) !important;
+  box-shadow: 0 8px 20px rgba(20, 27, 35, 0.06) !important;
+}
+
+/* Reduce visual crowding on the forecast comparison page. */
+.thermometer-panel {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.thermometer-panel-heading {
+  margin-bottom: 0.35rem !important;
+}
+
+.thermometer-summary {
+  margin-top: 0.35rem !important;
+  line-height: 1.55 !important;
+}
+
+
+/* =========================================================
+   Transition page typography fix
+   Fix crowded large headline spacing
+   ========================================================= */
+
+.us-transition h2,
+.transition-panel h2,
+section.us-transition h2 {
+  max-width: 1120px !important;
+  margin: 0 auto 1.25rem !important;
+  font-size: clamp(4rem, 6.4vw, 6.6rem) !important;
+  line-height: 1.12 !important;
+  letter-spacing: -0.055em !important;
+  text-wrap: balance;
+}
+
+.us-transition p:not(.eyebrow),
+.transition-panel p:not(.eyebrow),
+section.us-transition p:not(.eyebrow) {
+  max-width: 980px !important;
+  margin: 0 auto !important;
+  padding: 1rem 1.45rem !important;
+  line-height: 1.6 !important;
+}
+
+.us-transition .eyebrow,
+.transition-panel .eyebrow,
+section.us-transition .eyebrow {
+  margin-bottom: 0.9rem !important;
+}
+
+@media (max-width: 900px) {
+  .us-transition h2,
+  .transition-panel h2,
+  section.us-transition h2 {
+    font-size: clamp(3.1rem, 8vw, 5rem) !important;
+    line-height: 1.14 !important;
+    letter-spacing: -0.045em !important;
+  }
+}
+
+/* =========================================================
+   Plot 01 summary fix — keep the original card style, just smaller
+   This restores the "Aligned baseline temperature" box as a compact
+   floating card instead of a horizontal strip.
+   ========================================================= */
+
+.chart-wrap {
+  position: relative !important;
+  padding-top: 0 !important;
+}
+
+.trend-summary {
+  position: absolute !important;
+  top: 0.62rem !important;
+  left: 0.72rem !important;
+  right: auto !important;
+  bottom: auto !important;
+  z-index: 8 !important;
+
+  width: min(250px, calc(100% - 1.5rem)) !important;
+  max-width: 250px !important;
+  min-width: 0 !important;
+
+  display: none !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  gap: 0.18rem !important;
+
+  padding: 0.48rem 0.62rem !important;
+  border-radius: 15px !important;
+  background: rgba(255, 247, 235, 0.90) !important;
+  border: 1px solid rgba(196, 81, 44, 0.14) !important;
+  box-shadow: 0 8px 20px rgba(40, 55, 70, 0.08) !important;
+  backdrop-filter: blur(8px) !important;
+
+  opacity: 0 !important;
+  transform: translateY(4px) !important;
+  pointer-events: none !important;
+}
+
+.trend-summary.is-active {
+  display: flex !important;
+}
+
+.trend-summary.is-visible,
+.trend-summary.is-active.is-visible {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+}
+
+.trend-summary-label {
+  margin: 0 0 0.18rem !important;
+  color: var(--accent-dark) !important;
+  font-size: 0.62rem !important;
+  line-height: 1.1 !important;
+  font-weight: 950 !important;
+  letter-spacing: 0.13em !important;
+  text-transform: uppercase !important;
+  white-space: normal !important;
+}
+
+.trend-summary-rows {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 0.06rem !important;
+}
+
+.trend-summary-row {
+  display: grid !important;
+  grid-template-columns: 8px minmax(0, 1fr) auto !important;
+  align-items: center !important;
+  gap: 0.36rem !important;
+  padding: 0 !important;
+  font-size: 0.66rem !important;
+  line-height: 1.18 !important;
+  white-space: nowrap !important;
+}
+
+.trend-summary-row .dot {
+  width: 6px !important;
+  height: 6px !important;
+  margin: 0 !important;
+  border-radius: 50% !important;
+  align-self: center !important;
+}
+
+.trend-summary-row .name {
+  color: var(--text) !important;
+  font-weight: 750 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+.trend-summary-row .value {
+  color: inherit !important;
+  font-weight: 950 !important;
+  font-size: 0.66rem !important;
+  font-variant-numeric: tabular-nums !important;
+  white-space: nowrap !important;
+}
+
+@media (max-width: 760px) {
+  .trend-summary {
+    width: min(220px, calc(100% - 1.2rem)) !important;
+    max-width: 220px !important;
+    top: 0.5rem !important;
+    left: 0.55rem !important;
+    padding: 0.42rem 0.52rem !important;
+  }
+
+  .trend-summary-row {
+    font-size: 0.62rem !important;
+  }
+}
+
+
+.impact-viz-content--sources {
+  width: min(1380px, 94vw);
+  margin: 0 auto;
+}
+
+.impact-viz-main {
+  display: grid;
+  grid-template-columns: minmax(560px, 1.08fr) minmax(360px, 0.82fr);
+  gap: clamp(2rem, 5vw, 5.5rem);
+  align-items: center;
+}
+
+.impact-viz-left {
+  min-width: 0;
+}
+
+.impact-viz-right {
+  min-width: 0;
+}
+
+.impact-list-title {
+  margin: 0.35rem 0 0.35rem;
+  font-size: clamp(1.7rem, 3vw, 2.45rem);
+  line-height: 0.98;
+  letter-spacing: -0.055em;
+  color: var(--ink);
+}
+
+.impact-list-subtitle {
+  margin: 0;
+  color: var(--muted);
+  font-size: 1rem;
+}
+
+.impact-right-title {
+  margin: 1rem 0 1rem;
+  font-size: clamp(2.4rem, 5vw, 4.7rem);
+  line-height: 0.96;
+  letter-spacing: -0.065em;
+  color: var(--ink);
+}
+
+.impact-right-copy {
+  margin: 0 0 1.25rem;
+  padding: 1.15rem 1.25rem;
+  border: 1px solid rgba(143, 47, 27, 0.12);
+  border-radius: 1.25rem;
+  background: rgba(255, 248, 240, 0.58);
+  color: var(--muted);
+  font-size: 1.05rem;
+  line-height: 1.55;
+}
+
+.impact-source-links {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.impact-source-card {
+  display: block;
+  padding: 1rem 1.1rem;
+  border: 1px solid rgba(143, 47, 27, 0.14);
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.62);
+  color: var(--ink);
+  text-decoration: none;
+  box-shadow: 0 12px 34px rgba(23, 32, 42, 0.045);
+  transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+}
+
+.impact-source-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(196, 81, 44, 0.42);
+  background: rgba(255, 248, 240, 0.92);
+}
+
+.impact-source-kicker {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: var(--rust);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+}
+
+.impact-source-card strong {
+  display: block;
+  font-size: 1.05rem;
+  line-height: 1.2;
+}
+
+.impact-source-card small {
+  display: block;
+  margin-top: 0.28rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+
+@media (max-width: 980px) {
+  .impact-viz-main {
+    grid-template-columns: 1fr;
+  }
+
+  .impact-viz-right {
+    margin-top: 1.5rem;
+  }
+}
+
+
+/* =========================================================
+   Impact step source cards on right story panel
+   ========================================================= */
+
+.step--impact-sources {
+  padding-bottom: 2rem;
+}
+
+.step--impact-sources h2 {
+  margin-bottom: 0.95rem;
+}
+
+.step--impact-sources > p {
+  margin-bottom: 1.35rem;
+}
+
+.impact-source-links {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.impact-source-card {
+  display: block;
+  padding: 0.95rem 1.05rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(143, 47, 27, 0.14);
+  background: rgba(255, 255, 255, 0.68);
+  color: var(--ink);
+  text-decoration: none;
+  box-shadow: 0 12px 32px rgba(23, 32, 42, 0.045);
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    background 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.impact-source-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(196, 81, 44, 0.42);
+  background: rgba(255, 248, 240, 0.94);
+  box-shadow: 0 16px 38px rgba(23, 32, 42, 0.07);
+}
+
+.impact-source-card span {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: var(--rust);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.impact-source-card strong {
+  display: block;
+  color: var(--ink);
+  font-size: 1.05rem;
+  line-height: 1.2;
+}
+
+.impact-source-card small {
+  display: block;
+  margin-top: 0.3rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+
+/* Keep the impact left-side list compact and inside the chart area. */
+.impact-fill--clean {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.impact-clean-content {
+  width: min(780px, 92%);
+  margin: 0 auto;
+  padding: clamp(1rem, 2.4vh, 2rem) 0;
+}
+
+.impact-clean-rows {
+  display: grid;
+  gap: 0;
+}
+
+.impact-clean-rows .impact-viz-row {
+  display: grid;
+  grid-template-columns: 2.7rem 1fr;
+  gap: 1.15rem;
+  padding: 0.95rem 0;
+  border-bottom: 1px solid rgba(23, 32, 42, 0.11);
+}
+
+.impact-clean-rows .ivr-num {
+  color: var(--ink);
+  font-size: 1.05rem;
+  font-weight: 500;
+}
+
+.impact-clean-rows .ivr-head {
+  display: flex;
+  align-items: baseline;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.impact-clean-rows .ivr-label {
+  min-width: 8.5rem;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+}
+
+.impact-clean-rows .ivr-stat {
+  color: var(--ink);
+  font-size: 1.28rem;
+  font-weight: 900;
+}
+
+.impact-clean-rows .ivr-unit {
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.impact-clean-rows .ivr-desc {
+  margin: 0.38rem 0 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.impact-clean-rows .ivr-cite {
+  margin: 0.38rem 0 0;
+  color: rgba(95, 107, 115, 0.72);
+  font-size: 0.78rem;
+  font-style: italic;
+}
+
+
+
+/* =========================================================
+   STEP 08 — impact page sizing fix
+   Make both left impact list and right source cards smaller
+   ========================================================= */
+
+
+.impact-fill--clean {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.impact-clean-content {
+  width: min(700px, 90%);
+  margin: 0 auto;
+  padding: 0.75rem 0 1.1rem;
+}
+
+
+.chart-wrap .title-block {
+  max-width: 520px;
+}
+
+.chart-wrap .title-block .kicker {
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+}
+
+.chart-wrap .title-block h3,
+.chart-wrap .title-block h2 {
+  font-size: clamp(1.7rem, 2.1vw, 2.35rem);
+  line-height: 1.08;
+  margin-bottom: 0.35rem;
+}
+
+.chart-wrap .title-block p {
+  font-size: 0.96rem;
+  line-height: 1.45;
+}
+
+
+.impact-clean-rows {
+  display: grid;
+  gap: 0;
+}
+
+.impact-clean-rows .impact-viz-row {
+  display: grid;
+  grid-template-columns: 2.35rem 1fr;
+  gap: 0.95rem;
+  padding: 0.82rem 0;
+  border-bottom: 1px solid rgba(23, 32, 42, 0.11);
+}
+
+.impact-clean-rows .ivr-num {
+  color: var(--ink);
+  font-size: 0.98rem;
+  font-weight: 600;
+}
+
+.impact-clean-rows .ivr-head {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.impact-clean-rows .ivr-label {
+  min-width: 7.5rem;
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+}
+
+.impact-clean-rows .ivr-stat {
+  color: var(--ink);
+  font-size: 1.05rem;
+  font-weight: 900;
+}
+
+.impact-clean-rows .ivr-unit {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.impact-clean-rows .ivr-desc {
+  margin: 0.28rem 0 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  max-width: 94%;
+}
+
+.impact-clean-rows .ivr-cite {
+  margin: 0.28rem 0 0;
+  color: rgba(95, 107, 115, 0.72);
+  font-size: 0.74rem;
+  line-height: 1.35;
+  font-style: italic;
+}
+
+
+.impact-equity-callout {
+  margin-top: 1rem;
+  padding: 0.95rem 1rem;
+  border-left: 3px solid rgba(143, 47, 27, 0.9);
+  background: rgba(255, 248, 240, 0.72);
+  border-radius: 0.8rem;
+}
+
+.impact-equity-title {
+  font-size: 0.76rem;
+  letter-spacing: 0.16em;
+  font-weight: 900;
+  color: var(--rust);
+  margin-bottom: 0.45rem;
+}
+
+.impact-equity-body {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+
+.impact-chip-row {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+  margin-top: 0.95rem;
+}
+
+.impact-chip {
+  padding: 0.58rem 0.95rem;
+  border-radius: 999px;
+  border: 1px solid rgba(143, 47, 27, 0.14);
+  background: rgba(255, 255, 255, 0.58);
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.impact-list-subtitle {
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+
+.step--impact-sources {
+  padding-bottom: 1.5rem;
+}
+
+.step--impact-sources .step-number {
+  font-size: 0.8rem;
+  letter-spacing: 0.16em;
+  margin-bottom: 0.7rem;
+}
+
+.step--impact-sources h2 {
+  font-size: clamp(2rem, 3.2vw, 3.05rem);
+  line-height: 0.98;
+  max-width: 520px;
+  margin-bottom: 0.85rem;
+}
+
+.step--impact-sources > p {
+  font-size: 0.98rem;
+  line-height: 1.5;
+  max-width: 530px;
+  margin-bottom: 1rem;
+}
+
+
+.impact-source-links {
+  display: grid;
+  gap: 0.72rem;
+  max-width: 560px;
+}
+
+.impact-source-card {
+  display: block;
+  padding: 0.9rem 1rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(143, 47, 27, 0.12);
+  background: rgba(255, 255, 255, 0.7);
+  color: var(--ink);
+  text-decoration: none;
+  box-shadow: 0 10px 26px rgba(23, 32, 42, 0.04);
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    background 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.impact-source-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(196, 81, 44, 0.35);
+  background: rgba(255, 248, 240, 0.95);
+  box-shadow: 0 14px 32px rgba(23, 32, 42, 0.06);
+}
+
+.impact-source-card span {
+  display: block;
+  margin-bottom: 0.28rem;
+  color: var(--rust);
+  font-size: 0.7rem;
+  font-weight: 900;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.impact-source-card strong {
+  display: block;
+  color: var(--ink);
+  font-size: 0.98rem;
+  line-height: 1.2;
+}
+
+.impact-source-card small {
+  display: block;
+  margin-top: 0.24rem;
+  color: var(--muted);
+  font-size: 0.8rem;
+  line-height: 1.35;
+}
+
+
+@media (min-width: 1400px) {
+  .impact-clean-content {
+    width: min(660px, 88%);
+  }
+
+  .step--impact-sources h2 {
+    font-size: 2.75rem;
+    max-width: 500px;
+  }
+
+  .impact-source-links {
+    max-width: 520px;
+  }
+}
+
+
+@media (max-width: 1280px) {
+  .impact-clean-content {
+    width: min(640px, 88%);
+  }
+
+  .impact-clean-rows .ivr-desc {
+    max-width: 100%;
+  }
+
+  .step--impact-sources h2 {
+    font-size: 2.45rem;
+    max-width: 470px;
+  }
+
+  .impact-source-links {
+    max-width: 500px;
+  }
+}
+
+
+/* =========================================================
+   Final Step 08 impact layout and source-card sizing overrides
+   ========================================================= */
+
+/* Keep the impact visualization inside the left chart area. */
+.impact-fill,
+.impact-fill--clean {
+  position: absolute !important;
+  inset: 0 !important;
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+}
+
+.impact-viz-content,
+.impact-clean-content {
+  width: min(660px, 90%) !important;
+  height: 100% !important;
+  margin: 0 auto !important;
+  padding: clamp(0.45rem, 1.2vh, 0.9rem) 0 0.8rem !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  gap: clamp(0.45rem, 1vh, 0.75rem) !important;
+  box-sizing: border-box !important;
+}
+
+/* Compact the left-side title card for the impact step. */
+.viz-header:has(+ .chart-wrap .impact-fill),
+.viz-header:has(+ .chart-wrap .impact-fill--clean) {
+  max-width: min(560px, 95%) !important;
+  padding: 0.65rem 0.85rem !important;
+  border-radius: 18px !important;
+}
+
+.viz-header:has(+ .chart-wrap .impact-fill) h2,
+.viz-header:has(+ .chart-wrap .impact-fill--clean) h2 {
+  font-size: clamp(1.05rem, 1.45vw, 1.55rem) !important;
+  line-height: 1.08 !important;
+  letter-spacing: -0.045em !important;
+}
+
+.viz-header:has(+ .chart-wrap .impact-fill) #chart-subtitle,
+.viz-header:has(+ .chart-wrap .impact-fill--clean) #chart-subtitle {
+  font-size: 0.76rem !important;
+  line-height: 1.25 !important;
+  margin-top: 0.22rem !important;
+}
+
+/* Compact the four impact rows. */
+.impact-viz-rows,
+.impact-clean-rows {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  gap: 0 !important;
+  min-height: 0 !important;
+  flex: 0 1 auto !important;
+}
+
+.impact-viz-row,
+.impact-clean-rows .impact-viz-row {
+  display: grid !important;
+  grid-template-columns: 2.05rem minmax(0, 1fr) !important;
+  gap: 0.75rem !important;
+  padding: clamp(0.45rem, 1vh, 0.72rem) 0 !important;
+  border-top: 0 !important;
+  border-bottom: 1px solid rgba(23, 32, 42, 0.11) !important;
+}
+
+.impact-viz-row:first-child,
+.impact-clean-rows .impact-viz-row:first-child {
+  padding-top: 0 !important;
+}
+
+.impact-viz-row:last-child,
+.impact-clean-rows .impact-viz-row:last-child {
+  border-bottom: 0 !important;
+}
+
+.ivr-num,
+.impact-clean-rows .ivr-num {
+  color: var(--text) !important;
+  font-size: 0.82rem !important;
+  line-height: 1.2 !important;
+  font-weight: 600 !important;
+}
+
+.ivr-head,
+.impact-clean-rows .ivr-head {
+  display: flex !important;
+  align-items: baseline !important;
+  gap: 0.72rem !important;
+  margin: 0 0 0.18rem !important;
+  flex-wrap: wrap !important;
+}
+
+.ivr-label,
+.impact-clean-rows .ivr-label {
+  min-width: 7.2rem !important;
+  color: var(--muted) !important;
+  font-size: 0.62rem !important;
+  line-height: 1.2 !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.16em !important;
+}
+
+.ivr-stat,
+.impact-clean-rows .ivr-stat {
+  color: var(--text) !important;
+  font-size: clamp(0.9rem, 1.25vw, 1.1rem) !important;
+  line-height: 1.1 !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.035em !important;
+}
+
+.ivr-unit,
+.impact-clean-rows .ivr-unit {
+  color: var(--muted) !important;
+  font-size: 0.64rem !important;
+  line-height: 1.2 !important;
+  font-weight: 800 !important;
+}
+
+.ivr-desc,
+.impact-clean-rows .ivr-desc {
+  max-width: 96% !important;
+  margin: 0 !important;
+  color: var(--muted) !important;
+  font-size: clamp(0.72rem, 0.95vw, 0.84rem) !important;
+  line-height: 1.38 !important;
+}
+
+.ivr-cite,
+.impact-clean-rows .ivr-cite {
+  margin: 0.18rem 0 0 !important;
+  color: rgba(95, 107, 115, 0.72) !important;
+  font-size: 0.64rem !important;
+  line-height: 1.25 !important;
+  font-style: italic !important;
+}
+
+.impact-viz-equity,
+.impact-equity-callout {
+  flex: 0 0 auto !important;
+  margin-top: 0.45rem !important;
+  padding: 0.62rem 0.8rem !important;
+  border-left: 3px solid rgba(143, 47, 27, 0.9) !important;
+  border-radius: 0 12px 12px 0 !important;
+  background: rgba(255, 248, 240, 0.72) !important;
+}
+
+.ive-tag,
+.impact-equity-title {
+  display: block !important;
+  margin: 0 0 0.28rem !important;
+  color: var(--accent-dark) !important;
+  font-size: 0.62rem !important;
+  line-height: 1.2 !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.15em !important;
+  text-transform: uppercase !important;
+}
+
+.impact-viz-equity p,
+.impact-equity-body {
+  margin: 0 !important;
+  color: var(--text) !important;
+  font-size: 0.72rem !important;
+  line-height: 1.35 !important;
+  font-weight: 600 !important;
+}
+
+.impact-chip-row {
+  margin-top: 0.55rem !important;
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 0.45rem !important;
+}
+
+.impact-chip {
+  padding: 0.45rem 0.75rem !important;
+  border-radius: 999px !important;
+  border: 1px solid rgba(143, 47, 27, 0.14) !important;
+  background: rgba(255, 255, 255, 0.62) !important;
+  color: var(--muted) !important;
+  font-size: 0.72rem !important;
+  line-height: 1.2 !important;
+  font-weight: 800 !important;
+}
+
+/* Right-side source cards in the story column. */
+.step--impact-sources {
+  min-height: 96vh !important;
+  justify-content: center !important;
+  padding-top: 5vh !important;
+  padding-bottom: 5vh !important;
+}
+
+.step--impact-sources .step-number {
+  margin-bottom: 0.55rem !important;
+  font-size: 0.68rem !important;
+  letter-spacing: 0.15em !important;
+}
+
+.step--impact-sources h2 {
+  max-width: 500px !important;
+  margin-bottom: 0.7rem !important;
+  font-size: clamp(1.95rem, 3vw, 2.85rem) !important;
+  line-height: 0.98 !important;
+  letter-spacing: -0.06em !important;
+}
+
+.step--impact-sources > p:not(.step-number) {
+  max-width: 500px !important;
+  width: auto !important;
+  margin-bottom: 0.85rem !important;
+  padding: 0.75rem 0.9rem !important;
+  border-radius: 16px !important;
+  font-size: 0.88rem !important;
+  line-height: 1.45 !important;
+}
+
+.impact-source-links {
+  display: grid !important;
+  gap: 0.55rem !important;
+  width: min(500px, 100%) !important;
+  max-width: 500px !important;
+  margin-top: 0.7rem !important;
+}
+
+.impact-source-card {
+  display: block !important;
+  padding: 0.68rem 0.82rem !important;
+  border-radius: 0.82rem !important;
+  border: 1px solid rgba(143, 47, 27, 0.12) !important;
+  background: rgba(255, 255, 255, 0.72) !important;
+  color: var(--text) !important;
+  text-decoration: none !important;
+  box-shadow: 0 8px 20px rgba(23, 32, 42, 0.035) !important;
+  transition: transform 160ms ease, border-color 160ms ease, background 160ms ease, box-shadow 160ms ease !important;
+}
+
+.impact-source-card:hover,
+.impact-source-card:focus-visible {
+  transform: translateY(-1px) !important;
+  border-color: rgba(196, 81, 44, 0.36) !important;
+  background: rgba(255, 248, 240, 0.94) !important;
+  box-shadow: 0 12px 26px rgba(23, 32, 42, 0.055) !important;
+  outline: none !important;
+}
+
+.impact-source-card span {
+  display: block !important;
+  margin-bottom: 0.2rem !important;
+  color: var(--accent-dark) !important;
+  font-size: 0.58rem !important;
+  line-height: 1.2 !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.16em !important;
+  text-transform: uppercase !important;
+}
+
+.impact-source-card strong {
+  display: block !important;
+  color: var(--text) !important;
+  font-size: 0.86rem !important;
+  line-height: 1.18 !important;
+  font-weight: 900 !important;
+}
+
+.impact-source-card small {
+  display: block !important;
+  margin-top: 0.2rem !important;
+  color: var(--muted) !important;
+  font-size: 0.7rem !important;
+  line-height: 1.25 !important;
+}
+
+/* White-to-red heat scale for summer 35C+ day maps. */
+.hotday-legend-gradient,
+.legend-gradient.hotday-legend-gradient,
+#legend .hotday-legend-gradient,
+.state-hotday-legend .legend-gradient {
+  background: linear-gradient(90deg, #fffaf2 0%, #f9d29d 35%, #ef7f4f 70%, #990026 100%) !important;
+}
+
+@media (min-width: 1400px) {
+  .impact-viz-content,
+  .impact-clean-content {
+    width: min(620px, 88%) !important;
+  }
+
+  .step--impact-sources h2 {
+    font-size: 2.55rem !important;
+    max-width: 460px !important;
+  }
+
+  .impact-source-links {
+    max-width: 460px !important;
+  }
+}
+
+@media (max-width: 1280px) {
+  .impact-viz-content,
+  .impact-clean-content {
+    width: min(620px, 90%) !important;
+  }
+
+  .step--impact-sources h2 {
+    font-size: 2.25rem !important;
+    max-width: 440px !important;
+  }
+
+  .impact-source-links {
+    max-width: 440px !important;
+  }
+
+  .impact-source-card {
+    padding: 0.6rem 0.72rem !important;
+  }
+}
+
+@media (max-height: 760px) {
+  .viz-header:has(+ .chart-wrap .impact-fill),
+  .viz-header:has(+ .chart-wrap .impact-fill--clean) {
+    padding: 0.5rem 0.72rem !important;
+  }
+
+  .impact-viz-content,
+  .impact-clean-content {
+    justify-content: flex-start !important;
+    padding-top: 0.25rem !important;
+  }
+
+  .impact-viz-row,
+  .impact-clean-rows .impact-viz-row {
+    padding: 0.38rem 0 !important;
+  }
+
+  .ivr-desc,
+  .impact-clean-rows .ivr-desc {
+    font-size: 0.7rem !important;
+    line-height: 1.3 !important;
+  }
+
+  .ivr-cite,
+  .impact-clean-rows .ivr-cite {
+    font-size: 0.6rem !important;
+  }
+
+  .impact-source-links {
+    gap: 0.45rem !important;
+  }
+
+  .impact-source-card {
+    padding: 0.54rem 0.68rem !important;
+  }
+}
+
+@media (max-width: 980px) {
+  .impact-viz-content,
+  .impact-clean-content {
+    width: min(680px, 94%) !important;
+    height: auto !important;
+  }
+
+  .step--impact-sources h2,
+  .step--impact-sources > p:not(.step-number),
+  .impact-source-links {
+    max-width: 100% !important;
+  }
+}
+
+
+/* Final Step 08 source-card design */
+.impact-chip-row {
+  display: none !important;
+}
+
+.step--impact-sources {
+  min-height: 96vh !important;
+  justify-content: center !important;
+  padding-top: 4vh !important;
+  padding-bottom: 4vh !important;
+}
+
+.step--impact-sources .step-number {
+  width: fit-content !important;
+  margin: 0 0 0.65rem !important;
+  padding: 0.32rem 0.68rem !important;
+  border: 1px solid rgba(143, 47, 27, 0.12) !important;
+  border-radius: 999px !important;
+  background: rgba(255, 248, 240, 0.68) !important;
+  color: var(--accent-dark) !important;
+  font-size: 0.66rem !important;
+  font-weight: 950 !important;
+  letter-spacing: 0.16em !important;
+}
+
+.step--impact-sources h2 {
+  max-width: 500px !important;
+  margin: 0 0 0.8rem !important;
+  font-size: clamp(2.05rem, 3vw, 3rem) !important;
+  line-height: 0.98 !important;
+  letter-spacing: -0.06em !important;
+}
+
+.step--impact-sources .impact-source-intro {
+  max-width: 500px !important;
+  margin: 0 0 0.95rem !important;
+  padding: 0.78rem 0.95rem !important;
+  border: 1px solid rgba(143, 47, 27, 0.10) !important;
+  border-radius: 16px !important;
+  background: rgba(255, 248, 240, 0.56) !important;
+  color: var(--muted) !important;
+  font-size: 0.88rem !important;
+  line-height: 1.45 !important;
+}
+
+.impact-source-links {
+  display: grid !important;
+  width: min(500px, 100%) !important;
+  max-width: 500px !important;
+  gap: 0.62rem !important;
+  margin-top: 0 !important;
+}
+
+.impact-source-card {
+  --source-color: #8f2f1b;
+  --source-soft: rgba(143, 47, 27, 0.08);
+  --source-logo: "SOURCE";
+  position: relative !important;
+  isolation: isolate !important;
+  display: block !important;
+  min-height: 4.75rem !important;
+  padding: 0.68rem 7.4rem 0.68rem 0.86rem !important;
+  overflow: hidden !important;
+  border-radius: 1rem !important;
+  border: 1px solid color-mix(in srgb, var(--source-color) 28%, transparent) !important;
+  background:
+    linear-gradient(90deg, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.78) 62%, var(--source-soft) 100%) !important;
+  color: var(--text) !important;
+  text-decoration: none !important;
+  box-shadow: 0 8px 22px rgba(23, 32, 42, 0.045) !important;
+  transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease, background 160ms ease !important;
+}
+
+.impact-source-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 34%;
+  z-index: -1;
+  background:
+    radial-gradient(circle at 70% 50%, color-mix(in srgb, var(--source-color) 20%, transparent), transparent 62%);
+}
+
+.impact-source-card::after {
+  content: var(--source-logo);
+  position: absolute;
+  right: 0.8rem;
+  top: 50%;
+  transform: translateY(-50%);
+  max-width: 6.1rem;
+  color: color-mix(in srgb, var(--source-color) 72%, white 12%);
+  font-size: 1.05rem;
+  line-height: 0.9;
+  font-weight: 950;
+  letter-spacing: -0.04em;
+  text-align: right;
+  opacity: 0.34;
+  pointer-events: none;
+}
+
+.impact-source-card:hover,
+.impact-source-card:focus-visible {
+  transform: translateY(-1px) !important;
+  border-color: color-mix(in srgb, var(--source-color) 48%, transparent) !important;
+  box-shadow: 0 14px 28px rgba(23, 32, 42, 0.075) !important;
+  outline: none !important;
+}
+
+.impact-source-card span {
+  display: block !important;
+  margin-bottom: 0.22rem !important;
+  color: var(--source-color) !important;
+  font-size: 0.58rem !important;
+  line-height: 1.2 !important;
+  font-weight: 950 !important;
+  letter-spacing: 0.16em !important;
+  text-transform: uppercase !important;
+}
+
+.impact-source-card strong {
+  display: block !important;
+  color: var(--text) !important;
+  font-size: 0.9rem !important;
+  line-height: 1.16 !important;
+  font-weight: 950 !important;
+}
+
+.impact-source-card small {
+  display: block !important;
+  max-width: 100% !important;
+  margin-top: 0.24rem !important;
+  color: var(--muted) !important;
+  font-size: 0.69rem !important;
+  line-height: 1.25 !important;
+}
+
+.source-oneearth {
+  --source-color: #007ca8;
+  --source-soft: rgba(0, 124, 168, 0.11);
+  --source-logo: "One\A Earth";
+}
+
+.source-aea {
+  --source-color: #8f3342;
+  --source-soft: rgba(143, 51, 66, 0.11);
+  --source-logo: "AEA";
+}
+
+.source-eia {
+  --source-color: #0076a8;
+  --source-soft: rgba(0, 118, 168, 0.11);
+  --source-logo: "eia";
+}
+
+.source-ucsd {
+  --source-color: #182b49;
+  --source-soft: rgba(24, 43, 73, 0.10);
+  --source-logo: "UCSD\A Today";
+}
+
+.source-who {
+  --source-color: #1d5fae;
+  --source-soft: rgba(29, 95, 174, 0.11);
+  --source-logo: "WHO";
+}
+
+.chart-wrap:has(.impact-fill--clean) + #legend,
+.sticky-viz:has(.impact-fill--clean) #legend {
+  display: none !important;
+}
+
+@media (max-width: 1280px) {
+  .step--impact-sources h2 {
+    max-width: 440px !important;
+    font-size: 2.35rem !important;
+  }
+
+  .step--impact-sources .impact-source-intro,
+  .impact-source-links {
+    max-width: 440px !important;
+  }
+
+  .impact-source-card {
+    padding-right: 6.4rem !important;
+  }
+
+  .impact-source-card::after {
+    max-width: 5.2rem;
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-height: 760px) {
+  .impact-source-links {
+    gap: 0.44rem !important;
+  }
+
+  .impact-source-card {
+    min-height: 4.1rem !important;
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+  }
+
+  .impact-source-card strong {
+    font-size: 0.82rem !important;
+  }
+
+  .impact-source-card small {
+    font-size: 0.64rem !important;
+  }
+}
+
+@media (max-width: 980px) {
+  .step--impact-sources h2,
+  .step--impact-sources .impact-source-intro,
+  .impact-source-links {
+    max-width: 100% !important;
+  }
+}
+
+/* =========================================================
+   Final Step 08 impact layout refinement
+   ========================================================= */
+
+.chart-wrap:has(.impact-fill--clean) .legend-row,
+.sticky-viz:has(.impact-fill--clean) .legend-row,
+.chart-wrap:has(.impact-fill--clean) #map-note,
+.sticky-viz:has(.impact-fill--clean) #map-note {
+  display: none !important;
+}
+
+.impact-clean-content {
+  width: min(840px, 94%) !important;
+  padding: 0.9rem 0 1.25rem !important;
+}
+
+.impact-clean-rows .impact-viz-row {
+  grid-template-columns: 2.6rem 1fr !important;
+  gap: 1.15rem !important;
+  padding: 0.92rem 0 !important;
+}
+
+.impact-clean-rows .ivr-num {
+  font-size: 1.05rem !important;
+}
+
+.impact-clean-rows .ivr-label {
+  min-width: 9.1rem !important;
+  font-size: 0.82rem !important;
+  letter-spacing: 0.17em !important;
+}
+
+.impact-clean-rows .ivr-stat {
+  font-size: 1.34rem !important;
+  line-height: 1.05 !important;
+}
+
+.impact-clean-rows .ivr-unit {
+  font-size: 0.82rem !important;
+}
+
+.impact-clean-rows .ivr-desc {
+  max-width: 96% !important;
+  font-size: 0.96rem !important;
+  line-height: 1.46 !important;
+}
+
+.impact-clean-rows .ivr-cite {
+  font-size: 0.78rem !important;
+}
+
+.impact-equity-callout {
+  margin-top: 1.15rem !important;
+  padding: 1.05rem 1.15rem !important;
+}
+
+.impact-equity-title {
+  font-size: 0.82rem !important;
+}
+
+.impact-equity-body {
+  font-size: 0.98rem !important;
+  line-height: 1.5 !important;
+}
+
+.step--impact-sources {
+  padding-top: 3.2vh !important;
+  padding-bottom: 3.2vh !important;
+}
+
+.step--impact-sources h2 {
+  max-width: 520px !important;
+  font-size: clamp(2.35rem, 3.35vw, 3.25rem) !important;
+}
+
+.step--impact-sources .impact-source-intro {
+  max-width: 520px !important;
+}
+
+.impact-source-links {
+  width: min(520px, 100%) !important;
+  max-width: 520px !important;
+}
+
+@media (max-width: 1280px) {
+  .impact-clean-content {
+    width: min(780px, 94%) !important;
+  }
+
+  .impact-clean-rows .ivr-desc {
+    font-size: 0.92rem !important;
+  }
+
+  .step--impact-sources h2 {
+    max-width: 470px !important;
+    font-size: 2.55rem !important;
+  }
+
+  .step--impact-sources .impact-source-intro,
+  .impact-source-links {
+    max-width: 470px !important;
+  }
+}
+
+@media (max-height: 760px) {
+  .impact-clean-rows .impact-viz-row {
+    padding: 0.72rem 0 !important;
+  }
+
+  .impact-clean-rows .ivr-desc {
+    font-size: 0.86rem !important;
+    line-height: 1.38 !important;
+  }
+
+  .impact-clean-rows .ivr-stat {
+    font-size: 1.16rem !important;
+  }
+
+  .impact-equity-callout {
+    padding: 0.85rem 1rem !important;
+  }
+
+  .impact-equity-body {
+    font-size: 0.9rem !important;
+  }
+}
