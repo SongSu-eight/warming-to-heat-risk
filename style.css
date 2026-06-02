@@ -8686,297 +8686,246 @@ body.explore-mode #main-story .controls {
 .detail-section .monthly-chart-card { min-height: 228px !important; }
 .detail-section #monthly-chart { min-height: 218px !important; }
 
-
-/* =========================================================
-   Minimal smooth scrolling adjustment
-   Keep the existing full-screen visualization layout, but make
-   scroll triggers shorter and calmer so the story no longer feels
-   like hard PPT-style page snaps.
-   ========================================================= */
-html,
-body {
-  scroll-snap-type: none !important;
-  overscroll-behavior-y: auto;
-}
-
-#main-story .story,
-body.impact-fullpage-active #main-story .story {
-  min-height: calc(9 * 72vh) !important;
-}
-
-#main-story .story .step,
-body.impact-fullpage-active #main-story .story .step {
-  min-height: 72vh !important;
-}
-
-#main-story .sticky-viz.step-pulse,
-body.impact-fullpage-active #main-story .sticky-viz.step-pulse {
-  animation: none !important;
-}
-
-#main-story .sticky-viz,
-body.impact-fullpage-active #main-story .sticky-viz {
-  transition: none !important;
-}
-
-#main-story #main-chart,
-body.impact-fullpage-active #main-story #main-chart {
-  transition: opacity 220ms ease !important;
-}
-
-@media (max-height: 820px) {
-  #main-story .story,
-  body.impact-fullpage-active #main-story .story {
-    min-height: calc(9 * 82vh) !important;
-  }
-  #main-story .story .step,
-  body.impact-fullpage-active #main-story .story .step {
-    min-height: 82vh !important;
-  }
-}
-
-/* =========================================================
-   Clean title treatment: keep the visualization dominant.
-   The story header is now just one title line + one subtitle line.
-   ========================================================= */
-#main-story .viz-header,
-body.impact-fullpage-active #main-story .viz-header {
-  width: min(1120px, 100%) !important;
-  max-width: min(1120px, 100%) !important;
-  padding: 0.1rem 0 0.25rem !important;
-  border: 0 !important;
-  border-radius: 0 !important;
-  background: transparent !important;
-  backdrop-filter: none !important;
-  box-shadow: none !important;
-  display: flex !important;
-  align-items: flex-start !important;
-  justify-content: space-between !important;
-}
-
-#main-story .viz-title-block,
-body.impact-fullpage-active #main-story .viz-title-block {
-  max-width: min(760px, 72vw) !important;
-}
-
-#main-story .viz-title-block > .eyebrow,
-body.impact-fullpage-active #main-story .viz-title-block > .eyebrow {
+/* Requested cleanup pass: remove decorative boxes/cards while preserving the visualizations. */
+.source-offset-connector,
+.source-offset-label {
   display: none !important;
 }
 
-#main-story .viz-header h2,
-body.impact-fullpage-active #main-story .viz-header h2 {
-  margin: 0 !important;
-  font-size: clamp(1.55rem, 2.45vw, 2.35rem) !important;
-  line-height: 1.02 !important;
-  letter-spacing: -0.055em !important;
-}
-
-#main-story #chart-subtitle,
-body.impact-fullpage-active #main-story #chart-subtitle {
-  max-width: 720px !important;
-  margin: 0.28rem 0 0 !important;
-  font-size: clamp(0.82rem, 1.02vw, 1rem) !important;
-  line-height: 1.28 !important;
-  color: #68747c !important;
-}
-
-#main-story .legend-row,
-body.impact-fullpage-active #main-story .legend-row {
-  border: 0 !important;
-  background: transparent !important;
-  backdrop-filter: none !important;
-  box-shadow: none !important;
-  padding: 0.15rem 0 0 !important;
-  border-radius: 0 !important;
-}
-
-#main-story #map-note,
-body.impact-fullpage-active #main-story #map-note {
-  max-width: min(960px, 100%) !important;
-  font-size: 0.72rem !important;
-  line-height: 1.3 !important;
-  color: #73808a !important;
-}
-
-#main-story .sticky-viz,
-body.impact-fullpage-active #main-story .sticky-viz {
-  gap: clamp(0.28rem, 0.65vh, 0.5rem) !important;
-}
-
-#main-story #main-chart,
-body.impact-fullpage-active #main-story #main-chart {
-  max-height: calc(100vh - 155px) !important;
-}
-
-@media (max-width: 820px) {
-  #main-story .viz-header,
-  body.impact-fullpage-active #main-story .viz-header {
-    display: block !important;
-  }
-  #main-story .viz-title-block,
-  body.impact-fullpage-active #main-story .viz-title-block {
-    max-width: 100% !important;
-  }
-}
-
-/* Clean pass: reduce the number of visible boxes/cards across the full webpage. */
 .viz-header,
+.legend-row,
 .line-caption,
 .placeholder-legend,
+.us-transition p:not(.eyebrow),
 .expectation-intro,
 .expectation-result-copy,
-.thermometer-panel,
-.thermometer-you-card,
-.thermometer-range-note,
-.state-change-copy,
-.state-change-controls,
-.state-change-state-card,
-.state-change-state-card.state-shape-card,
-.us-transition p:not(.eyebrow),
-.selected-state-panel,
-.daily-card,
-.monthly-panel,
-.monthly-chart-card,
-.impact-viz-equity,
-.impact-page-intro-copy,
-.impact-page-column,
-.impact-page-kicker,
-.state-picker-row,
-#legend .legend-caption {
+.state-change-copy {
   background: transparent !important;
-  border-color: transparent !important;
+  border: 0 !important;
   box-shadow: none !important;
   backdrop-filter: none !important;
 }
 
 .viz-header {
+  padding: 1.2rem 1.7rem 0 !important;
+}
+
+.viz-title-block .eyebrow {
+  display: none !important;
+}
+
+.viz-header h2 {
+  font-size: clamp(2.2rem, 4.6vw, 4.2rem) !important;
+  max-width: 1120px !important;
+}
+
+#chart-subtitle {
+  max-width: 900px !important;
+  font-size: clamp(1rem, 1.35vw, 1.32rem) !important;
+  line-height: 1.35 !important;
+}
+
+.legend-row {
+  width: auto !important;
+  padding: 0 1.7rem 1.2rem !important;
+  transform: none !important;
+}
+
+.line-caption .legend-caption,
+.legend-caption {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
   padding: 0 !important;
 }
 
-#legend .legend-caption,
-.line-caption .legend-caption,
-.placeholder-legend {
+/* Remove month mini-card boxes but keep the thermometer and month contents. */
+.month-calendar .month-card > rect:first-child {
+  display: none !important;
+}
+
+/* Remove exposure comparison card surfaces. */
+.exposure-focus-card > rect:first-child,
+.exposure-selected-rank-panel > rect:first-child,
+.exposure-selected-note > rect:first-child,
+.exposure-selected-top-message > rect:first-child {
+  display: none !important;
+}
+
+/* Remove U.S. exposure card/key/callout surfaces. */
+.us-exposure-panel > rect:first-child,
+.us-exposure-block-viz > g > rect:first-child {
+  display: none !important;
+}
+
+/* Make main visualization use more canvas area. */
+.sticky-viz {
   padding: 0 !important;
+}
+
+.chart-wrap {
+  min-height: 0 !important;
+}
+
+#main-chart {
+  min-height: 620px !important;
+}
+
+/* Hot-day comparison page refinements. */
+.hotday-smallmultiple-controls text,
+.hotday-smallmultiple-color-legend text,
+.hotday-temp-trend-inset text {
+  paint-order: stroke;
+  stroke: rgba(255, 248, 240, 0.7);
+  stroke-width: 2px;
+  stroke-linejoin: round;
+}
+
+.hotday-temp-trend-inset .axis path,
+.hotday-temp-trend-inset .axis line {
+  stroke: rgba(23,32,42,0.22) !important;
+}
+
+.exposure-sun .sun-glyph {
+  filter: drop-shadow(0 2px 4px rgba(143,47,27,0.10));
+}
+
+/* This pass: keep calendar month boxes, but keep other decorative cards removed. */
+.month-calendar .month-card > rect:first-child {
+  display: inline !important;
+  fill: rgba(255,255,255,0.74) !important;
+  stroke: rgba(23,32,42,0.12) !important;
+  stroke-width: 1.1px !important;
+}
+.month-calendar .month-card:has(rect.month-day-block) > rect:first-child,
+.month-calendar .month-card > rect:first-child[fill*="196"] {
+  fill: rgba(196,81,44,0.075) !important;
+  stroke: rgba(196,81,44,0.24) !important;
+}
+
+/* Make the active story visuals feel larger and less boxed. */
+.sticky-viz {
+  grid-template-rows: auto minmax(600px, 1fr) auto !important;
+}
+.viz-header,
+.legend-row {
   border-radius: 0 !important;
 }
-
-.expectation-intro {
-  padding: 0.65rem 0 !important;
-}
-
-.expectation-field input,
-#state-picker,
-.writeup-link {
+.legend-row {
+  background: transparent !important;
+  border: 0 !important;
   box-shadow: none !important;
 }
 
-/* Keep the data marks visible, but remove decorative outlines from exposure-page containers. */
+/* Keep exposure and U.S. exposure comparison frameless. */
 .exposure-focus-card > rect:first-child,
 .exposure-selected-rank-panel > rect:first-child,
+.exposure-selected-note > rect:first-child,
 .exposure-selected-top-message > rect:first-child,
-.exposure-selected-note > rect:first-child {
-  fill: transparent !important;
-  stroke: none !important;
+.us-exposure-panel > rect:first-child,
+.us-exposure-block-viz > g > rect:first-child {
+  display: none !important;
+}
+.month-calendar .month-card.has-hotdays > rect:first-child {
+  fill: rgba(196,81,44,0.075) !important;
+  stroke: rgba(196,81,44,0.24) !important;
+}
+.month-calendar .month-card.is-empty > rect:first-child {
+  fill: rgba(255,255,255,0.74) !important;
+  stroke: rgba(23,32,42,0.12) !important;
 }
 
-
-/* Explore exposure switch: make the overlay control look like a real switch. */
-body.explore-mode .bubble-toggle-label {
-  min-width: 0 !important;
+/* Latest requested layout tweaks: exposure map, U.S. suns, and Explore controls. */
+/* Explore controls: year slider takes the full first row; scenario/metric/bubbles sit below. */
+body.explore-mode .viz-header {
+  align-items: start !important;
+  gap: 1.1rem !important;
 }
 
-body.explore-mode .bubble-toggle-control {
+body.explore-mode .controls {
   display: grid !important;
-  grid-template-columns: auto 1fr;
-  align-items: center;
-  gap: 0.5rem !important;
-  min-height: 2.25rem !important;
-  padding: 0.32rem 0.54rem !important;
-  border: 1px solid rgba(79, 143, 192, 0.22) !important;
-  background: rgba(255, 255, 255, 0.82) !important;
+  grid-template-columns: repeat(3, minmax(150px, 1fr)) !important;
+  grid-template-areas:
+    "year year year"
+    "scenario metric bubbles" !important;
+  min-width: min(760px, 58vw) !important;
+  max-width: min(820px, 60vw) !important;
+  gap: 0.65rem !important;
+  align-items: stretch !important;
 }
 
-body.explore-mode .bubble-toggle-control input {
-  appearance: none;
-  -webkit-appearance: none;
-  position: relative;
-  width: 2.3rem !important;
-  height: 1.22rem !important;
-  margin: 0 !important;
-  border-radius: 999px;
-  border: 1px solid rgba(95, 107, 115, 0.34);
-  background: rgba(95, 107, 115, 0.20);
-  cursor: pointer;
-  transition: background 0.16s ease, border-color 0.16s ease;
+body.explore-mode .controls label:nth-child(1) { grid-area: scenario !important; }
+body.explore-mode .controls label:nth-child(2) { grid-area: year !important; }
+body.explore-mode .controls label:nth-child(3) { grid-area: metric !important; }
+body.explore-mode .controls label:nth-child(4) { grid-area: bubbles !important; }
+
+body.explore-mode .controls label:nth-child(2) {
+  grid-template-columns: auto 1fr !important;
+  grid-template-rows: auto auto !important;
+  column-gap: 0.8rem !important;
+  align-items: center !important;
 }
 
-body.explore-mode .bubble-toggle-control input::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 0.16rem;
-  width: 0.82rem;
-  height: 0.82rem;
-  border-radius: 50%;
-  background: white;
-  box-shadow: 0 1px 4px rgba(23, 32, 42, 0.22);
-  transform: translateY(-50%);
-  transition: left 0.16s ease;
+body.explore-mode .controls label:nth-child(2) input[type="range"] {
+  grid-column: 1 / -1 !important;
+  width: 100% !important;
+  max-width: none !important;
 }
 
-body.explore-mode .bubble-toggle-control input:checked {
-  background: rgba(79, 143, 192, 0.80);
-  border-color: rgba(79, 143, 192, 0.95);
+body.explore-mode .controls select,
+body.explore-mode .bubble-toggle-control {
+  width: 100% !important;
+  max-width: none !important;
 }
 
-body.explore-mode .bubble-toggle-control input:checked::after {
-  left: 1.25rem;
+/* Give the U.S. exposure sun grids a little breathing room from their labels. */
+.exposure-sun-grid {
+  transform-box: fill-box;
 }
 
-body.explore-mode .bubble-toggle-text {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+/* Keep the frameless U.S. comparison clean after the sun grid was resized. */
+.us-exposure-panel > rect:first-child,
+.us-exposure-block-viz > g > rect:first-child {
+  display: none !important;
 }
 
-/* Final explore bubble pass: match Plot 06 bubble placement/design and keep bubbles interactive. */
-.explore-bubble-layer {
-  pointer-events: all !important;
+@media (max-width: 1100px) {
+  body.explore-mode .controls {
+    min-width: min(640px, 54vw) !important;
+    max-width: min(680px, 56vw) !important;
+    grid-template-columns: repeat(3, minmax(120px, 1fr)) !important;
+  }
 }
 
-.explore-exposure-bubble {
-  pointer-events: all !important;
-  cursor: pointer !important;
-  vector-effect: non-scaling-stroke;
-  fill: rgba(196,81,44,0.34) !important;
-  stroke: rgba(143,47,27,0.78) !important;
-  stroke-width: 1.3px !important;
-  mix-blend-mode: normal !important;
-  transition: fill 0.16s ease, stroke-width 0.16s ease, filter 0.16s ease;
+/* Final layout refinements requested in the latest round. */
+/* Explore mode: keep the headline on top, then place the long year bar and the controls underneath, aligned to the right. */
+body.explore-mode #main-story .viz-header {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  align-items: start !important;
+  row-gap: 0.9rem !important;
 }
 
-.explore-exposure-bubble:hover,
-.explore-exposure-bubble:hover:not(.selected) {
-  fill: rgba(196,81,44,0.46) !important;
-  stroke: #ffd43b !important;
-  stroke-width: 2.8px !important;
-  filter: drop-shadow(0 0 5px rgba(255,212,59,0.9)) !important;
+body.explore-mode #main-story .viz-title-block {
+  max-width: 760px !important;
 }
 
-.explore-exposure-bubble.selected {
-  fill: rgba(255,212,59,0.42) !important;
-  stroke: #ffd43b !important;
-  stroke-width: 3.4px !important;
-  filter: drop-shadow(0 0 5px rgba(255,212,59,0.9)) !important;
+body.explore-mode #main-story .viz-title-block h2 {
+  margin-bottom: 0.3rem !important;
 }
 
-.explore-selected-bubble-halo {
-  pointer-events: none !important;
-  fill: rgba(255,212,59,0.12) !important;
-  stroke: #ffd43b !important;
-  stroke-width: 2.6px !important;
-  filter: drop-shadow(0 0 5px rgba(255,212,59,0.75)) !important;
-  mix-blend-mode: normal !important;
+body.explore-mode #main-story .controls {
+  justify-self: end !important;
+  width: min(860px, 100%) !important;
+  min-width: 0 !important;
+  max-width: min(860px, 100%) !important;
+  margin-left: auto !important;
 }
 
+@media (max-width: 1100px) {
+  body.explore-mode #main-story .controls {
+    justify-self: stretch !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}

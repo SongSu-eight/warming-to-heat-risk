@@ -66,99 +66,88 @@ const stepSettings = [
     year: 2020,
     scenario: "ssp245",
     metric: "summer_tas_c_change_from_observed_2020",
-    title: "Average warming looks small",
+    title: "Average warming can look small and abstract",
     subtitle:
-      "CMIP6 projections show how temperature changes after the 2020 baseline.",
+      "Observed annual temperature anchors the 2000–2020 baseline, then CMIP6 projections show how average temperature changes through 2100.",
     note:
-      "Average temperature is the starting point, not the whole story."
+      "If we only look at average temperature, climate risk can feel like just a few degrees."
   },
   {
     view: "translation-card",
     year: 2100,
     scenario: "ssp585",
     metric: "summer_hot_days_35c_change_from_observed_2020",
-    title: "Averages hide hot days",
+    title: "Averages hide extra very hot days",
     subtitle:
-      "35°C+ days show how warming appears in daily life.",
+      "Average temperature is only the first layer. Daily heat becomes easier to feel when more summer days rise above 35°C.",
     note:
-      "Values use 5-year rolling averages and 2020 baseline alignment.",
+      "Both the °C figure and the very hot day count use centered 5-year rolling averages and baseline alignment.",
   },
   {
     view: "state-hotday-small-multiples",
     year: 2100,
     scenario: "ssp585",
     metric: "summer_hot_days_35c_change_from_observed_2020",
-    title: "Hot days land unevenly",
+    title: "Extra Very hot days do not land evenly",
     subtitle:
-      "Some states add far more 35°C+ summer days than others.",
+      "The same national warming story turns into different very-hot-day patterns across states.",
     note:
-      "Color shows added 35°C+ summer days under high emissions.",
-  },
-  {
-    view: "threshold-explanation",
-    year: 2100,
-    scenario: "ssp585",
-    metric: "summer_hot_days_35c_change_from_observed_2020",
-    title: "Same warming, different hot-day risk",
-    subtitle:
-      "Average warming matters most when a state is already close to 35°C.",
-    note:
-      "Grey dot = starting point. Arrow = warming pressure. Number = added 35°C+ summer days.",
+      "Color shows baseline-aligned 5-year average increases in very hot summer days under high emissions.",
   },
   {
     view: "exposure-layer-cards",
     year: 2100,
     scenario: "ssp585",
     metric: "summer_hot_days_35c_change_from_observed_2020",
-    title: "Heat exposure depends on heat and people",
+    title: "Carry your selected state into exposure",
     subtitle:
-      "More hot days matter more when more people are exposed.",
+      "Exposure combines added very hot days with projected population, then compares your state with the highest-exposure benchmark.",
     note:
-      "Exposure-days are a proxy: added 35°C+ summer days × projected population.",
+      "Exposure proxy = added very hot summer days × projected population. It is not a health-outcome prediction.",
   },
   {
     view: "animated-exposure-map",
     year: 2100,
     scenario: "ssp585",
     metric: "summer_hot_days_35c_change_from_observed_2020",
-    title: "Exposure grows with people",
+    title: "Exposure grows where heat meets people",
     subtitle:
-      "Bubbles show where heat and population overlap.",
+      "Now that exposure is defined, the map shows where very hot days and exposed population combine across the U.S.",
     note:
-      "Fill = hot days. Bubble size = exposure-days.",
+      "Fill = very hot summer days. Bubble size = exposure proxy. 2000–2020 uses observed hot days; 2030–2100 uses high-emissions projections.",
   },
   {
     view: "us-exposure-comparison",
     year: 2100,
     scenario: "ssp585",
     metric: "summer_hot_days_35c_change_from_observed_2020",
-    title: "U.S. exposure grows",
+    title: "By 2100, U.S. heat exposure becomes much larger",
     subtitle:
-      "Each sun represents the same amount of heat exposure.",
+      "Each sun represents the same amount of heat exposure. One exposure unit means one person experiencing one additional 35°C+ summer day.",
     note:
-      "2020 and 2100 use the same exposure-day proxy.",
+      "2020 baseline = observed 2020 hot-day hazard × population projection baseline. 2100 projection = projected 2100 hot-day hazard × projected 2100 population.",
   },
   {
     view: "impact-placeholder",
     year: 2100,
     scenario: "ssp585",
     metric: "summer_hot_days_35c_change_from_observed_2020",
-    title: "Daily life impacts",
+    title: "Common knowledge on the left, sourced impacts on the right",
     subtitle:
-      "Source-backed examples connect heat to daily routines.",
+      "Step 08 separates context/proxy layers from outside-source examples, using color to make the two kinds of evidence easier to compare.",
     note:
-      "Context and impacts are separated."
+      "Left = common-knowledge context/proxy layers. Right = source-backed daily-life examples."
   },
   {
     view: "map",
     year: 2100,
     scenario: "ssp585",
     metric: "summer_hot_days_35c_change_from_observed_2020",
-    title: "Explore the data",
+    title: "Compare states and metrics yourself",
     subtitle:
-      "Compare scenario, year, metric, and state.",
+      "Use the controls to compare average warming with extra very hot days. Very hot means daily highs above 35°C.",
     note:
-      "Hover or click a state for details.",
+      "Explore mode: hover previews values; click selects a state with a solid yellow outline for local detail.",
   },
 ];
 let statesGeo;
@@ -208,10 +197,6 @@ let hotDayRollingLookupCache = null;
 let monthlyHotDayRollingLookupCache = null;
 let renderCycleId = 0;
 let stateHotdaySmallMultipleTimer = null;
-let exploreExposureScaleCache = new Map();
-let exploreExposureRowsCache = new Map();
-let exploreExposureByStateCache = new Map();
-let exploreBubbleCentroidCache = null;
 
 function clearStoryTimers() {
   if (mapAnimationTimer) {
@@ -371,14 +356,8 @@ function setupControls() {
     bubbleToggle.on("change", (event) => {
       showExposureBubbles = event.target.checked;
       updateManualTitle();
-
-      // Keep the final Explore page responsive: do not rebuild/recolor the whole map
-      // just to toggle the exposure bubbles. Match Plot 06 by only updating the
-      // exposure overlay and its legend.
-      if (currentStep === stepSettings.length - 1 && currentState.view === "map") {
-        updateExploreExposureOverlayOnly(showExposureBubbles ? 160 : 90);
-      } else if (currentState.view === "map") {
-        renderMap(220);
+      if (currentState.view === "map") {
+        renderMap(350);
       }
     });
   }
@@ -1127,7 +1106,7 @@ function scheduleStateChangeLoopWhenVisible() {
       if (stateChangeHasStarted || stateChangePaused || !isStateChangeSectionInView()) return;
       stateChangeHasStarted = true;
       playStateChangeLoopFromCurrent(false);
-    }, 1000);
+    }, 350);
   };
 
   if (isStateChangeSectionInView()) {
@@ -1356,8 +1335,8 @@ function setupScroll() {
 
   scroller
     .setup({
-      step: "#main-story .step",
-      offset: 0.5,
+      step: ".step",
+      offset: 0.55,
       debug: false,
     })
     .onStepEnter((response) => {
@@ -1392,8 +1371,7 @@ function updateStep(step) {
     .classed("impact-fullpage-active", false);
 
   syncControls();
-  // Keep story transitions calmer: the chart updates with the scroll step,
-  // but the container no longer flashes like a slide change.
+  pulseViz();
   updateMainView();
 
   if (!setting.animateYears) {
@@ -1464,7 +1442,7 @@ function updateManualTitle() {
 
   title.text(`${metricLabels[currentState.metric]} in ${currentState.year}`);
   subtitle.text(
-    `${scenarioLabels[currentState.scenario]} scenario. Hover previews values; click selects a state with a solid yellow outline. ${showExposureBubbles ? "Bubbles show exposure-days proxy." : "Turn on bubbles to compare exposure-days proxy."}`
+    `${scenarioLabels[currentState.scenario]} scenario. Hover previews values; click selects a state with a solid yellow outline. ${showExposureBubbles ? "Bubbles show exposure proxy." : "Turn on bubbles to compare exposure proxy."}`
   );
   mapNote.text("Explore mode: color shows the selected climate metric. Very hot days = daily highs above 35°C. Hover previews values; click selects a state for detail.");
 }
@@ -1751,7 +1729,7 @@ function renderLineChart() {
     .attr("y", -18)
     .attr("text-anchor", "middle")
     .attr("fill", "#5f6b73")
-    .attr("font-size", 10.5)
+    .attr("font-size", 11)
     .attr("font-weight", 900)
     .text("2020 source switch");
 
@@ -1819,7 +1797,7 @@ function renderLineChart() {
     .map((scenario) => projectedRows.find((d) => d.scenario === scenario && d.year === START_YEAR))
     .filter((d) => d && Number.isFinite(d.rawValue));
 
-  // Source-offset annotation removed for a cleaner Plot 01.
+  // Source-offset annotation removed for a cleaner baseline transition.
 
   g.selectAll(".scenario-start-dot-raw")
     .data(scenarioStartPoints)
@@ -2067,7 +2045,7 @@ function renderLineChart() {
     .attr("class", "legend-caption")
     .text(`Grey = NOAA observed annual average temperature. Colored dots show raw CMIP6 values at 2020; scenario lines are baseline-aligned to observed 2020. Lines use centered 5-year rolling averages; endpoint windows use available years.`);
 
-  mapNote.text("Average temperature is the starting point, not the whole story.");
+  mapNote.text("If we only look at average temperature, climate risk can feel like just a few degrees.");
 }
 
 
@@ -2872,9 +2850,9 @@ function renderTranslationCard() {
     .attr("y", -16)
     .attr("text-anchor", "middle")
     .attr("fill", "#8f2f1b")
-    .attr("font-size", 11)
+    .attr("font-size", 10.2)
     .attr("font-weight", 900)
-    .attr("letter-spacing", "0.07em")
+    .attr("letter-spacing", "0.055em")
     .text("TRANSLATED INTO VERY HOT DAYS");
 
   arrow.transition()
@@ -2939,7 +2917,7 @@ function renderTranslationCard() {
   const monthGroups = monthWrap.selectAll("g.month-card")
     .data(monthCards)
     .join("g")
-    .attr("class", "month-card")
+    .attr("class", (d) => `month-card ${d.blocks > 0 ? "has-hotdays" : "is-empty"}`)
     .attr("transform", (d) => `translate(${d.x},${d.y})`);
 
   monthGroups.append("rect")
@@ -3024,7 +3002,7 @@ function renderTranslationCard() {
     .attr("y", cardY + cardH - 28)
     .attr("text-anchor", "middle")
     .attr("fill", "#17202a")
-    .attr("font-size", 15)
+    .attr("font-size", 17)
     .attr("font-weight", 800)
     .attr("opacity", 0)
     .text("The same 2100 high-emissions future may look small in degrees, but becomes tangible as calendar days.");
@@ -3385,34 +3363,40 @@ function renderStateHotdaySmallMultiples() {
     .attr("font-weight", 950)
     .text(START_YEAR);
 
-  const leftGroupX = leftPanels.length === 1 ? 142 : 54;
-  const panelW = leftPanels.length === 1 ? 300 : 232;
-  const panelH = 250;
+  // Compact the state comparison on the left so the right side can explain
+  // why hot-day counts do not follow the same ranking as average temperature.
+  const leftGroupX = -2;
+  const panelW = leftPanels.length === 1 ? 268 : 188;
+  const panelH = 260;
   const panelGap = 28;
-  const panelY = 142;
-  const rightW = 250;
-  const rightX = width - rightW - 58;
+  const panelY = 150;
+  const rightW = 188;
+  const rightX = leftGroupX + leftPanels.length * (panelW + panelGap) + 20;
+  const lineChartX = 678;
+  const lineChartY = 104;
+  const lineChartW = 242;
+  const lineChartH = 324;
 
-  const sectionY = 108;
+  const sectionY = 138;
   g.append("text")
     .attr("x", leftGroupX)
     .attr("y", sectionY)
     .attr("fill", "#8f2f1b")
-    .attr("font-size", 11)
+    .attr("font-size", 10.2)
     .attr("font-weight", 900)
-    .attr("letter-spacing", "0.07em")
+    .attr("letter-spacing", "0.055em")
     .text(sameAsTopTemp
       ? "YOUR STATE IS ALSO THE FASTEST-WARMING STATE"
-      : "WARMING STATES");
+      : "PREVIOUS WARMING STATES");
 
   g.append("text")
     .attr("x", rightX)
     .attr("y", sectionY)
     .attr("fill", "#8f2f1b")
-    .attr("font-size", 11)
+    .attr("font-size", 10.2)
     .attr("font-weight", 900)
-    .attr("letter-spacing", "0.07em")
-    .text("MOST ADDED HOT DAYS");
+    .attr("letter-spacing", "0.055em")
+    .text("MOST EXTRA VERY HOT DAYS");
 
   const positionedLeftPanels = leftPanels.map((d, i) => ({
     ...d,
@@ -3446,65 +3430,87 @@ function renderStateHotdaySmallMultiples() {
     .attr("y", 0)
     .attr("text-anchor", "middle")
     .attr("fill", "#7a858d")
-    .attr("font-size", 10.5)
+    .attr("font-size", 8.8)
     .attr("font-weight", 900)
-    .attr("letter-spacing", "0.06em")
-    .text((d) => d.label.toUpperCase());
+    .attr("letter-spacing", "0.035em")
+    .text((d) => {
+      if (d.kind.includes("hotday")) return "MOST 35°C+ DAYS";
+      if (d.kind.includes("top")) return "FASTEST AVG WARMING";
+      return "YOUR STATE";
+    });
 
   panel.append("text")
     .attr("x", (d) => d.w / 2)
     .attr("y", 34)
     .attr("text-anchor", "middle")
     .attr("fill", "#17202a")
-    .attr("font-size", (d) => d.stateName.length > 13 ? 22 : 26)
+    .attr("font-size", (d) => d.stateName.length > 13 ? 20 : 24)
     .attr("font-weight", 900)
     .text((d) => d.stateName);
 
   panel.each(function(d) {
     const panelG = d3.select(this);
     const feature = getStateFeature(d.stateName);
-    drawMiniStateShape(panelG, feature, 14, 58, d.w - 28, 125, color(0));
+    drawMiniStateShape(panelG, feature, 12, 58, d.w - 24, 132, color(0));
   });
 
   const valueText = panel.append("text")
     .attr("class", "hotday-state-value")
     .attr("x", (d) => d.w / 2)
-    .attr("y", 220)
+    .attr("y", 224)
     .attr("text-anchor", "middle")
     .attr("fill", "#c4512c")
-    .attr("font-size", 34)
+    .attr("font-size", 31)
     .attr("font-weight", 950)
     .text("+0.0 days");
 
   panel.append("text")
     .attr("x", (d) => d.w / 2)
-    .attr("y", 244)
+    .attr("y", 249)
     .attr("text-anchor", "middle")
     .attr("fill", "#5f6b73")
-    .attr("font-size", 11.5)
+    .attr("font-size", 10.6)
     .text("5-year avg. added very hot summer days");
 
   if (positionedLeftPanels.length && positionedRightPanels.length) {
-    const dividerX = rightX - 42;
+    const dividerX = rightX - 14;
     g.append("line")
       .attr("x1", dividerX)
       .attr("x2", dividerX)
-      .attr("y1", 104)
+      .attr("y1", 122)
       .attr("y2", 430)
-      .attr("stroke", "rgba(143,47,27,0.22)")
-      .attr("stroke-width", 1.2)
+      .attr("stroke", "rgba(143,47,27,0.18)")
+      .attr("stroke-width", 1.1)
       .attr("stroke-dasharray", "5 7");
+
+    g.append("line")
+      .attr("x1", lineChartX - 18)
+      .attr("x2", lineChartX - 18)
+      .attr("y1", 122)
+      .attr("y2", 430)
+      .attr("stroke", "rgba(23,32,42,0.10)")
+      .attr("stroke-width", 1.1);
   }
+
+  const tempTrendUpdater = drawAverageTemperatureTrendInset(
+    g,
+    panels,
+    lineChartX,
+    lineChartY,
+    lineChartW,
+    lineChartH
+  );
 
   panel.transition()
     .delay((d, i) => 140 + i * 170)
     .duration(520)
     .attr("opacity", 1);
 
+  const legendW = 420;
   const legend = g.append("g")
-    .attr("transform", `translate(${width / 2 - 190},${height - 56})`);
+    .attr("class", "hotday-smallmultiple-color-legend")
+    .attr("transform", `translate(${width / 2 - legendW / 2},${height - 56})`);
 
-  const legendW = 380;
   const defs = svg.append("defs");
   const gradId = "hotday-state-gradient";
   const grad = defs.append("linearGradient").attr("id", gradId).attr("x1", "0%").attr("x2", "100%");
@@ -3543,6 +3549,8 @@ function renderStateHotdaySmallMultiples() {
   function updateYear(year, immediate = false) {
     const duration = immediate ? 0 : 520;
     yearText.text(year);
+    tempTrendUpdater?.(year, duration);
+
     panel.each(function(d) {
       const row = getNearestYearRow(d.series, year);
       const days = row?.days ?? 0;
@@ -3572,7 +3580,7 @@ function renderStateHotdaySmallMultiples() {
 
   const controls = g.append("g")
     .attr("class", "hotday-smallmultiple-controls")
-    .attr("transform", `translate(0,${height - 102})`);
+    .attr("transform", `translate(${width / 2 - 375},${height - 102})`);
 
   const button = controls.append("g")
     .attr("class", "hotday-smallmultiple-play-button")
@@ -3596,14 +3604,9 @@ function renderStateHotdaySmallMultiples() {
     .attr("font-weight", 900)
     .text("Pause");
 
-  const sliderX0 = 112;
-  const sliderX1 = Math.min(650, Math.max(500, width - 520));
+  const sliderX0 = 140;
+  const sliderX1 = 610;
   const sliderY = 13;
-
-  // Center the time slider itself under the visualization; the play button and status
-  // sit around it instead of pulling the whole control group left.
-  const centeredControlsX = Math.max(24, (width - (sliderX0 + sliderX1)) / 2);
-  controls.attr("transform", `translate(${centeredControlsX},${height - 102})`);
   const sliderScale = d3.scaleLinear()
     .domain([0, years.length - 1])
     .range([sliderX0, sliderX1]);
@@ -3766,6 +3769,171 @@ function renderStateHotdaySmallMultiples() {
     .text("Color shows 5-year average added very hot summer days. Left: earlier warming states; right: largest hot-day increase.");
 }
 
+
+function drawAverageTemperatureTrendInset(parentG, panels, x0, y0, chartW, chartH) {
+  const uniquePanels = Array.from(
+    new Map(panels.map((d) => [normalizeStateName(d.stateName), d])).values()
+  );
+
+  const trendRows = uniquePanels.map((panel) => {
+    const seriesObj = getStateAlignedAnnualChangeSeries(panel.stateName, "ssp585");
+    const series = (seriesObj?.series || [])
+      .filter((d) => d.year >= START_YEAR && d.year <= END_YEAR && Number.isFinite(d.change))
+      .map((d) => ({ year: d.year, value: d.change }));
+    return {
+      ...panel,
+      trendSeries: series,
+    };
+  }).filter((d) => d.trendSeries.length);
+
+  if (!trendRows.length) return null;
+
+  const finalHotValues = trendRows.map((d) => {
+    const finalHot = d.series?.find((p) => p.year === END_YEAR) || d.series?.[d.series.length - 1];
+    return Math.max(0, finalHot?.days ?? 0);
+  });
+  const hotColorScale = d3.scaleSequential()
+    .domain([0, Math.max(1, d3.max(finalHotValues) || 1)])
+    .interpolator(interpolateHotDaysWhiteToRed);
+  const colors = new Map();
+  trendRows.forEach((d) => {
+    const finalHot = d.series?.find((p) => p.year === END_YEAR) || d.series?.[d.series.length - 1];
+    const days = Math.max(0, finalHot?.days ?? 0);
+    colors.set(normalizeStateName(d.stateName), days < 0.15 ? "#9aa3aa" : hotColorScale(days));
+  });
+
+  const margin = { top: 56, right: 62, bottom: 40, left: 44 };
+  const innerW = chartW - margin.left - margin.right;
+  const innerH = chartH - margin.top - margin.bottom;
+
+  const allValues = trendRows.flatMap((d) => d.trendSeries.map((p) => p.value));
+  const yMax = Math.max(0.5, d3.max(allValues) || 0.5);
+  const y = d3.scaleLinear()
+    .domain([0, yMax * 1.12])
+    .nice()
+    .range([innerH, 0]);
+
+  const x = d3.scaleLinear()
+    .domain([START_YEAR, END_YEAR])
+    .range([0, innerW]);
+
+  const line = d3.line()
+    .x((d) => x(d.year))
+    .y((d) => y(d.value))
+    .curve(d3.curveMonotoneX);
+
+  const inset = parentG.append("g")
+    .attr("class", "hotday-temp-trend-inset")
+    .attr("transform", `translate(${x0},${y0})`);
+
+  inset.append("text")
+    .attr("x", 0)
+    .attr("y", 0)
+    .attr("fill", "#17202a")
+    .attr("font-size", 17)
+    .attr("font-weight", 950)
+    .text("Average warming trend");
+
+  inset.append("text")
+    .attr("x", 0)
+    .attr("y", 20)
+    .attr("fill", "#5f6b73")
+    .attr("font-size", 10.5)
+    .text("Lines show °C change since 2020");
+
+  const plot = inset.append("g")
+    .attr("transform", `translate(${margin.left},${margin.top})`);
+
+  plot.append("g")
+    .attr("class", "hotday-temp-grid")
+    .call(d3.axisLeft(y).ticks(4).tickSize(-innerW).tickFormat(""))
+    .call((g) => g.select(".domain").remove())
+    .call((g) => g.selectAll("line").attr("stroke", "rgba(23,32,42,0.10)"));
+
+  plot.append("g")
+    .attr("class", "axis hotday-temp-y-axis")
+    .call(d3.axisLeft(y).ticks(4).tickFormat((d) => `${d3.format(".1f")(d)}°`))
+    .call((g) => g.selectAll("text").attr("font-size", 8.5));
+
+  plot.append("g")
+    .attr("class", "axis hotday-temp-x-axis")
+    .attr("transform", `translate(0,${innerH})`)
+    .call(d3.axisBottom(x).tickValues([2020, 2060, 2100]).tickFormat(d3.format("d")))
+    .call((g) => g.selectAll("text").attr("font-size", 8.5));
+
+  const currentYearLine = plot.append("line")
+    .attr("class", "hotday-temp-current-year")
+    .attr("y1", 0)
+    .attr("y2", innerH)
+    .attr("stroke", "rgba(23,32,42,0.22)")
+    .attr("stroke-width", 1)
+    .attr("stroke-dasharray", "3 4");
+
+  const seriesG = plot.selectAll("g.hotday-temp-series")
+    .data(trendRows, (d) => d.stateName)
+    .join("g")
+    .attr("class", "hotday-temp-series");
+
+  seriesG.append("path")
+    .attr("fill", "none")
+    .attr("stroke", (d) => colors.get(normalizeStateName(d.stateName)))
+    .attr("stroke-width", 3)
+    .attr("opacity", 0.9)
+    .attr("d", (d) => line(d.trendSeries));
+
+  seriesG.append("circle")
+    .attr("class", "hotday-temp-current-dot")
+    .attr("r", (d) => d.kind.includes("selected") ? 4.2 : 3.6)
+    .attr("fill", (d) => colors.get(normalizeStateName(d.stateName)))
+    .attr("stroke", "#fff8f0")
+    .attr("stroke-width", 1.8);
+
+  const labels = inset.append("g")
+    .attr("class", "hotday-temp-line-labels")
+    .attr("transform", `translate(${margin.left},${margin.top})`);
+
+  labels.selectAll("text")
+    .data(trendRows, (d) => d.stateName)
+    .join("text")
+    .attr("x", innerW + 6)
+    .attr("y", (d) => {
+      const final = d.trendSeries.find((p) => p.year === END_YEAR) || d.trendSeries[d.trendSeries.length - 1];
+      return y(final.value) + 3;
+    })
+    .attr("fill", (d) => colors.get(normalizeStateName(d.stateName)))
+    .attr("font-size", 9.5)
+    .attr("font-weight", 900)
+    .text((d) => {
+      const name = d.stateName.length > 10 ? d.stateName.slice(0, 10) + "…" : d.stateName;
+      return name;
+    });
+
+  inset.append("text")
+    .attr("x", 0)
+    .attr("y", chartH + 8)
+    .attr("fill", "#5f6b73")
+    .attr("font-size", 9.5)
+    .attr("font-weight", 700)
+    .text("Compare this with the hot-day counts on the left.");
+
+  return function updateTempTrendYear(year, duration = 0) {
+    currentYearLine
+      .transition()
+      .duration(duration)
+      .attr("x1", x(year))
+      .attr("x2", x(year));
+
+    seriesG.each(function(d) {
+      const point = getNearestYearRow(d.trendSeries, year);
+      d3.select(this).select("circle.hotday-temp-current-dot")
+        .transition()
+        .duration(duration)
+        .attr("cx", x(point.year))
+        .attr("cy", y(point.value));
+    });
+  };
+}
+
 function renderThresholdExplanation() {
   hideTrendSummary();
   hideMapYearOverlay();
@@ -3793,10 +3961,10 @@ function renderThresholdExplanation() {
     const finalDays = Math.max(0, finalRow?.days ?? 0);
 
     const role = d.kind?.includes("top-hotday")
-      ? "Most added 35°C+ days"
+      ? "Most very hot summer days added"
       : d.kind?.includes("top-temperature")
-        ? "Fastest average warming"
-        : "Your selected state";
+        ? "Fastest average-temperature increase"
+        : "Your state";
 
     const existing = merged.get(key);
     if (existing) {
@@ -3860,7 +4028,7 @@ function renderThresholdExplanation() {
     .attr("font-size", 11)
     .attr("font-weight", 900)
     .attr("letter-spacing", "0.08em")
-    .text("HOW AVERAGE WARMING BECOMES HOT DAYS");
+    .text("WHY VERY HOT DAYS GROW DIFFERENTLY");
 
   g.append("text")
     .attr("x", 54)
@@ -3868,7 +4036,7 @@ function renderThresholdExplanation() {
     .attr("fill", "#17202a")
     .attr("font-size", 23)
     .attr("font-weight", 950)
-    .text("Crossing 35°C creates very hot days.");
+    .text("Why some states add more very hot days.");
 
   const intro = g.append("text")
     .attr("x", 54)
@@ -3878,12 +4046,12 @@ function renderThresholdExplanation() {
 
   intro.append("tspan")
     .attr("x", 54)
-    .text("The arrow shows the warming push; the number shows extra summer days that cross 35°C by 2100.");
+    .text("A warmer starting point means more days are already closer to the fixed 35°C line.");
 
   intro.append("tspan")
     .attr("x", 54)
     .attr("dy", 17)
-    .text("States already near 35°C can add more hot days, even if they are not the fastest-warming.");
+    .text("So the fastest-warming state is not always the state adding the most very hot days.");
 
   const panelCount = panels.length;
   const panelW = panelCount === 1 ? 330 : panelCount === 2 ? 280 : 220;
@@ -3932,7 +4100,7 @@ function renderThresholdExplanation() {
     .attr("font-size", 11)
     .attr("font-weight", 900)
     .attr("letter-spacing", "0.03em")
-    .text("35°C line: days above this count as very hot");
+    .text("35°C threshold");
 
   const panel = g.selectAll("g.threshold-ladder-panel")
     .data(panels)
@@ -4043,7 +4211,7 @@ function renderThresholdExplanation() {
       .attr("fill", "#5f6b73")
       .attr("font-size", 11.2)
       .attr("font-weight", 750)
-      .text("extra 35°C+ summer days by 2100");
+      .text("5-year avg. added very hot summer days");
   });
 
   panel.transition()
@@ -4056,9 +4224,9 @@ function renderThresholdExplanation() {
     .attr("y", height - 62)
     .attr("text-anchor", "middle")
     .attr("fill", "#17202a")
-    .attr("font-size", 15)
+    .attr("font-size", 17)
     .attr("font-weight", 900)
-    .text("Fastest average warming is not always the most new 35°C+ days.")
+    .text("Next, we track very hot summer days directly.")
     .attr("opacity", 0)
     .transition()
     .delay(980)
@@ -4068,7 +4236,7 @@ function renderThresholdExplanation() {
   legendContainer
     .append("div")
     .attr("class", "legend-caption")
-    .text("Grey dot = starting point. Arrow = warming pressure. Number = added 35°C+ summer days.");
+    .text("Grey dot = starting heat. Arrow = warming push toward more days above 35°C.");
 }
 
 function wrapSvgText(textSelection, text, maxWidth, lineHeight = 14) {
@@ -4435,8 +4603,8 @@ function getExposureRows(scenario = "ssp585", year = END_YEAR) {
 
 function formatExposureMillions(value) {
   if (!Number.isFinite(value)) return "N/A";
-  if (value >= 1000) return `${d3.format(".2s")(value * 1000000).replace("G", "B")} exposure-days`;
-  return `${d3.format(".1f")(value)}M exposure-days`;
+  if (value >= 1000) return `${d3.format(".2s")(value * 1000000).replace("G", "B")} exposure`;
+  return `${d3.format(".1f")(value)}M exposure`;
 }
 
 function drawBubbleSizeLegendCard(container, options = {}) {
@@ -4446,9 +4614,9 @@ function drawBubbleSizeLegendCard(container, options = {}) {
     width = 188,
     height = 92,
     title = "BUBBLE SIZE",
-    subtitle = "exposure-days proxy",
+    subtitle = "exposure proxy",
     maxValue = 1,
-    valueRatios = [1, 0.5, 0.2],
+    valueRatios = [1, 0.35],
     radiusScale = d3.scaleSqrt().domain([0, Math.max(1, maxValue)]).range([3, 12]),
     titleColor = "#8f2f1b",
     fill = "rgba(196,81,44,0.18)",
@@ -4653,7 +4821,7 @@ function renderAnimatedExposureColorLegend(color, maxHotDays) {
   legendContainer
     .append("div")
     .attr("class", "legend-caption")
-    .text("Fill = very hot summer days. Bubble size = exposure-days proxy. Use Replay or the slider to inspect years.");
+    .text("Fill = very hot summer days. Bubble size = exposure proxy. Use Replay or the slider to inspect years.");
 }
 
 function formatPopulationMillions(value) {
@@ -4752,7 +4920,7 @@ function getUSExposureComparisonRows(scenario = "ssp585") {
 
 function getExposureBubblePoint(stateName) {
   const manualAnchors = {
-    "California": [-119.4, 36.5],
+    "California": [-120.3, 36.5],
     "Texas": [-99.1, 31.0],
     "Florida": [-81.55, 28.1],
     "New York": [-75.3, 42.9],
@@ -4799,7 +4967,7 @@ function renderAnimatedExposureMap() {
   const g = svg.append("g").attr("class", "animated-exposure-map-viz");
   const mapG = g.append("g")
     // Keep the map large, but lift and slightly shrink it so Texas/Florida do not sit under the slider/legend.
-    .attr("transform", "translate(10,44) scale(0.84)");
+    .attr("transform", "translate(-96,42) scale(0.80)");
 
   mapG.selectAll("path.exposure-map-state")
     .data(statesGeo.features)
@@ -4844,13 +5012,13 @@ function renderAnimatedExposureMap() {
     .attr("font-size", 23)
     .attr("font-weight", 950)
     .attr("letter-spacing", "-0.04em")
-    .text("Observed very hot days → projected exposure-days");
+    .text("Observed very hot days → projected exposure");
   labelG.append("text")
     .attr("y", 56)
     .attr("fill", "#5f6b73")
     .attr("font-size", 12.5)
     .attr("font-weight", 650)
-    .text("Fill = very hot summer days. Bubble size = exposure-days proxy.");
+    .text("Fill = very hot summer days. Bubble size = exposure proxy.");
 
   const yearText = g.append("text")
     .attr("x", 858)
@@ -4861,9 +5029,9 @@ function renderAnimatedExposureMap() {
     .attr("font-weight", 950)
     .attr("letter-spacing", "-0.06em");
 
-  const panel = g.append("g").attr("transform", "translate(696,118)");
+  const panel = g.append("g").attr("transform", "translate(708,118)");
   panel.append("rect")
-    .attr("width", 224)
+    .attr("width", 212)
     .attr("height", 212)
     .attr("rx", 22)
     .attr("fill", "rgba(255,255,255,0.90)")
@@ -4880,12 +5048,12 @@ function renderAnimatedExposureMap() {
 
   const legendMax = Math.max(1, maxExposure);
   drawBubbleSizeLegendCard(g, {
-    x: 696,
+    x: 708,
     y: 348,
-    width: 224,
-    height: 124,
+    width: 212,
+    height: 112,
     maxValue: legendMax,
-    valueRatios: [1, 0.5, 0.2],
+    valueRatios: [1, 0.35],
     radiusScale: radius,
     titleColor: "#8f2f1b",
     fill: "rgba(196,81,44,0.18)",
@@ -5156,7 +5324,7 @@ function renderAnimatedExposureMap() {
           r.append("text").attr("class", "state-name").attr("x", 0).attr("y", 11).attr("fill", "#17202a").attr("font-size", 11).attr("font-weight", 850);
           r.append("rect").attr("class", "bar-bg").attr("x", 0).attr("y", 17).attr("width", 104).attr("height", 8).attr("rx", 4).attr("fill", "rgba(209,143,47,0.18)");
           r.append("rect").attr("class", "bar").attr("x", 0).attr("y", 17).attr("height", 8).attr("rx", 4).attr("fill", "#d18f2f");
-          r.append("text").attr("class", "value").attr("x", 206).attr("y", 24).attr("text-anchor", "end").attr("fill", "#5f6b73").attr("font-size", 9.2).attr("font-weight", 800);
+          r.append("text").attr("class", "value").attr("x", 194).attr("y", 24).attr("text-anchor", "end").attr("fill", "#5f6b73").attr("font-size", 9.2).attr("font-weight", 800);
           return r;
         },
         (update) => update,
@@ -5283,9 +5451,36 @@ function renderExposureLayerCards() {
   const maxPop = d3.max(comparisonRows, (d) => d.populationMillions) || 1;
   const maxExposure = d3.max(comparisonRows, (d) => d.exposureMillions) || 1;
 
-  const g = svg.append("g")
-    .attr("class", "exposure-selected-state-viz")
-    .attr("transform", "translate(-72,-8) scale(1.08)");
+  const g = svg.append("g").attr("class", "exposure-selected-state-viz");
+
+  g.append("text")
+    .attr("x", width / 2)
+    .attr("y", 30)
+    .attr("text-anchor", "middle")
+    .attr("fill", "#8f2f1b")
+    .attr("font-size", 12)
+    .attr("font-weight", 950)
+    .attr("letter-spacing", "0.16em")
+    .text("THEREFORE: EXTEND THE SELECTED STATE");
+
+  g.append("text")
+    .attr("x", width / 2)
+    .attr("y", 61)
+    .attr("text-anchor", "middle")
+    .attr("fill", "#17202a")
+    .attr("font-size", 26)
+    .attr("font-weight", 950)
+    .attr("letter-spacing", "-0.05em")
+    .text(`${selectedRow.state}: very hot days × people = exposure`);
+
+  g.append("text")
+    .attr("x", width / 2)
+    .attr("y", 84)
+    .attr("text-anchor", "middle")
+    .attr("fill", "#5f6b73")
+    .attr("font-size", 12)
+    .attr("font-weight", 760)
+    .text(`#${selectedRank} of ${ranked.length} states by 2100 high-emissions exposure proxy.`);
 
   function drawFocusCard(parent, d, cfg) {
     const card = parent.append("g")
@@ -5296,9 +5491,9 @@ function renderExposureLayerCards() {
       .attr("width", cfg.w)
       .attr("height", cfg.h)
       .attr("rx", 26)
-      .attr("fill", "transparent")
-      .attr("stroke", "none")
-      .attr("stroke-width", 0);
+      .attr("fill", cfg.kind === "selected" ? "rgba(255,247,235,0.98)" : "rgba(255,255,255,0.92)")
+      .attr("stroke", cfg.kind === "selected" ? "rgba(245,200,75,0.95)" : "rgba(23,32,42,0.12)")
+      .attr("stroke-width", cfg.kind === "selected" ? 2.2 : 1.2);
 
     card.append("text")
       .attr("x", 24)
@@ -5313,13 +5508,13 @@ function renderExposureLayerCards() {
       .attr("x", 24)
        .attr("y", 53)
       .attr("fill", "#17202a")
-      .attr("font-size", cfg.compact ? 25 : 31)
+      .attr("font-size", cfg.compact ? 23 : 29)
       .attr("font-weight", 950)
       .attr("letter-spacing", "-0.05em")
       .text(d.state);
 
     const eqY = cfg.compact ? 95 : 108;
-    const barW = cfg.compact ? 118 : 132;
+    const barW = cfg.compact ? 96 : 112;
     const cols = [
       {
         x: 26,
@@ -5330,7 +5525,7 @@ function renderExposureLayerCards() {
         ratio: d.addedHotDays / maxHot,
       },
       {
-        x: 198,
+        x: 184,
         label: "PROJECTED PEOPLE",
         value: `${d3.format(".1f")(d.populationMillions)}M`,
         color: "#4f8fc0",
@@ -5338,8 +5533,8 @@ function renderExposureLayerCards() {
         ratio: d.populationMillions / maxPop,
       },
       {
-        x: 370,
-        label: "EXPOSURE-DAYS",
+        x: 342,
+        label: "EXPOSURE",
         value: formatExposureMillions(d.exposureMillions),
         color: "#d18f2f",
         track: "rgba(209,143,47,0.14)",
@@ -5362,7 +5557,7 @@ function renderExposureLayerCards() {
         .attr("x", 0)
         .attr("y", 27)
         .attr("fill", "#17202a")
-        .attr("font-size", i === 2 ? 19 : 18)
+        .attr("font-size", i === 2 ? 18 : 17)
         .attr("font-weight", 950)
         .text(col.value);
 
@@ -5390,7 +5585,7 @@ function renderExposureLayerCards() {
     });
 
     card.append("text")
-      .attr("x", 178)
+      .attr("x", 162)
       .attr("y", eqY + 35)
       .attr("text-anchor", "middle")
       .attr("fill", "#8f2f1b")
@@ -5399,7 +5594,7 @@ function renderExposureLayerCards() {
       .text("×");
 
     card.append("text")
-      .attr("x", 348)
+      .attr("x", 320)
       .attr("y", eqY + 35)
       .attr("text-anchor", "middle")
       .attr("fill", "#8f2f1b")
@@ -5426,25 +5621,25 @@ function renderExposureLayerCards() {
   if (selectedIsTop) {
     drawFocusCard(g, selectedRow, {
       kind: "selected",
-      eyebrow: "SELECTED STATE · NATIONAL BENCHMARK",
-      x: 35,
-      y: 66,
-      w: 575,
-      h: 216,
+      eyebrow: "YOUR SELECTED STATE · HIGHEST EXPOSURE",
+      x: 24,
+      y: 120,
+      w: 600,
+      h: 220,
       compact: false,
     });
 
     const topMessage = g.append("g")
       .attr("class", "exposure-selected-top-message")
-      .attr("transform", "translate(35,304)");
+      .attr("transform", "translate(50,370)");
 
     topMessage.append("rect")
-      .attr("width", 575)
+      .attr("width", 548)
       .attr("height", 92)
       .attr("rx", 22)
-      .attr("fill", "transparent")
-      .attr("stroke", "none")
-      .attr("stroke-width", 0);
+      .attr("fill", "rgba(255,247,235,0.96)")
+      .attr("stroke", "rgba(245,200,75,0.72)")
+      .attr("stroke-width", 1.8);
 
     topMessage.append("text")
       .attr("x", 24)
@@ -5453,48 +5648,48 @@ function renderExposureLayerCards() {
       .attr("font-size", 12)
       .attr("font-weight", 950)
       .attr("letter-spacing", "0.12em")
-      .text("NATIONAL BENCHMARK");
+      .text("NO SEPARATE BENCHMARK NEEDED");
 
     topMessage.append("foreignObject")
       .attr("x", 24)
       .attr("y", 46)
-      .attr("width", 530)
+      .attr("width", 500)
       .attr("height", 42)
       .append("xhtml:div")
       .attr("style", "font-size:15px;line-height:1.3;color:#17202a;font-weight:850;")
-      .text(`${selectedRow.state} ranks highest because its heat exposure is largest.`);
+      .text(`${selectedRow.state} is already the highest-exposure state in the 2100 high-emissions scenario.`);
   } else {
     drawFocusCard(g, selectedRow, {
       kind: "selected",
-      eyebrow: "SELECTED STATE",
-      x: 35,
-      y: 62,
-      w: 575,
-      h: 176,
+      eyebrow: selectedStateName ? "YOUR SELECTED STATE" : "SELECTED STATE",
+      x: 24,
+      y: 112,
+      w: 590,
+      h: 180,
       compact: true,
     });
 
     drawFocusCard(g, benchmarkRow, {
       kind: "benchmark",
-      eyebrow: "NATIONAL BENCHMARK",
-      x: 35,
-      y: 292,
-      w: 575,
-      h: 176,
+      eyebrow: "HIGHEST EXPOSURE STATE",
+      x: 24,
+      y: 314,
+      w: 590,
+      h: 180,
       compact: true,
     });
   }
 
   const side = g.append("g")
     .attr("class", "exposure-selected-rank-panel")
-    .attr("transform", "translate(615,72)");
+    .attr("transform", "translate(632,112)");
 
   side.append("rect")
     .attr("width", 270)
     .attr("height", 370)
     .attr("rx", 24)
-    .attr("fill", "transparent")
-    .attr("stroke", "none");
+    .attr("fill", "rgba(255,255,255,0.94)")
+    .attr("stroke", "rgba(23,32,42,0.12)");
 
   side.append("text")
     .attr("x", 18)
@@ -5503,7 +5698,7 @@ function renderExposureLayerCards() {
     .attr("font-size", 10)
     .attr("font-weight", 950)
     .attr("letter-spacing", "0.13em")
-    .text("EXPOSURE RANKING");
+    .text("RANK CONTEXT");
 
   side.append("text")
     .attr("x", 18)
@@ -5523,8 +5718,8 @@ function renderExposureLayerCards() {
     .text(`of ${ranked.length} states`);
 
   const rankText = selectedIsTop
-    ? `${selectedRow.state} has the highest exposure.`
-    : `${topRow.state} is the national benchmark.`;
+    ? `${selectedRow.state} is already the benchmark.`
+    : `${selectedRow.state} is compared with ${topRow.state}.`;
 
   side.append("foreignObject")
     .attr("x", 18)
@@ -5539,13 +5734,13 @@ function renderExposureLayerCards() {
   if (!topForPanel.some((d) => d.state === selectedRow.state)) topForPanel.push(selectedRow);
 
   const panelMax = d3.max(topForPanel, (d) => d.exposureMillions) || 1;
-  const panelScale = d3.scaleLinear().domain([0, panelMax]).range([6, 146]);
+  const panelScale = d3.scaleLinear().domain([0, panelMax]).range([5, 136]);
 
   const list = side.selectAll("g.rank-mini-row")
     .data(topForPanel, (d) => d.state)
     .join("g")
     .attr("class", (d) => `rank-mini-row${d.state === selectedRow.state ? " is-selected" : ""}`)
-    .attr("transform", (_, i) => `translate(18,${158 + i * 42})`)
+    .attr("transform", (_, i) => `translate(18,${170 + i * 39})`)
     .style("cursor", "pointer")
     .on("click", (event, d) => {
       selectedStateName = d.state;
@@ -5565,8 +5760,8 @@ function renderExposureLayerCards() {
   list.append("rect")
     .attr("x", 0)
     .attr("y", 9)
-    .attr("width", 150)
-    .attr("height", 9)
+    .attr("width", 144)
+    .attr("height", 8)
     .attr("rx", 4)
     .attr("fill", "rgba(209,143,47,0.14)");
 
@@ -5579,8 +5774,8 @@ function renderExposureLayerCards() {
     .attr("width", (d) => panelScale(d.exposureMillions));
 
   list.append("text")
-    .attr("x", 166)
-    .attr("y", 18)
+    .attr("x", 160)
+    .attr("y", 17)
     .attr("fill", "#5f6b73")
     .attr("font-size", 9)
     .attr("font-weight", 850)
@@ -5588,27 +5783,66 @@ function renderExposureLayerCards() {
 
   const note = g.append("g")
     .attr("class", "exposure-selected-note")
-    .attr("transform", "translate(35,484)");
+    .attr("transform", "translate(24,500)");
 
   note.append("rect")
     .attr("x", 0)
     .attr("y", 0)
-    .attr("width", 800)
+    .attr("width", 870)
     .attr("height", 32)
     .attr("rx", 18)
-    .attr("fill", "transparent")
-    .attr("stroke", "none");
+    .attr("fill", "rgba(255,255,255,0.84)")
+    .attr("stroke", "rgba(23,32,42,0.08)");
 
   note.append("text")
-    .attr("x", 400)
+    .attr("x", 435)
     .attr("y", 21)
     .attr("text-anchor", "middle")
     .attr("fill", "#5f6b73")
     .attr("font-size", 11)
     .attr("font-weight", 800)
-    .text("Exposure-days are a proxy, not a health outcome.");
+    .text(selectedIsTop
+      ? "Selected state is already the benchmark. Exposure is a proxy, not health outcomes."
+      : "Selected state is compared with the highest-exposure benchmark. Exposure is a proxy, not health outcomes.");
+
+  legendContainer
+    .append("div")
+    .attr("class", "legend-caption")
+    .text("Selected-state view: compare the selected state with the highest-exposure benchmark. If the selected state is already highest, it stands alone as the benchmark.");
 }
 
+
+
+function drawSunGlyph(parent, cx, cy, r, color, opacity = 0.9) {
+  const rays = 8;
+  const rayInner = r * 1.45;
+  const rayOuter = r * 2.05;
+  const g = parent.append("g")
+    .attr("class", "sun-glyph")
+    .attr("opacity", opacity);
+
+  g.selectAll("line.sun-ray")
+    .data(d3.range(rays))
+    .join("line")
+    .attr("class", "sun-ray")
+    .attr("x1", (i) => cx + Math.cos((i / rays) * Math.PI * 2) * rayInner)
+    .attr("y1", (i) => cy + Math.sin((i / rays) * Math.PI * 2) * rayInner)
+    .attr("x2", (i) => cx + Math.cos((i / rays) * Math.PI * 2) * rayOuter)
+    .attr("y2", (i) => cy + Math.sin((i / rays) * Math.PI * 2) * rayOuter)
+    .attr("stroke", color)
+    .attr("stroke-width", Math.max(1.2, r * 0.32))
+    .attr("stroke-linecap", "round");
+
+  g.append("circle")
+    .attr("cx", cx)
+    .attr("cy", cy)
+    .attr("r", r)
+    .attr("fill", color)
+    .attr("stroke", "rgba(255,248,240,0.95)")
+    .attr("stroke-width", Math.max(1, r * 0.22));
+
+  return g;
+}
 
 function renderUSExposureComparison() {
   hideTrendSummary();
@@ -5630,17 +5864,15 @@ function renderUSExposureComparison() {
   const ratio = total2020 > 0 ? total2100 / total2020 : NaN;
 
   const blockUnitMillions = chooseExposureBlockUnit(maxValue);
-  const blockUnitLabel = formatExposureMillions(blockUnitMillions);
+  const blockUnitLabel = formatExposureMillions(blockUnitMillions).replace("exposure-days", "exposure-days");
   const cols = 12;
-  const sunStep = 16;
-  const sunR = 4.2;
-  const rayR1 = 6.0;
-  const rayR2 = 7.6;
-  const panelW = 330;
-  const panelH = 268;
-  const leftX = 68;
-  const rightX = 516;
-  const panelY = 142;
+  const sunR = 3.75;
+  const gap = 6.6;
+  const panelW = 340;
+  const panelH = 308;
+  const leftX = 36;
+  const rightX = 522;
+  const panelY = 130;
 
   const values = [
     {
@@ -5669,35 +5901,38 @@ function renderUSExposureComparison() {
 
   g.append("text")
     .attr("x", 420)
-    .attr("y", 58)
+    .attr("y", 34)
+    .attr("text-anchor", "middle")
+    .attr("fill", "#8f2f1b")
+    .attr("font-size", 12)
+    .attr("font-weight", 900)
+    .attr("letter-spacing", "0.14em")
+    .text("U.S. EXPOSURE SUN COMPARISON");
+
+  g.append("text")
+    .attr("x", 420)
+    .attr("y", 68)
     .attr("text-anchor", "middle")
     .attr("fill", "#17202a")
-    .attr("font-size", 28)
+    .attr("font-size", 26)
     .attr("font-weight", 950)
-    .attr("letter-spacing", "-0.055em")
-    .text("Watch exposure-days grow by 2100");
+    .attr("letter-spacing", "-0.05em")
+    .text("Watch the increase from 2020 to 2100");
 
-  const key = g.append("g").attr("transform", "translate(310,91)");
-  const keySun = key.append("g").attr("class", "sun-key").attr("transform", "translate(0,0)");
-  d3.range(8).forEach((i) => {
-    const a = (Math.PI * 2 * i) / 8;
-    keySun.append("line")
-      .attr("x1", Math.cos(a) * 6.0)
-      .attr("y1", Math.sin(a) * 6.0)
-      .attr("x2", Math.cos(a) * 8.0)
-      .attr("y2", Math.sin(a) * 8.0)
-      .attr("stroke", "#cf6e48")
-      .attr("stroke-width", 1.4)
-      .attr("stroke-linecap", "round")
-      .attr("opacity", 0.8);
-  });
-  keySun.append("circle")
-    .attr("r", 4.4)
-    .attr("fill", "#cf6e48")
-    .attr("opacity", 0.86);
+  const key = g.append("g").attr("transform", "translate(210,91)");
+  key.append("rect")
+    .attr("x", 0)
+    .attr("y", -15)
+    .attr("width", 420)
+    .attr("height", 34)
+    .attr("rx", 17)
+    .attr("fill", "rgba(255,255,255,0.88)")
+    .attr("stroke", "rgba(23,32,42,0.10)");
+  const keySun = key.append("g").attr("transform", "translate(25,2)");
+  drawSunGlyph(keySun, 0, 0, 4.6, "#cf6e48", 0.88);
   key.append("text")
-    .attr("x", 18)
-    .attr("y", 5)
+    .attr("x", 42)
+    .attr("y", 7)
     .attr("fill", "#5f6b73")
     .attr("font-size", 12)
     .attr("font-weight", 850)
@@ -5709,7 +5944,15 @@ function renderUSExposureComparison() {
     .attr("class", "us-exposure-panel")
     .attr("transform", (d) => `translate(${d.x},${panelY})`);
 
-  // No panel rectangles: keep this comparison open and page-like, not card-like.
+  panels.append("rect")
+    .attr("x", 0)
+    .attr("y", 0)
+    .attr("width", panelW)
+    .attr("height", panelH)
+    .attr("rx", 24)
+    .attr("fill", "rgba(255,255,255,0.84)")
+    .attr("stroke", (d) => d.key === "2100" ? "rgba(196,81,44,0.26)" : "rgba(23,32,42,0.10)")
+    .attr("stroke-width", 1.2);
 
   panels.append("text")
     .attr("x", 20)
@@ -5718,7 +5961,7 @@ function renderUSExposureComparison() {
     .attr("font-size", 12)
     .attr("font-weight", 900)
     .attr("letter-spacing", "0.08em")
-    .text((d) => d.key === "2020" ? "2020 BASELINE" : "2100 PROJECTION");
+    .text((d) => d.stage);
 
   panels.append("text")
     .attr("x", 20)
@@ -5731,7 +5974,7 @@ function renderUSExposureComparison() {
 
   panels.append("text")
     .attr("x", 20)
-    .attr("y", 90)
+    .attr("y", 87)
     .attr("fill", "#17202a")
     .attr("font-size", 27)
     .attr("font-weight", 960)
@@ -5740,7 +5983,7 @@ function renderUSExposureComparison() {
 
   panels.append("text")
     .attr("x", 20)
-    .attr("y", 116)
+    .attr("y", 112)
     .attr("fill", (d) => d.accent)
     .attr("font-size", 12)
     .attr("font-weight", 850)
@@ -5750,7 +5993,7 @@ function renderUSExposureComparison() {
     const panel = d3.select(this);
     const note = panel.append("text")
       .attr("x", 20)
-      .attr("y", 130)
+      .attr("y", 125)
       .attr("fill", "#5f6b73")
       .attr("font-size", 10.5)
       .attr("font-weight", 800);
@@ -5765,46 +6008,32 @@ function renderUSExposureComparison() {
   panels.each(function(d) {
     const panel = d3.select(this);
     const blockData = getExposureBlockData(d.value, blockUnitMillions);
-    const blockG = panel.append("g")
-      .attr("class", `exposure-block-grid exposure-block-grid-${d.key}`)
-      .attr("transform", "translate(24,154)");
+    const sunG = panel.append("g")
+      .attr("class", `exposure-sun-grid exposure-sun-grid-${d.key}`)
+      .attr("transform", "translate(24,190)");
 
-    const blockCells = blockG.selectAll("g.exposure-sun")
+    const suns = sunG.selectAll("g.exposure-sun")
       .data(blockData)
       .join("g")
       .attr("class", "exposure-sun")
-      .attr("transform", (_, i) => `translate(${(i % cols) * sunStep},${Math.floor(i / cols) * sunStep})`)
+      .attr("transform", (_, i) => `translate(${(i % cols) * (sunR * 2 + gap)},${Math.floor(i / cols) * (sunR * 2 + gap)})`)
       .attr("opacity", 0);
 
-    blockCells.each(function() {
-      const sun = d3.select(this);
-      d3.range(8).forEach((i) => {
-        const a = (Math.PI * 2 * i) / 8;
-        sun.append("line")
-          .attr("x1", Math.cos(a) * rayR1)
-          .attr("y1", Math.sin(a) * rayR1)
-          .attr("x2", Math.cos(a) * rayR2)
-          .attr("y2", Math.sin(a) * rayR2)
-          .attr("stroke", d.color)
-          .attr("stroke-width", 1.25)
-          .attr("stroke-linecap", "round");
-      });
-      sun.append("circle")
-        .attr("r", sunR)
-        .attr("fill", d.color);
+    suns.each(function(b) {
+      drawSunGlyph(d3.select(this), 0, 0, sunR, d.color, b.fraction >= 0.98 ? 0.92 : Math.max(0.25, 0.24 + b.fraction * 0.62));
     });
 
-    const perBlockDelay = d.key === "2020" ? 180 : 58;
-    const startDelay = d.key === "2020" ? 300 : 1450;
-    blockCells.transition()
+    const perBlockDelay = d.key === "2020" ? 180 : 62;
+    const startDelay = d.key === "2020" ? 300 : 1500;
+    suns.transition()
       .delay((b, i) => startDelay + i * perBlockDelay)
       .duration(260)
-      .attr("opacity", (b) => b.fraction >= 0.98 ? 0.92 : Math.max(0.26, 0.20 + b.fraction * 0.62));
+      .attr("opacity", 1);
   });
 
   const midGroup = g.append("g")
     .attr("class", "us-exposure-mid-group")
-    .attr("transform", "translate(435,276)")
+    .attr("transform", "translate(435,306)")
     .attr("opacity", 0);
 
   midGroup.append("text")
@@ -5828,22 +6057,28 @@ function renderUSExposureComparison() {
     .duration(450)
     .attr("opacity", 1);
 
-  const callout = g.append("g").attr("transform", "translate(210,468)");
+  const callout = g.append("g").attr("transform", "translate(110,454)");
+  callout.append("rect")
+    .attr("width", 720)
+     .attr("height", 72)
+    .attr("rx", 24)
+    .attr("fill", "rgba(255,243,223,0.94)")
+    .attr("stroke", "rgba(196,81,44,0.20)");
   callout.append("text")
-    .attr("x", 0)
-    .attr("y", 0)
+    .attr("x", 24)
+    .attr("y", 31)
     .attr("fill", "#8f2f1b")
     .attr("font-size", 13)
     .attr("font-weight", 950)
     .attr("letter-spacing", "0.08em")
-    .text("TOTAL EXPOSURE INCREASE");
+    .text("CHANGE IN TOTAL EXPOSURE");
   callout.append("text")
-    .attr("x", 0)
-    .attr("y", 32)
+    .attr("x", 24)
+    .attr("y", 62)
     .attr("fill", "#17202a")
-    .attr("font-size", 24)
+    .attr("font-size", 22)
     .attr("font-weight", 960)
-    .attr("letter-spacing", "-0.045em")
+    .attr("letter-spacing", "-0.04em")
     .text(`${diff >= 0 ? "+" : ""}${formatExposureMillions(diff)}${Number.isFinite(ratio) ? ` · about ${d3.format(".1f")(ratio)}× 2020` : ""}`);
 
   legendContainer
@@ -7025,97 +7260,6 @@ function scrollToStateDetailSection() {
   });
 }
 
-function getExploreFilteredRows() {
-  return stateData.filter((d) =>
-    d.year === currentState.year &&
-    d.scenario === currentState.scenario
-  );
-}
-
-function getExploreDataByState(filtered = getExploreFilteredRows()) {
-  return new Map(filtered.map((d) => [normalizeStateName(d.state), d]));
-}
-
-function getExploreExposureRowsCached(scenario, year) {
-  const key = `${scenario}-${year}`;
-  if (!exploreExposureRowsCache.has(key)) {
-    // Use the same exposure rows as Plot 06 so bubble sizes and values match.
-    exploreExposureRowsCache.set(key, getExposureMapRows(scenario, year));
-  }
-  return exploreExposureRowsCache.get(key);
-}
-
-function getExploreExposureByStateCached(scenario, year) {
-  const key = `${scenario}-${year}`;
-  if (!exploreExposureByStateCache.has(key)) {
-    exploreExposureByStateCache.set(
-      key,
-      new Map(getExploreExposureRowsCached(scenario, year).map((d) => [normalizeStateName(d.state), d]))
-    );
-  }
-  return exploreExposureByStateCache.get(key);
-}
-
-function getExposureMetricValueForRow(d) {
-  if (!d) return NaN;
-  const scenario = d.scenario || currentState.scenario;
-  const year = d.year || currentState.year;
-  const exposureRow = getExploreExposureByStateCached(scenario, year).get(normalizeStateName(d.state));
-  return exposureRow?.exposureMillions ?? NaN;
-}
-
-function getExploreExposureScale(scenario) {
-  if (!exploreExposureScaleCache.has(scenario)) {
-    const exposureScaleRows = d3.range(2000, 2101, 10)
-      .flatMap((year) => getExposureMapRows(scenario, year));
-    const maxExposure = d3.max(exposureScaleRows, (d) => d.exposureMillions) || 1;
-    exploreExposureScaleCache.set(scenario, {
-      maxExposure,
-      radius: d3.scaleSqrt().domain([0, maxExposure]).range([1.5, 24]),
-    });
-  }
-  return exploreExposureScaleCache.get(scenario);
-}
-
-function getExploreBubbleCentroids() {
-  if (!exploreBubbleCentroidCache) {
-    exploreBubbleCentroidCache = statesGeo.features.map((feature) => {
-      const stateName = getFeatureStateName(feature);
-      const normalizedStateName = normalizeStateName(stateName);
-      // Match Plot 06: use the same manually adjusted bubble anchor points
-      // for states where centroids make bubbles sit awkwardly on the map.
-      const bubblePoint = getExposureBubblePoint(normalizedStateName);
-      return {
-        feature,
-        stateName,
-        normalizedStateName,
-        x: bubblePoint[0],
-        y: bubblePoint[1],
-      };
-    });
-  }
-  return exploreBubbleCentroidCache;
-}
-
-function updateExploreExposureOverlayOnly(transitionDuration = 120) {
-  const mapG = svg.select("g.map-layer");
-  if (mapG.empty()) {
-    renderMap(transitionDuration);
-    return;
-  }
-
-  const filtered = getExploreFilteredRows();
-  const dataByState = getExploreDataByState(filtered);
-  drawExploreExposureBubbles(mapG, dataByState, transitionDuration);
-  drawExploreBubbleLegendInMap(currentStep === stepSettings.length - 1 && showExposureBubbles);
-  updateMapNote(filtered, currentState.metric);
-
-  if (selectedStateName) {
-    const selectedRow = dataByState.get(selectedStateName);
-    updateSelectedStateCard(selectedStateName, selectedRow);
-  }
-}
-
 function renderMap(transitionDuration = 750) {
   setVizMode("map");
 
@@ -7126,8 +7270,14 @@ function renderMap(transitionDuration = 750) {
     mapG = svg.append("g").attr("class", "map-layer");
   }
 
-  const filtered = getExploreFilteredRows();
-  const dataByState = getExploreDataByState(filtered);
+  const filtered = stateData.filter((d) =>
+    d.year === currentState.year &&
+    d.scenario === currentState.scenario
+  );
+
+  const dataByState = new Map(
+    filtered.map((d) => [normalizeStateName(d.state), d])
+  );
 
   const metric = currentState.metric;
   const values = filtered
@@ -7234,21 +7384,25 @@ function drawExploreExposureBubbles(mapG, dataByState, transitionDuration = 350)
     return;
   }
 
-  const exposureRows = getExploreExposureRowsCached(currentState.scenario, currentState.year);
+  const exposureRows = getExposureRows(currentState.scenario, currentState.year);
   const exposureByState = new Map(exposureRows.map((d) => [normalizeStateName(d.state), d]));
-  const { radius } = getExploreExposureScale(currentState.scenario);
+  const exposureScaleRows = d3.range(2000, 2101, 10).flatMap((year) => getExposureMapRows(currentState.scenario, year));
+  const maxExposure = d3.max(exposureScaleRows, (d) => d.exposureMillions) || 1;
+  const radius = d3.scaleSqrt().domain([0, maxExposure]).range([1.5, 24]);
 
   let bubbleLayer = mapG.select("g.explore-bubble-layer");
   if (bubbleLayer.empty()) {
     bubbleLayer = mapG.append("g").attr("class", "explore-bubble-layer");
   }
 
-  const bubbleData = getExploreBubbleCentroids()
-    .map((d) => ({
-      ...d,
-      exposure: exposureByState.get(d.normalizedStateName),
-      row: dataByState.get(d.normalizedStateName),
-    }))
+  const bubbleData = statesGeo.features
+    .map((feature) => {
+      const stateName = getFeatureStateName(feature);
+      const exposure = exposureByState.get(normalizeStateName(stateName));
+      const row = dataByState.get(normalizeStateName(stateName));
+      const centroid = path.centroid(feature);
+      return { feature, stateName, exposure, row, x: centroid[0], y: centroid[1] };
+    })
     .filter((d) => d.exposure && Number.isFinite(d.x) && Number.isFinite(d.y));
 
   const bubbles = bubbleLayer.selectAll("circle.explore-exposure-bubble")
@@ -7259,12 +7413,10 @@ function drawExploreExposureBubbles(mapG, dataByState, transitionDuration = 350)
         .attr("cx", (d) => d.x)
         .attr("cy", (d) => d.y)
         .attr("r", 0)
-        // Match Plot 06 bubble design: warm translucent fill with a clear red-brown outline.
-        .attr("fill", "rgba(196,81,44,0.34)")
-        .attr("stroke", "rgba(143,47,27,0.78)")
-        .attr("stroke-width", 1.3)
-        .attr("pointer-events", "all")
-        .style("cursor", "pointer"),
+        .attr("fill", "rgba(79, 143, 192, 0.055)")
+        .attr("stroke", "rgba(23, 32, 42, 0.46)")
+        .attr("stroke-width", 0.85)
+        .attr("pointer-events", "none"),
       (update) => update,
       (exit) => exit.transition().duration(180).attr("r", 0).remove()
     );
@@ -7272,44 +7424,10 @@ function drawExploreExposureBubbles(mapG, dataByState, transitionDuration = 350)
   bubbles
     .classed("selected", (d) => selectedStateName === normalizeStateName(d.stateName))
     .attr("fill", (d) => selectedStateName === normalizeStateName(d.stateName)
-      ? "rgba(255,212,59,0.42)"
-      : "rgba(196,81,44,0.34)")
-    .attr("stroke", (d) => selectedStateName === normalizeStateName(d.stateName) ? "#ffd43b" : "rgba(143,47,27,0.78)")
-    .attr("stroke-width", (d) => selectedStateName === normalizeStateName(d.stateName) ? 3.4 : 1.3)
-    .attr("filter", (d) => selectedStateName === normalizeStateName(d.stateName) ? "drop-shadow(0 0 5px rgba(255,212,59,0.9))" : null)
-    .attr("pointer-events", "all")
-    .style("cursor", "pointer")
-    .on("mouseenter", function(event, d) {
-      d3.select(this).raise();
-      d3.select(this)
-        .attr("stroke", "#ffd43b")
-        .attr("stroke-width", selectedStateName === normalizeStateName(d.stateName) ? 3.4 : 2.8)
-        .attr("filter", "drop-shadow(0 0 5px rgba(255,212,59,0.9))")
-        .attr("fill", selectedStateName === normalizeStateName(d.stateName) ? "rgba(255,212,59,0.42)" : "rgba(196,81,44,0.46)");
-      showExposureBubbleTooltip(event, d);
-    })
-    .on("mousemove", function(event, d) {
-      showExposureBubbleTooltip(event, d);
-    })
-    .on("mouseleave", function(event, d) {
-      d3.select(this)
-        .attr("stroke", selectedStateName === normalizeStateName(d.stateName) ? "#ffd43b" : "rgba(143,47,27,0.78)")
-        .attr("stroke-width", selectedStateName === normalizeStateName(d.stateName) ? 3.4 : 1.3)
-        .attr("filter", selectedStateName === normalizeStateName(d.stateName) ? "drop-shadow(0 0 5px rgba(255,212,59,0.9))" : null)
-        .attr("fill", selectedStateName === normalizeStateName(d.stateName) ? "rgba(255,212,59,0.42)" : "rgba(196,81,44,0.34)");
-      hideTooltip();
-    })
-    .on("click", function(event, d) {
-      selectedStateName = normalizeStateName(d.stateName);
-      if (!statePicker.empty()) statePicker.property("value", selectedStateName);
-      updateSelectedStateCard(d.stateName, d.row);
-      mapG.selectAll(".state")
-        .classed("selected", (feature) => selectedStateName === normalizeStateName(getFeatureStateName(feature)));
-      drawExploreExposureBubbles(mapG, dataByState, 120);
-      if (currentStep === stepSettings.length - 1) {
-        scrollToStateDetailSection();
-      }
-    })
+      ? "rgba(255, 212, 59, 0.22)"
+      : "rgba(79, 143, 192, 0.055)")
+    .attr("stroke", (d) => selectedStateName === normalizeStateName(d.stateName) ? "#ffd43b" : "rgba(23, 32, 42, 0.46)")
+    .attr("stroke-width", (d) => selectedStateName === normalizeStateName(d.stateName) ? 2.15 : 0.85)
     .transition()
     .duration(transitionDuration)
     .ease(d3.easeCubicOut)
@@ -7362,8 +7480,8 @@ function showExposureBubbleTooltip(event, d) {
     .html(`
       <h3>${d.stateName}</h3>
       <p><strong>Exposure bubble</strong>, ${scenarioLabels[currentState.scenario]} ${currentState.year}</p>
-      <p>Very hot summer days: <strong>${d3.format(".1f")(d.exposure.hotDays ?? d.exposure.hazard)} days</strong></p>
-      <p>Population baseline/projection: <strong>${formatPopulationMillions(d.exposure.populationMillions)}</strong></p>
+      <p>Added hot days: <strong>${d3.format("+.1f")(d.exposure.hazard)}</strong></p>
+      <p>Population layer: <strong>${d3.format(".1f")(d.exposure.populationMillions)}M</strong></p>
       <p>Exposure-days proxy: <strong>${formatExposureMillions(d.exposure.exposureMillions)}</strong></p>
       <p class="tooltip-muted">Hover previews details. Click selects this state with a solid yellow outline.</p>
     `);
@@ -7678,20 +7796,22 @@ function drawExploreBubbleLegendInMap(shouldShow) {
 
   if (!shouldShow) return;
 
-  // Use the same scale as the explore bubbles so the legend and map marks match.
-  // Keep three reference sizes, consistent with the Plot 06 bubble-size legend.
-  const { maxExposure, radius } = getExploreExposureScale(currentState.scenario);
+  const exposureRows = getExposureRows(currentState.scenario, currentState.year)
+    .filter((d) => Number.isFinite(d.exposureMillions) && d.exposureMillions > 0);
+  const exposureScaleRows = d3.range(2000, 2101, 10).flatMap((year) => getExposureMapRows(currentState.scenario, year));
+  const maxExposure = d3.max(exposureScaleRows, (d) => d.exposureMillions) || 1;
+  const radius = d3.scaleSqrt().domain([0, maxExposure]).range([1.5, 24]);
 
   const bubbleLegend = svg.append("g")
     .attr("class", "explore-bubble-legend-in-map");
 
   drawBubbleSizeLegendCard(bubbleLegend, {
-    x: 700,
-    y: 376,
-    width: 214,
-    height: 110,
+    x: 732,
+    y: 392,
+    width: 202,
+    height: 94,
     maxValue: maxExposure,
-    valueRatios: [1, 0.5, 0.2],
+    valueRatios: [1, 0.35],
     radiusScale: radius,
     titleColor: "#8f2f1b",
     fill: "rgba(196,81,44,0.16)",
@@ -7716,8 +7836,8 @@ function updateMapNote(filtered, metric) {
   let baseNote = setting?.note || "Hover over a state to see details.";
   if (currentStep === stepSettings.length - 1) {
     baseNote = showExposureBubbles
-      ? "Explore mode: color shows the selected climate metric; bubbles show exposure-days. Hover previews values; click selects a state with a solid yellow outline."
-      : "Hover or click a state for details. Turn on bubbles to overlay exposure-days.";
+      ? "Explore mode: color shows the selected climate metric; bubbles show exposure. Hover previews values; click selects a state with a solid yellow outline."
+      : "Explore mode: hover previews values; click selects a state with a solid yellow outline for local detail. Turn on bubbles to overlay exposure.";
   }
 
   mapNote.text(
@@ -8138,6 +8258,9 @@ function formatWeeks(value) {
 }
 
 function pulseViz() {
-  // Keep scroll transitions calm; avoid the flash/pulse that made steps feel like slides.
-  return;
+  if (stickyViz.empty()) return;
+
+  stickyViz.classed("step-pulse", false);
+  void stickyViz.node().offsetWidth;
+  stickyViz.classed("step-pulse", true);
 }
