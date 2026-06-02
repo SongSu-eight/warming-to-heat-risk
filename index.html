@@ -354,7 +354,7 @@
         <p class="step-number">05 · Exposure</p>
         <h2>Carry your selected state into exposure.</h2>
         <p>
-          Exposure-days are built from added very hot days and projected population, then compared with the national benchmark.
+          Exposure are built from added very hot days and projected population, then compared with the national benchmark.
         </p>
       </article>
 
@@ -366,21 +366,160 @@
         </p>
       </article>
 
+<!-- ============================================================
+     IMPACT SCROLL — 画卷式 (scroll-driven scroll, sticky frame)
+     插入位置: </section> (end #main-story) 与 <section id="state-detail"> 之间
+     依赖项目已有的 D3 + scrollama
+     标题 href 现为占位 #replace-link-N, 后续替换为论文/来源链接
+     ============================================================ -->
+<section id="impact-scroll" class="impact-scroll" aria-label="How heat exposure affects daily life">
+
+  <!-- sticky 大框：固定在视口，内容随滚动逐条切换 -->
+  <div class="impact-frame">
+    <div class="impact-frame-inner">
+
+      <div class="impact-frame-head">
+        <p class="step-number">Impact</p>
+        <p class="impact-frame-hint">Scroll to continue</p>
+      </div>
+
+      <!-- 进度卷轴 -->
+      <div class="impact-rail" aria-hidden="true">
+        <div class="impact-rail-fill" id="impact-rail-fill"></div>
+      </div>
+
+      <!-- 内容舞台：每个 panel 绝对叠放，scrollama 控制 is-active -->
+      <div class="impact-stage">
+
+        <div class="impact-panel is-active" data-panel="0">
+          <div class="impact-panel-icon"><svg id="impact-icon-0"></svg></div>
+          <div class="impact-panel-copy">
+            <span class="impact-panel-tag">Start here</span>
+            <h3>Daily impact of exposures</h3>
+            <p>We turned warming into very hot days, and very hot days into exposure. Now follow the heat into daily life — from who is exposed, to how it harms the body, to where it shows up.</p>
+          </div>
+        </div>
+
+        <div class="impact-panel" data-panel="1">
+          <div class="impact-panel-icon"><svg id="impact-icon-1"></svg></div>
+          <div class="impact-panel-copy">
+            <span class="impact-panel-tag">01 · Population exposure</span>
+            <h3><a href="https://news.ucar.edu/15524/exposure-us-population-extreme-heat-could-quadruple-mid-century" target="_blank" rel="noopener noreferrer">Hot days × people = exposure</a></h3>
+            <p>
+              <a href="https://www.epa.gov/climatechange-science/extreme-heat"
+                target="_blank"
+                rel="noopener noreferrer">
+                A very hot summer day is any day above 35°C
+              </a>.
+              Multiply projected very hot days by projected state population and we get person-days of exposure. Sustained increases drive excess mortality, lower productivity, and overloaded health services — hitting the elderly, outdoor workers, and low-income families hardest.
+          </p>
+          </div>
+        </div>
+
+        <div class="impact-panel" data-panel="2">
+          <div class="impact-panel-icon"><svg id="impact-icon-2"></svg></div>
+          <div class="impact-panel-copy">
+            <span class="impact-panel-tag">02 · Older adults</span>
+            <h3><a href="https://www.americanprogress.org/article/protecting-older-adults-from-the-growing-threats-of-extreme-heat/" target="_blank" rel="noopener noreferrer">Age 65+ are most at risk</a></h3>
+            <p>
+              Older adults are at much higher risk from extreme 
+              heat. Their bodies cool down less efficiently through sweating and 
+              circulation, and this is made worse by chronic diseases and medications. 
+              As a result, older adults experience more heat-related illness and 
+              death than any other age group, mostly from heart complications.
+            </p>
+          </div>
+        </div>
+
+        <div class="impact-panel" data-panel="3">
+          <div class="impact-panel-icon"><svg id="impact-icon-3"></svg></div>
+          <div class="impact-panel-copy">
+            <span class="impact-panel-tag">03 · Vulnerable populations</span>
+            <h3><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11930879/" target="_blank" rel="noopener noreferrer">Some people can't just stay inside</a></h3>
+            <p>Air conditioning and staying indoors are common solutions for extreme hot days, but some groups can't escape exposure. Outdoor workers in construction, agriculture, and delivery endure long hours while generating extra body heat. Low-income communities are more exposed too, with limited AC access and poorer housing. </p>
+          </div>
+        </div>
+
+        <div class="impact-panel" data-panel="4">
+          <div class="impact-panel-icon"><svg id="impact-icon-4"></svg></div>
+          <div class="impact-panel-copy">
+            <span class="impact-panel-tag">04 · Humidity vs. hot-dry heat</span>
+            <h3><a href="https://www.who.int/news-room/fact-sheets/detail/climate-change-heat-and-health" target="_blank" rel="noopener noreferrer">Not all heat harms the same way</a></h3>
+            <p>The body cools itself mainly through sweating. When humidity is high, 
+              sweat cannot evaporate easily, so heat gets trapped in the body and 
+              even moderate temperatures become dangerous. In dry heat, sweat 
+              evaporates well and the body can cool down, but people lose water 
+              quickly and get dehydrated. Humid heat is the most dangerous because it 
+              stops the body's main way of cooling itself.
+            </p>
+          </div>
+        </div>
+
+        <div class="impact-panel" data-panel="5">
+          <div class="impact-panel-icon"><svg id="impact-icon-5"></svg></div>
+          <div class="impact-panel-copy">
+            <span class="impact-panel-tag">05 · Sleep</span>
+            <h3><a href="https://www.cell.com/one-earth/fulltext/S2590-3322%2822%2900209-3" target="_blank" rel="noopener noreferrer">Hot nights cut sleep by ~14 minutes</a></h3>
+            <p>On very warm nights above 30°C, sleep declines by about 14 minutes. More frequent hot nights make people fall asleep later and wake up earlier, compressing the sleep period and reducing sleep quality.</p>
+          </div>
+        </div>
+
+        <div class="impact-panel" data-panel="6">
+          <div class="impact-panel-icon"><svg id="impact-icon-6"></svg></div>
+          <div class="impact-panel-copy">
+            <span class="impact-panel-tag">06 · Learning</span>
+            <h3><a href="https://www.aeaweb.org/articles?id=10.1257%2Fpol.20180612&utm_source" target="_blank" rel="noopener noreferrer">A hotter school year lowers learning by ~1%</a></h3>
+            <p>Without air conditioning, a 0.56°C hotter school year reduces that year's learning by about 1%. Hot school days also disproportionately affect minority students, accounting for roughly 5% of the racial achievement gap.</p>
+          </div>
+        </div>
+
+        <div class="impact-panel" data-panel="7">
+          <div class="impact-panel-icon"><svg id="impact-icon-7"></svg></div>
+          <div class="impact-panel-copy">
+            <span class="impact-panel-tag">07 · Cooling cost</span>
+            <h3><a href="https://www.eia.gov/todayinenergy/detail.php?id=62303" target="_blank" rel="noopener noreferrer">Summer electricity use rises ~3%</a></h3>
+            <p>EIA's 2024 forecast expected a 5% rise in cooling degree days to increase average U.S. household summer electricity use by about 3% — a recurring cost that lands hardest on families who can least afford it.</p>
+          </div>
+        </div>
+
+        <div class="impact-panel" data-panel="8">
+          <div class="impact-panel-icon"><svg id="impact-icon-8"></svg></div>
+          <div class="impact-panel-copy">
+            <span class="impact-panel-tag">08 · Emergency room visits</span>
+            <h3><a href="https://today.ucsd.edu/story/weathering-change-fewer-cold-fatalities-more-heat-emergencies-in-california?utm_source" target="_blank" rel="noopener noreferrer">Heat pushes up ER visits across categories</a></h3>
+            <p>Hotter temperatures can increase emergency department visits for injuries, mental health issues, poisonings, and other heat-sensitive conditions, adding pressure to a healthcare system already stretched thin.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- 滚动触发器：9 段，每段 100vh，驱动上方 sticky 框 -->
+  <div class="impact-triggers" aria-hidden="true">
+    <div class="impact-trigger" data-trigger="0"></div>
+    <div class="impact-trigger" data-trigger="1"></div>
+    <div class="impact-trigger" data-trigger="2"></div>
+    <div class="impact-trigger" data-trigger="3"></div>
+    <div class="impact-trigger" data-trigger="4"></div>
+    <div class="impact-trigger" data-trigger="5"></div>
+    <div class="impact-trigger" data-trigger="6"></div>
+    <div class="impact-trigger" data-trigger="7"></div>
+    <div class="impact-trigger" data-trigger="8"></div>
+  </div>
+
+</section>
+
+
+
       <article class="step" data-step="6">
-        <p class="step-number">07 · Impact</p>
-        <h2>Common knowledge on the left, sourced impacts on the right.</h2>
+        <p class="step-number">07 · Explore</p>
+        <h2>Compare states and metrics yourself.</h2>
         <p>
-          Orange cards show common-knowledge context and proxy layers; blue cards show source-backed daily-life examples.
+          Use the controls to switch scenario, year, metric, and exposure bubbles. Hover states to preview values, then click a state to carry it into the local detail section.
         </p>
       </article>
 
-      <article class="step" data-step="7">
-        <p class="step-number">08 · Explore</p>
-        <h2>Compare states and metrics yourself.</h2>
-        <p>
-          Change the year, scenario, and metric to compare the climate layers yourself. The exposure pages above show how those layers can be extended into exposure-days.
-        </p>
-      </article>
     </div>
   </section>
 
