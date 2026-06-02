@@ -8685,3 +8685,3203 @@ body.explore-mode #main-story .controls {
 }
 .detail-section .monthly-chart-card { min-height: 228px !important; }
 .detail-section #monthly-chart { min-height: 218px !important; }
+
+/* Requested cleanup pass: remove decorative boxes/cards while preserving the visualizations. */
+.source-offset-connector,
+.source-offset-label {
+  display: none !important;
+}
+
+.viz-header,
+.legend-row,
+.line-caption,
+.placeholder-legend,
+.us-transition p:not(.eyebrow),
+.expectation-intro,
+.expectation-result-copy,
+.state-change-copy {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+.viz-header {
+  padding: 1.2rem 1.7rem 0 !important;
+}
+
+.viz-title-block .eyebrow {
+  display: none !important;
+}
+
+.viz-header h2 {
+  font-size: clamp(2.2rem, 4.6vw, 4.2rem) !important;
+  max-width: 1120px !important;
+}
+
+#chart-subtitle {
+  max-width: 900px !important;
+  font-size: clamp(1rem, 1.35vw, 1.32rem) !important;
+  line-height: 1.35 !important;
+}
+
+.legend-row {
+  width: auto !important;
+  padding: 0 1.7rem 1.2rem !important;
+  transform: none !important;
+}
+
+.line-caption .legend-caption,
+.legend-caption {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+/* Remove month mini-card boxes but keep the thermometer and month contents. */
+.month-calendar .month-card > rect:first-child {
+  display: none !important;
+}
+
+/* Remove exposure comparison card surfaces. */
+.exposure-focus-card > rect:first-child,
+.exposure-selected-rank-panel > rect:first-child,
+.exposure-selected-note > rect:first-child,
+.exposure-selected-top-message > rect:first-child {
+  display: none !important;
+}
+
+/* Remove U.S. exposure card/key/callout surfaces. */
+.us-exposure-panel > rect:first-child,
+.us-exposure-block-viz > g > rect:first-child {
+  display: none !important;
+}
+
+/* Make main visualization use more canvas area. */
+.sticky-viz {
+  padding: 0 !important;
+}
+
+.chart-wrap {
+  min-height: 0 !important;
+}
+
+#main-chart {
+  min-height: 620px !important;
+}
+
+/* Hot-day comparison page refinements. */
+.hotday-smallmultiple-controls text,
+.hotday-smallmultiple-color-legend text,
+.hotday-temp-trend-inset text {
+  paint-order: stroke;
+  stroke: rgba(255, 248, 240, 0.7);
+  stroke-width: 2px;
+  stroke-linejoin: round;
+}
+
+.hotday-temp-trend-inset .axis path,
+.hotday-temp-trend-inset .axis line {
+  stroke: rgba(23,32,42,0.22) !important;
+}
+
+.exposure-sun .sun-glyph {
+  filter: drop-shadow(0 2px 4px rgba(143,47,27,0.10));
+}
+
+/* This pass: keep calendar month boxes, but keep other decorative cards removed. */
+.month-calendar .month-card > rect:first-child {
+  display: inline !important;
+  fill: rgba(255,255,255,0.74) !important;
+  stroke: rgba(23,32,42,0.12) !important;
+  stroke-width: 1.1px !important;
+}
+.month-calendar .month-card:has(rect.month-day-block) > rect:first-child,
+.month-calendar .month-card > rect:first-child[fill*="196"] {
+  fill: rgba(196,81,44,0.075) !important;
+  stroke: rgba(196,81,44,0.24) !important;
+}
+
+/* Make the active story visuals feel larger and less boxed. */
+.sticky-viz {
+  grid-template-rows: auto minmax(600px, 1fr) auto !important;
+}
+.viz-header,
+.legend-row {
+  border-radius: 0 !important;
+}
+.legend-row {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Keep exposure and U.S. exposure comparison frameless. */
+.exposure-focus-card > rect:first-child,
+.exposure-selected-rank-panel > rect:first-child,
+.exposure-selected-note > rect:first-child,
+.exposure-selected-top-message > rect:first-child,
+.us-exposure-panel > rect:first-child,
+.us-exposure-block-viz > g > rect:first-child {
+  display: none !important;
+}
+.month-calendar .month-card.has-hotdays > rect:first-child {
+  fill: rgba(196,81,44,0.075) !important;
+  stroke: rgba(196,81,44,0.24) !important;
+}
+.month-calendar .month-card.is-empty > rect:first-child {
+  fill: rgba(255,255,255,0.74) !important;
+  stroke: rgba(23,32,42,0.12) !important;
+}
+
+/* Latest requested layout tweaks: exposure map, U.S. suns, and Explore controls. */
+/* Explore controls: year slider takes the full first row; scenario/metric/bubbles sit below. */
+body.explore-mode .viz-header {
+  align-items: start !important;
+  gap: 1.1rem !important;
+}
+
+body.explore-mode .controls {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(150px, 1fr)) !important;
+  grid-template-areas:
+    "year year year"
+    "scenario metric bubbles" !important;
+  min-width: min(760px, 58vw) !important;
+  max-width: min(820px, 60vw) !important;
+  gap: 0.65rem !important;
+  align-items: stretch !important;
+}
+
+body.explore-mode .controls label:nth-child(1) { grid-area: scenario !important; }
+body.explore-mode .controls label:nth-child(2) { grid-area: year !important; }
+body.explore-mode .controls label:nth-child(3) { grid-area: metric !important; }
+body.explore-mode .controls label:nth-child(4) { grid-area: bubbles !important; }
+
+body.explore-mode .controls label:nth-child(2) {
+  grid-template-columns: auto 1fr !important;
+  grid-template-rows: auto auto !important;
+  column-gap: 0.8rem !important;
+  align-items: center !important;
+}
+
+body.explore-mode .controls label:nth-child(2) input[type="range"] {
+  grid-column: 1 / -1 !important;
+  width: 100% !important;
+  max-width: none !important;
+}
+
+body.explore-mode .controls select,
+body.explore-mode .bubble-toggle-control {
+  width: 100% !important;
+  max-width: none !important;
+}
+
+/* Give the U.S. exposure sun grids a little breathing room from their labels. */
+.exposure-sun-grid {
+  transform-box: fill-box;
+}
+
+/* Keep the frameless U.S. comparison clean after the sun grid was resized. */
+.us-exposure-panel > rect:first-child,
+.us-exposure-block-viz > g > rect:first-child {
+  display: none !important;
+}
+
+@media (max-width: 1100px) {
+  body.explore-mode .controls {
+    min-width: min(640px, 54vw) !important;
+    max-width: min(680px, 56vw) !important;
+    grid-template-columns: repeat(3, minmax(120px, 1fr)) !important;
+  }
+}
+
+/* Final layout refinements requested in the latest round. */
+/* Explore mode: keep the headline on top, then place the long year bar and the controls underneath, aligned to the right. */
+body.explore-mode #main-story .viz-header {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  align-items: start !important;
+  row-gap: 0.9rem !important;
+}
+
+body.explore-mode #main-story .viz-title-block {
+  max-width: 760px !important;
+}
+
+body.explore-mode #main-story .viz-title-block h2 {
+  margin-bottom: 0.3rem !important;
+}
+
+body.explore-mode #main-story .controls {
+  justify-self: end !important;
+  width: min(860px, 100%) !important;
+  min-width: 0 !important;
+  max-width: min(860px, 100%) !important;
+  margin-left: auto !important;
+}
+
+@media (max-width: 1100px) {
+  body.explore-mode #main-story .controls {
+    justify-self: stretch !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
+
+/* Latest Explore polish: smaller header/controls, larger map area. */
+body.explore-mode #main-story .viz-header {
+  padding: 1.05rem 1.45rem !important;
+  row-gap: 0.55rem !important;
+  max-width: min(960px, 76vw) !important;
+}
+
+body.explore-mode #main-story .viz-title-block h2,
+body.explore-mode .viz-header h2 {
+  font-size: clamp(1.55rem, 2.05vw, 2.05rem) !important;
+  line-height: 0.98 !important;
+  margin-bottom: 0.22rem !important;
+}
+
+body.explore-mode #main-story .viz-title-block p,
+body.explore-mode #chart-subtitle {
+  font-size: clamp(0.82rem, 1vw, 0.98rem) !important;
+  line-height: 1.25 !important;
+  max-width: 760px !important;
+}
+
+body.explore-mode #main-story .controls {
+  width: min(760px, 100%) !important;
+  max-width: min(760px, 100%) !important;
+  gap: 0.45rem !important;
+}
+
+body.explore-mode #main-story .controls label {
+  padding: 0.55rem 0.65rem !important;
+  border-radius: 14px !important;
+  font-size: 0.68rem !important;
+}
+
+body.explore-mode #main-story .controls select,
+body.explore-mode #main-story .bubble-toggle-control {
+  min-height: 2.15rem !important;
+  padding: 0.48rem 0.58rem !important;
+  border-radius: 12px !important;
+  font-size: 0.92rem !important;
+}
+
+body.explore-mode #main-story .controls label:nth-child(2) input[type="range"] {
+  height: 1.2rem !important;
+}
+
+body.explore-mode #main-story .chart-wrap {
+  margin-top: -0.25rem !important;
+}
+
+
+
+/* ============================================================
+   IMPACT SCROLL — 画卷式 styles
+   追加到 style.css 末尾。仅用项目已有 :root 变量。
+   ============================================================ */
+
+/* 外层：撑出滚动空间。sticky 框在内部固定 */
+.impact-scroll {
+  position: relative;
+}
+
+/* ---- sticky 大框（画卷本体）---- */
+.impact-frame {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: clamp(1rem, 3vh, 2.5rem) clamp(1rem, 4vw, 3rem);
+  z-index: 1;
+}
+
+.impact-frame-inner {
+  position: relative;
+  width: min(880px, 92vw);
+  height: min(560px, 78vh);
+  padding: clamp(1.4rem, 3vw, 2.6rem);
+  padding-left: clamp(2.2rem, 4vw, 3.4rem);
+  border: 1px solid var(--glass-border);
+  border-radius: 28px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 24px 70px rgba(40, 55, 70, 0.14);
+  overflow: hidden;
+}
+
+/* 卷轴两端的木轴质感（上下渐隐边） */
+.impact-frame-inner::before,
+.impact-frame-inner::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 56px;
+  pointer-events: none;
+  z-index: 3;
+}
+.impact-frame-inner::before {
+  top: 0;
+  background: linear-gradient(180deg, var(--glass-bg) 12%, transparent);
+}
+.impact-frame-inner::after {
+  bottom: 0;
+  background: linear-gradient(0deg, var(--glass-bg) 12%, transparent);
+}
+
+/* ---- 头部 ---- */
+.impact-frame-head {
+  position: absolute;
+  top: clamp(1.1rem, 2.4vw, 1.8rem);
+  left: clamp(2.2rem, 4vw, 3.4rem);
+  right: clamp(1.4rem, 3vw, 2.6rem);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  z-index: 4;
+}
+.impact-frame-head .step-number {
+  margin: 0;
+  color: var(--accent-dark);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.impact-frame-hint {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+/* ---- 进度卷轴 ---- */
+.impact-rail {
+  position: absolute;
+  top: clamp(3.4rem, 6vw, 4.6rem);
+  bottom: clamp(1.4rem, 3vw, 2.6rem);
+  left: clamp(1.3rem, 2.6vw, 2rem);
+  width: 3px;
+  border-radius: 999px;
+  background: rgba(143, 47, 27, 0.12);
+  z-index: 4;
+}
+.impact-rail-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 0%;
+  border-radius: 999px;
+  background: var(--accent);
+  transition: height 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ---- 内容舞台：panel 绝对叠放 ---- */
+.impact-stage {
+  position: relative;
+  height: 100%;
+  display: grid;
+  place-items: center;
+}
+
+.impact-panel {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: clamp(1rem, 2.5vw, 2rem);
+  align-items: center;
+  padding: clamp(2.4rem, 5vw, 3.4rem) 0.4rem clamp(1rem, 2vw, 1.6rem);
+  opacity: 0;
+  transform: translateY(34px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  pointer-events: none;
+}
+.impact-panel.is-active {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+/* 已划过去的 panel 略微上移淡出 */
+.impact-panel.is-past {
+  opacity: 0;
+  transform: translateY(-34px);
+}
+
+/* ---- 图标 ---- */
+.impact-panel-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.impact-panel-icon svg {
+  width: 116px;
+  height: 92px;
+  display: block;
+}
+
+/* ---- 文字 ---- */
+.impact-panel-tag {
+  display: inline-block;
+  margin-bottom: 0.7rem;
+  color: var(--accent-dark);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.impact-panel-copy h3 {
+  margin: 0 0 0.85rem;
+  color: var(--text);
+  font-size: clamp(1.4rem, 2.6vw, 2.1rem);
+  line-height: 1.08;
+  letter-spacing: -0.045em;
+}
+.impact-panel-copy h3 a {
+  color: inherit;
+  text-decoration: none;
+  background-image: linear-gradient(var(--accent), var(--accent));
+  background-size: 0% 2px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size 0.3s ease, color 0.2s ease;
+}
+.impact-panel-copy h3 a:hover {
+  color: var(--accent-dark);
+  background-size: 100% 2px;
+}
+.impact-panel-copy h3 a::after {
+  content: "↗";
+  display: inline-block;
+  margin-left: 0.3em;
+  font-size: 0.6em;
+  vertical-align: 0.25em;
+  color: var(--accent);
+  opacity: 0.65;
+}
+.impact-panel-copy p {
+  margin: 0;
+  max-width: 560px;
+  color: var(--muted);
+  font-size: clamp(0.95rem, 1.1vw, 1.1rem);
+  line-height: 1.6;
+}
+
+/* ---- 滚动触发器：撑出滚动距离 ---- */
+.impact-triggers {
+  position: relative;
+  margin-top: -100vh;   /* 让第一段与 sticky 框对齐 */
+}
+.impact-trigger {
+  height: 100vh;
+}
+
+/* ---- 响应式 ---- */
+@media (max-width: 680px) {
+  .impact-frame-inner {
+    height: min(620px, 82vh);
+  }
+  .impact-panel {
+    grid-template-columns: 1fr;
+    gap: 0.6rem;
+    align-content: center;
+  }
+  .impact-panel-icon {
+    justify-content: flex-start;
+  }
+  .impact-panel-icon svg {
+    width: 84px;
+    height: 66px;
+  }
+}
+
+
+/* ============================================================
+   Text-box width fix
+   The plot narration boxes should size with their column instead of
+   being locked to a narrow fixed max-width.
+   ============================================================ */
+.scrolly {
+  grid-template-columns: minmax(0, 1fr) minmax(420px, clamp(460px, 36vw, 720px));
+  column-gap: clamp(1.25rem, 2.4vw, 3rem);
+  align-items: stretch;
+}
+
+.story {
+  width: 100%;
+  max-width: none;
+}
+
+.step {
+  width: 100%;
+  padding-right: clamp(0.75rem, 1.8vw, 2rem);
+}
+
+.step h2,
+.step p:not(.step-number) {
+  width: 100%;
+  max-width: min(100%, 680px);
+  box-sizing: border-box;
+}
+
+.step p:not(.step-number) {
+  width: min(100%, 680px);
+}
+
+.impact-panel-copy,
+.impact-panel-copy p {
+  width: 100%;
+  max-width: min(100%, 720px);
+  box-sizing: border-box;
+}
+
+@media (max-width: 1180px) {
+  .scrolly {
+    grid-template-columns: minmax(0, 1fr) minmax(380px, 44vw);
+    padding-inline: clamp(1rem, 2vw, 2rem);
+  }
+
+  .step h2,
+  .step p:not(.step-number) {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 920px) {
+  .scrolly {
+    grid-template-columns: 1fr;
+  }
+
+  .story {
+    max-width: min(720px, calc(100vw - 2rem));
+    margin-inline: auto;
+  }
+
+  .step {
+    padding-inline: 0;
+  }
+}
+
+/* ============================================================
+   Follow-up box-width fix
+   The top title card and bottom legend/info card in the main
+   story should not stay locked to an awkward fixed width.
+   In story mode, let them size to their content, with sensible
+   caps and wrapping. Explore mode keeps its larger control layout.
+   ============================================================ */
+body:not(.explore-mode) #main-story .viz-header {
+  width: fit-content !important;
+  max-width: min(58rem, 100%) !important;
+  min-width: min(38rem, 100%) !important;
+  justify-content: flex-start !important;
+}
+
+body:not(.explore-mode) #main-story .viz-title-block {
+  max-width: min(52rem, 100%) !important;
+}
+
+body:not(.explore-mode) #main-story #chart-subtitle {
+  max-width: min(50rem, 100%) !important;
+}
+
+body:not(.explore-mode) #main-story .legend-row {
+  width: fit-content !important;
+  max-width: min(60rem, 100%) !important;
+  min-width: min(36rem, 100%) !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  justify-content: flex-start !important;
+  gap: 0.45rem !important;
+}
+
+body:not(.explore-mode) #main-story #map-note {
+  max-width: min(48rem, 100%) !important;
+  line-height: 1.45 !important;
+}
+
+@media (max-width: 920px) {
+  body:not(.explore-mode) #main-story .viz-header,
+  body:not(.explore-mode) #main-story .legend-row {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+
+  body:not(.explore-mode) #main-story .legend-row {
+    gap: 0.55rem !important;
+  }
+}
+
+/* ============================================================
+   FINAL PAGE + BOX FIX
+   After the impact section was moved out of the main scrolly, the
+   old scroll height was still sized for extra pages. Keep exactly
+   one scroll page per remaining main-story step, and make plot text
+   boxes use the full plot width instead of an inherited fixed card.
+   ============================================================ */
+#main-story .story,
+body.impact-fullpage-active #main-story .story,
+body.impact-fullpage-active .story {
+  min-height: calc(6 * 100vh) !important;
+}
+
+#main-story .story .step,
+body.impact-fullpage-active #main-story .story .step {
+  min-height: 100vh !important;
+}
+
+/* Main plot title/subtitle card: full plot width, text kept readable. */
+#main-story .viz-header,
+body:not(.explore-mode) #main-story .viz-header,
+body.explore-mode #main-story .viz-header,
+body.impact-fullpage-active #main-story .viz-header {
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: flex-start !important;
+  gap: clamp(1rem, 2vw, 2rem) !important;
+}
+
+#main-story .viz-title-block,
+body:not(.explore-mode) #main-story .viz-title-block,
+body.explore-mode #main-story .viz-title-block {
+  width: auto !important;
+  max-width: min(880px, 64vw) !important;
+  min-width: 0 !important;
+}
+
+#main-story #chart-subtitle,
+body:not(.explore-mode) #main-story #chart-subtitle,
+body.explore-mode #main-story #chart-subtitle {
+  width: 100% !important;
+  max-width: 860px !important;
+}
+
+/* Main plot legend/note card: full plot width, no locked narrow card. */
+#main-story .legend-row,
+body:not(.explore-mode) #main-story .legend-row,
+body.impact-fullpage-active #main-story .legend-row {
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: wrap !important;
+  align-items: flex-end !important;
+  justify-content: flex-start !important;
+  gap: 0.75rem 1.1rem !important;
+}
+
+#main-story #legend {
+  flex: 0 1 auto !important;
+  min-width: min(360px, 100%) !important;
+  max-width: min(560px, 100%) !important;
+}
+
+#main-story #map-note,
+body:not(.explore-mode) #main-story #map-note,
+body.impact-fullpage-active #main-story #map-note {
+  flex: 1 1 420px !important;
+  max-width: none !important;
+  min-width: min(420px, 100%) !important;
+  line-height: 1.45 !important;
+}
+
+/* Keep explore controls usable after the full-width header override. */
+body.explore-mode #main-story .controls {
+  flex: 0 1 min(860px, 56vw) !important;
+  width: min(860px, 56vw) !important;
+  max-width: min(860px, 56vw) !important;
+  min-width: min(620px, 54vw) !important;
+  margin-left: auto !important;
+}
+
+@media (max-width: 1100px) {
+  #main-story .viz-header,
+  body.explore-mode #main-story .viz-header {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    row-gap: 0.75rem !important;
+  }
+
+  #main-story .viz-title-block,
+  body.explore-mode #main-story .viz-title-block {
+    max-width: 100% !important;
+  }
+
+  body.explore-mode #main-story .controls {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    justify-self: stretch !important;
+  }
+}
+
+@media (max-width: 720px) {
+  #main-story .legend-row,
+  body:not(.explore-mode) #main-story .legend-row,
+  body.impact-fullpage-active #main-story .legend-row {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  #main-story #legend,
+  #main-story #map-note {
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+}
+
+/* ============================================================
+   FINAL FIX: Restore Explore as the last main-story plot step.
+   The impact section now lives outside #main-story, so the story
+   has 7 plot pages: 6 narrative pages + 1 explore page.
+   ============================================================ */
+#main-story .story,
+body.impact-fullpage-active #main-story .story,
+body.impact-fullpage-active .story {
+  min-height: calc(7 * 100vh) !important;
+}
+
+/* Plot text/card boxes: do not lock them to the old narrow 980px card.
+   Let the header and legend span the plot width while keeping text readable. */
+#main-story .viz-header,
+body:not(.explore-mode) #main-story .viz-header,
+body.explore-mode #main-story .viz-header,
+body.impact-fullpage-active #main-story .viz-header {
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  padding: clamp(0.7rem, 1vw, 1rem) clamp(0.9rem, 1.5vw, 1.35rem) !important;
+  border-radius: 22px !important;
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: space-between !important;
+  gap: clamp(1rem, 2vw, 2.25rem) !important;
+}
+
+#main-story .viz-title-block,
+body:not(.explore-mode) #main-story .viz-title-block,
+body.explore-mode #main-story .viz-title-block {
+  flex: 1 1 auto !important;
+  width: auto !important;
+  max-width: none !important;
+  min-width: 0 !important;
+}
+
+#main-story #chart-subtitle,
+body:not(.explore-mode) #main-story #chart-subtitle,
+body.explore-mode #main-story #chart-subtitle {
+  width: min(100%, 74rem) !important;
+  max-width: none !important;
+}
+
+#main-story .legend-row,
+body:not(.explore-mode) #main-story .legend-row,
+body.explore-mode #main-story .legend-row,
+body.impact-fullpage-active #main-story .legend-row {
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  padding: 0.65rem clamp(0.85rem, 1.4vw, 1.25rem) !important;
+  border-radius: 22px !important;
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: wrap !important;
+  align-items: flex-end !important;
+  justify-content: flex-start !important;
+  gap: 0.65rem 1.1rem !important;
+}
+
+#main-story #legend {
+  flex: 0 1 auto !important;
+  min-width: min(360px, 100%) !important;
+  max-width: min(620px, 100%) !important;
+}
+
+#main-story #map-note,
+body:not(.explore-mode) #main-story #map-note,
+body.explore-mode #main-story #map-note,
+body.impact-fullpage-active #main-story #map-note {
+  flex: 1 1 34rem !important;
+  width: auto !important;
+  min-width: min(34rem, 100%) !important;
+  max-width: none !important;
+  line-height: 1.45 !important;
+}
+
+/* Explore controls: keep them visible and inside the header, but never let
+   their min-width push the map/chart out of the page. */
+body.explore-mode #main-story .controls {
+  display: grid !important;
+  flex: 0 1 min(860px, 48vw) !important;
+  width: min(860px, 48vw) !important;
+  max-width: min(860px, 48vw) !important;
+  min-width: 0 !important;
+  margin-left: auto !important;
+  justify-self: end !important;
+}
+
+body.explore-mode #main-story #main-chart {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+@media (max-width: 1200px) {
+  #main-story .viz-header,
+  body.explore-mode #main-story .viz-header {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    row-gap: 0.75rem !important;
+  }
+
+  body.explore-mode #main-story .controls {
+    width: 100% !important;
+    max-width: 100% !important;
+    justify-self: stretch !important;
+  }
+}
+
+@media (max-width: 760px) {
+  #main-story .legend-row,
+  body:not(.explore-mode) #main-story .legend-row,
+  body.explore-mode #main-story .legend-row,
+  body.impact-fullpage-active #main-story .legend-row {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  #main-story #legend,
+  #main-story #map-note {
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+}
+
+/* ============================================================
+   HARD RESTORE: Explore plot visibility + page count
+   Keep the last main-story step as a real map/explore page.
+   Earlier fixes accidentally let old layout rules collapse the chart area.
+   ============================================================ */
+#main-story .story,
+body.impact-fullpage-active #main-story .story,
+body.impact-fullpage-active .story {
+  min-height: calc(var(--main-story-pages, 7) * 100vh) !important;
+}
+
+#main-story .story .step {
+  min-height: 100vh !important;
+}
+
+body.explore-mode #main-story.scrolly {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  grid-template-areas: "stack" !important;
+  width: 100% !important;
+  max-width: none !important;
+  padding-inline: clamp(1rem, 3vw, 3rem) !important;
+}
+
+body.explore-mode #main-story .graphic {
+  grid-area: stack !important;
+  position: sticky !important;
+  top: 0 !important;
+  height: 100vh !important;
+  width: 100% !important;
+  z-index: 2 !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+body.explore-mode #main-story .sticky-viz {
+  height: 100vh !important;
+  width: 100% !important;
+  min-height: 100vh !important;
+  display: grid !important;
+  grid-template-rows: auto minmax(460px, 1fr) auto !important;
+  gap: clamp(0.45rem, 0.9vh, 0.75rem) !important;
+  overflow: visible !important;
+}
+
+body.explore-mode #main-story .chart-wrap {
+  display: grid !important;
+  place-items: center !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-height: min(58vh, 620px) !important;
+  overflow: visible !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+body.explore-mode #main-story #main-chart {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-height: min(58vh, 620px) !important;
+  max-height: none !important;
+}
+
+body.explore-mode #main-story #main-chart .map-layer,
+body.explore-mode #main-story #main-chart path.state {
+  display: initial !important;
+  visibility: visible !important;
+  opacity: 1;
+}
+
+body.explore-mode #main-story .viz-header {
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  display: grid !important;
+  grid-template-columns: minmax(280px, 0.9fr) minmax(360px, 1.1fr) !important;
+  gap: clamp(0.85rem, 1.8vw, 1.5rem) !important;
+  align-items: start !important;
+}
+
+body.explore-mode #main-story .controls {
+  display: grid !important;
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  margin-left: 0 !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  grid-template-areas:
+    "year year year"
+    "scenario metric bubbles" !important;
+}
+
+body.explore-mode #main-story .controls label,
+body.explore-mode #main-story .controls select,
+body.explore-mode #main-story .bubble-toggle-control {
+  min-width: 0 !important;
+}
+
+body.explore-mode #main-story .legend-row {
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  display: flex !important;
+  flex-wrap: wrap !important;
+}
+
+body.explore-mode.no-tooltip .tooltip {
+  display: block !important;
+}
+
+@media (max-width: 1050px) {
+  body.explore-mode #main-story .viz-header {
+    grid-template-columns: 1fr !important;
+  }
+  body.explore-mode #main-story .controls {
+    grid-template-columns: 1fr !important;
+    grid-template-areas:
+      "scenario"
+      "year"
+      "metric"
+      "bubbles" !important;
+  }
+  body.explore-mode #main-story .sticky-viz {
+    grid-template-rows: auto minmax(360px, 1fr) auto !important;
+  }
+}
+
+/* ============================================================
+   FINAL ORDER FIX: Impact scroll belongs between the U.S.
+   comparison step and the final Explore step.
+   Because the impact section is now inside #main-story .story,
+   keep it visible/clickable while the story steps themselves remain
+   invisible scroll triggers.
+   ============================================================ */
+#main-story #impact-scroll {
+  position: relative !important;
+  z-index: 4 !important;
+  width: 100% !important;
+  min-height: 500vh !important;
+  pointer-events: auto !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+#main-story #impact-scroll,
+#main-story #impact-scroll * {
+  display: revert !important;
+}
+
+#main-story #impact-scroll .impact-frame {
+  display: grid !important;
+  z-index: 6 !important;
+}
+
+#main-story #impact-scroll .impact-frame-inner,
+#main-story #impact-scroll .impact-stage,
+#main-story #impact-scroll .impact-triggers,
+#main-story #impact-scroll .impact-trigger {
+  display: block !important;
+}
+
+#main-story #impact-scroll .impact-panel {
+  display: grid !important;
+}
+
+#main-story #impact-scroll .impact-panel-icon,
+#main-story #impact-scroll .impact-panel-copy,
+#main-story #impact-scroll .impact-frame-head {
+  display: flex !important;
+}
+
+#main-story #impact-scroll .impact-panel-copy {
+  display: block !important;
+}
+
+/* Final non-explore text/card width fix. Avoid fixed 980px-style boxes. */
+body:not(.explore-mode) #main-story .viz-header {
+  justify-self: start !important;
+  width: fit-content !important;
+  min-width: 0 !important;
+  max-width: min(64rem, 100%) !important;
+  display: flex !important;
+}
+
+body:not(.explore-mode) #main-story .viz-title-block {
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: min(56rem, calc(100vw - 7rem)) !important;
+}
+
+body:not(.explore-mode) #main-story .viz-title-block h2,
+body:not(.explore-mode) #main-story #chart-subtitle {
+  width: auto !important;
+  max-width: min(56rem, calc(100vw - 7rem)) !important;
+}
+
+body:not(.explore-mode) #main-story .legend-row {
+  justify-self: start !important;
+  width: fit-content !important;
+  min-width: 0 !important;
+  max-width: min(64rem, 100%) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+}
+
+body:not(.explore-mode) #main-story #legend,
+body:not(.explore-mode) #main-story #map-note {
+  min-width: 0 !important;
+  max-width: min(56rem, calc(100vw - 7rem)) !important;
+}
+
+@media (max-width: 760px) {
+  body:not(.explore-mode) #main-story .viz-header,
+  body:not(.explore-mode) #main-story .legend-row {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  body:not(.explore-mode) #main-story .viz-title-block,
+  body:not(.explore-mode) #main-story .viz-title-block h2,
+  body:not(.explore-mode) #main-story #chart-subtitle,
+  body:not(.explore-mode) #main-story #legend,
+  body:not(.explore-mode) #main-story #map-note {
+    max-width: 100% !important;
+  }
+}
+
+/* ============================================================
+   IMPACT PAGE REDESIGN — no card, same visual language as the
+   opening / transition pages. Keep the scroll-driven panels, but
+   remove the framed card surface so the content feels like a full
+   story page before Explore.
+   ============================================================ */
+#main-story #impact-scroll {
+  width: 100vw !important;
+  max-width: none !important;
+  margin-left: calc(50% - 50vw) !important;
+  margin-right: calc(50% - 50vw) !important;
+  min-height: 900vh !important;
+  background:
+    radial-gradient(circle at 78% 20%, rgba(255, 196, 92, 0.22), transparent 22rem),
+    radial-gradient(circle at 18% 76%, rgba(196, 81, 44, 0.14), transparent 24rem),
+    linear-gradient(180deg, #fff8f0 0%, #f6e3d1 58%, #edf2f4 100%) !important;
+  overflow: clip !important;
+}
+
+#main-story #impact-scroll .impact-frame {
+  position: sticky !important;
+  top: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  display: grid !important;
+  place-items: center !important;
+  padding: clamp(3rem, 7vh, 5rem) clamp(1.25rem, 7vw, 7rem) !important;
+  background: transparent !important;
+}
+
+#main-story #impact-scroll .impact-frame-inner {
+  position: relative !important;
+  width: min(1180px, 100%) !important;
+  height: min(720px, 82vh) !important;
+  padding: 0 !important;
+  padding-left: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  overflow: visible !important;
+}
+
+#main-story #impact-scroll .impact-frame-inner::before,
+#main-story #impact-scroll .impact-frame-inner::after {
+  display: none !important;
+}
+
+#main-story #impact-scroll .impact-frame-head {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 8 !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: baseline !important;
+  gap: 1rem !important;
+  pointer-events: none !important;
+}
+
+#main-story #impact-scroll .impact-frame-head .step-number,
+#main-story #impact-scroll .impact-panel-tag {
+  color: var(--accent-dark) !important;
+  font-size: clamp(0.68rem, 0.9vw, 0.78rem) !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.18em !important;
+  text-transform: uppercase !important;
+}
+
+#main-story #impact-scroll .impact-frame-hint {
+  margin: 0 !important;
+  color: rgba(95, 107, 115, 0.76) !important;
+  font-size: clamp(0.62rem, 0.85vw, 0.72rem) !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.16em !important;
+  text-transform: uppercase !important;
+}
+
+#main-story #impact-scroll .impact-rail {
+  top: auto !important;
+  bottom: clamp(0.5rem, 1.2vh, 1rem) !important;
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+  height: 3px !important;
+  border-radius: 999px !important;
+  background: rgba(143, 47, 27, 0.14) !important;
+  z-index: 8 !important;
+}
+
+#main-story #impact-scroll .impact-rail-fill {
+  top: 0 !important;
+  left: 0 !important;
+  width: 0% !important;
+  height: 100% !important;
+  background: var(--accent) !important;
+  border-radius: 999px !important;
+  transition: width 0.45s cubic-bezier(0.4, 0, 0.2, 1), height 0.45s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+#main-story #impact-scroll .impact-stage {
+  position: relative !important;
+  height: 100% !important;
+  display: grid !important;
+  place-items: center !important;
+}
+
+#main-story #impact-scroll .impact-panel {
+  position: absolute !important;
+  inset: 0 !important;
+  display: grid !important;
+  grid-template-columns: minmax(96px, 0.24fr) minmax(0, 0.76fr) !important;
+  gap: clamp(1.3rem, 4vw, 4.5rem) !important;
+  align-items: center !important;
+  padding: clamp(2.5rem, 8vh, 5rem) 0 clamp(2rem, 7vh, 4.5rem) !important;
+  background: transparent !important;
+  opacity: 0 !important;
+  transform: translateY(42px) scale(0.985) !important;
+  transition: opacity 0.55s ease, transform 0.55s ease !important;
+  pointer-events: none !important;
+}
+
+#main-story #impact-scroll .impact-panel.is-active {
+  opacity: 1 !important;
+  transform: translateY(0) scale(1) !important;
+  pointer-events: auto !important;
+}
+
+#main-story #impact-scroll .impact-panel.is-past {
+  opacity: 0 !important;
+  transform: translateY(-42px) scale(0.985) !important;
+}
+
+#main-story #impact-scroll .impact-panel-icon {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  opacity: 0.9 !important;
+  filter: drop-shadow(0 18px 36px rgba(143, 47, 27, 0.12)) !important;
+}
+
+#main-story #impact-scroll .impact-panel-icon svg {
+  width: clamp(92px, 12vw, 150px) !important;
+  height: auto !important;
+  min-height: 88px !important;
+  display: block !important;
+}
+
+#main-story #impact-scroll .impact-panel-copy {
+  display: block !important;
+  width: min(840px, 100%) !important;
+  max-width: 840px !important;
+}
+
+#main-story #impact-scroll .impact-panel-copy h3 {
+  margin: 0 0 clamp(0.9rem, 2vh, 1.35rem) !important;
+  color: #17202a !important;
+  font-size: clamp(2.45rem, 5.7vw, 5.8rem) !important;
+  line-height: 0.94 !important;
+  letter-spacing: -0.075em !important;
+  text-wrap: balance !important;
+}
+
+#main-story #impact-scroll .impact-panel-copy h3 a {
+  color: inherit !important;
+  text-decoration: none !important;
+  background-image: none !important;
+}
+
+#main-story #impact-scroll .impact-panel-copy h3 a:hover {
+  color: var(--accent-dark) !important;
+}
+
+#main-story #impact-scroll .impact-panel-copy h3 a::after {
+  margin-left: 0.22em !important;
+  color: rgba(196, 81, 44, 0.75) !important;
+}
+
+#main-story #impact-scroll .impact-panel-copy p {
+  width: min(760px, 100%) !important;
+  max-width: 760px !important;
+  margin: 0 !important;
+  color: #5f6b73 !important;
+  font-size: clamp(1rem, 1.45vw, 1.28rem) !important;
+  line-height: 1.6 !important;
+}
+
+#main-story #impact-scroll .impact-panel-copy p a {
+  color: var(--accent-dark) !important;
+  font-weight: 750 !important;
+  text-decoration-thickness: 1px !important;
+  text-underline-offset: 0.2em !important;
+}
+
+#main-story #impact-scroll .impact-triggers {
+  position: relative !important;
+  margin-top: -100vh !important;
+  z-index: 7 !important;
+}
+
+#main-story #impact-scroll .impact-trigger {
+  height: 100vh !important;
+}
+
+@media (max-width: 780px) {
+  #main-story #impact-scroll .impact-frame {
+    padding: 5rem 1.25rem 3rem !important;
+  }
+
+  #main-story #impact-scroll .impact-frame-inner {
+    height: min(760px, 84vh) !important;
+  }
+
+  #main-story #impact-scroll .impact-frame-head {
+    align-items: flex-start !important;
+    flex-direction: column !important;
+    gap: 0.35rem !important;
+  }
+
+  #main-story #impact-scroll .impact-panel {
+    grid-template-columns: 1fr !important;
+    align-content: center !important;
+    gap: 1.1rem !important;
+    padding-top: 4.5rem !important;
+  }
+
+  #main-story #impact-scroll .impact-panel-icon {
+    justify-content: flex-start !important;
+  }
+
+  #main-story #impact-scroll .impact-panel-copy h3 {
+    font-size: clamp(2.15rem, 12vw, 3.7rem) !important;
+  }
+}
+
+/* ============================================================
+   DISPLAY ERROR REPAIR PASS
+   Clean final overrides for the current structure:
+   story steps 01-06, then full-page impact, then step 07 Explore.
+   This avoids older accumulated CSS rules collapsing pages or hiding
+   the Explore plot.
+   ============================================================ */
+#main-story.scrolly {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  grid-template-areas: "stack" !important;
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 clamp(1rem, 3vw, 3rem) 5rem !important;
+  overflow: visible !important;
+}
+
+#main-story > .graphic {
+  grid-area: stack !important;
+  position: sticky !important;
+  top: 0 !important;
+  height: 100vh !important;
+  width: 100% !important;
+  z-index: 2 !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+#main-story .sticky-viz {
+  height: 100vh !important;
+  width: 100% !important;
+  min-height: 100vh !important;
+  max-width: none !important;
+  display: grid !important;
+  grid-template-rows: auto minmax(0, 1fr) auto !important;
+  gap: clamp(0.45rem, 0.8vh, 0.75rem) !important;
+  padding: clamp(0.75rem, 1.2vw, 1.15rem) 0 !important;
+  overflow: visible !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+#main-story .chart-wrap {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  display: grid !important;
+  place-items: center !important;
+  overflow: visible !important;
+}
+
+#main-story #main-chart {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  max-height: calc(100vh - 210px) !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Top and bottom plot text boxes: full plot width, no awkward locked card width. */
+#main-story .viz-header,
+body:not(.explore-mode) #main-story .viz-header {
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  padding: clamp(0.72rem, 1vw, 1rem) clamp(0.9rem, 1.45vw, 1.25rem) !important;
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: space-between !important;
+  gap: clamp(1rem, 2vw, 2.25rem) !important;
+  border: 1px solid var(--glass-border) !important;
+  border-radius: 22px !important;
+  background: var(--glass-bg) !important;
+  backdrop-filter: blur(12px) !important;
+}
+
+#main-story .viz-title-block,
+body:not(.explore-mode) #main-story .viz-title-block {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  max-width: none !important;
+}
+
+#main-story #chart-subtitle,
+body:not(.explore-mode) #main-story #chart-subtitle {
+  width: min(100%, 78rem) !important;
+  max-width: none !important;
+}
+
+#main-story .legend-row,
+body:not(.explore-mode) #main-story .legend-row {
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  padding: 0.62rem clamp(0.85rem, 1.4vw, 1.2rem) !important;
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 0.65rem 1.1rem !important;
+  border: 1px solid var(--glass-border) !important;
+  border-radius: 22px !important;
+  background: var(--glass-bg) !important;
+  backdrop-filter: blur(12px) !important;
+}
+
+#main-story #legend {
+  flex: 0 1 auto !important;
+  min-width: min(330px, 100%) !important;
+  max-width: min(620px, 100%) !important;
+}
+
+#main-story #map-note {
+  flex: 1 1 30rem !important;
+  min-width: min(30rem, 100%) !important;
+  max-width: none !important;
+  width: auto !important;
+  line-height: 1.45 !important;
+}
+
+/* Story triggers stay in the document flow. Their text is hidden because the
+   active narration is carried by the plot header/subtitle. */
+#main-story > .story {
+  grid-area: stack !important;
+  position: relative !important;
+  z-index: 3 !important;
+  width: 100% !important;
+  min-height: auto !important;
+  pointer-events: none !important;
+  opacity: 1 !important;
+}
+
+#main-story > .story > .step {
+  min-height: 100vh !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: block !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+#main-story > .story > .step * {
+  display: none !important;
+}
+
+/* Full-page Impact, placed between step 06 and Explore. */
+#impact-scroll,
+#main-story #impact-scroll {
+  position: relative !important;
+  z-index: 30 !important;
+  width: 100vw !important;
+  max-width: none !important;
+  min-height: 900vh !important;
+  margin-left: calc(50% - 50vw) !important;
+  margin-right: calc(50% - 50vw) !important;
+  pointer-events: auto !important;
+  background:
+    radial-gradient(circle at 76% 18%, rgba(255, 196, 92, 0.22), transparent 22rem),
+    radial-gradient(circle at 18% 76%, rgba(196, 81, 44, 0.14), transparent 24rem),
+    linear-gradient(180deg, #fff8f0 0%, #f6e3d1 58%, #edf2f4 100%) !important;
+  overflow: hidden !important;
+}
+
+#impact-scroll .impact-frame,
+#main-story #impact-scroll .impact-frame {
+  position: sticky !important;
+  top: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  display: grid !important;
+  place-items: center !important;
+  padding: clamp(3rem, 7vh, 5rem) clamp(1.25rem, 7vw, 7rem) !important;
+  background: transparent !important;
+}
+
+#impact-scroll .impact-frame-inner,
+#main-story #impact-scroll .impact-frame-inner {
+  position: relative !important;
+  width: min(1180px, 100%) !important;
+  height: min(720px, 82vh) !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  overflow: visible !important;
+}
+
+#impact-scroll .impact-frame-inner::before,
+#impact-scroll .impact-frame-inner::after,
+#main-story #impact-scroll .impact-frame-inner::before,
+#main-story #impact-scroll .impact-frame-inner::after {
+  display: none !important;
+}
+
+#impact-scroll .impact-frame-head,
+#main-story #impact-scroll .impact-frame-head {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 8 !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: baseline !important;
+  gap: 1rem !important;
+}
+
+#impact-scroll .impact-rail,
+#main-story #impact-scroll .impact-rail {
+  position: absolute !important;
+  top: auto !important;
+  bottom: clamp(0.5rem, 1.2vh, 1rem) !important;
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+  height: 3px !important;
+  background: rgba(143, 47, 27, 0.14) !important;
+  border-radius: 999px !important;
+  z-index: 8 !important;
+}
+
+#impact-scroll .impact-rail-fill,
+#main-story #impact-scroll .impact-rail-fill {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 0% !important;
+  height: 100% !important;
+  background: var(--accent) !important;
+  border-radius: 999px !important;
+}
+
+#impact-scroll .impact-stage,
+#main-story #impact-scroll .impact-stage {
+  position: relative !important;
+  height: 100% !important;
+  display: grid !important;
+  place-items: center !important;
+}
+
+#impact-scroll .impact-panel,
+#main-story #impact-scroll .impact-panel {
+  position: absolute !important;
+  inset: 0 !important;
+  display: grid !important;
+  grid-template-columns: minmax(96px, 0.24fr) minmax(0, 0.76fr) !important;
+  gap: clamp(1.3rem, 4vw, 4.5rem) !important;
+  align-items: center !important;
+  padding: clamp(2.5rem, 8vh, 5rem) 0 clamp(2rem, 7vh, 4.5rem) !important;
+  opacity: 0 !important;
+  transform: translateY(42px) scale(0.985) !important;
+  transition: opacity 0.55s ease, transform 0.55s ease !important;
+  pointer-events: none !important;
+}
+
+#impact-scroll .impact-panel.is-active,
+#main-story #impact-scroll .impact-panel.is-active {
+  opacity: 1 !important;
+  transform: translateY(0) scale(1) !important;
+  pointer-events: auto !important;
+}
+
+#impact-scroll .impact-panel.is-past,
+#main-story #impact-scroll .impact-panel.is-past {
+  opacity: 0 !important;
+  transform: translateY(-42px) scale(0.985) !important;
+}
+
+#impact-scroll .impact-panel-icon,
+#main-story #impact-scroll .impact-panel-icon {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  filter: drop-shadow(0 18px 36px rgba(143, 47, 27, 0.12)) !important;
+}
+
+#impact-scroll .impact-panel-icon svg,
+#main-story #impact-scroll .impact-panel-icon svg {
+  width: clamp(92px, 12vw, 150px) !important;
+  height: auto !important;
+  min-height: 88px !important;
+  display: block !important;
+}
+
+#impact-scroll .impact-panel-copy,
+#main-story #impact-scroll .impact-panel-copy {
+  display: block !important;
+  width: min(840px, 100%) !important;
+  max-width: 840px !important;
+}
+
+#impact-scroll .impact-panel-copy h3,
+#main-story #impact-scroll .impact-panel-copy h3 {
+  margin: 0 0 clamp(0.9rem, 2vh, 1.35rem) !important;
+  color: #17202a !important;
+  font-size: clamp(2.45rem, 5.7vw, 5.8rem) !important;
+  line-height: 0.94 !important;
+  letter-spacing: -0.075em !important;
+  text-wrap: balance !important;
+}
+
+#impact-scroll .impact-panel-copy p,
+#main-story #impact-scroll .impact-panel-copy p {
+  width: min(760px, 100%) !important;
+  max-width: 760px !important;
+  margin: 0 !important;
+  color: #5f6b73 !important;
+  font-size: clamp(1rem, 1.45vw, 1.28rem) !important;
+  line-height: 1.6 !important;
+}
+
+#impact-scroll .impact-triggers,
+#main-story #impact-scroll .impact-triggers {
+  position: relative !important;
+  margin-top: -100vh !important;
+  z-index: 7 !important;
+}
+
+#impact-scroll .impact-trigger,
+#main-story #impact-scroll .impact-trigger {
+  height: 100vh !important;
+}
+
+/* Explore must come back after Impact as a full plot page. */
+body.explore-mode #main-story > .graphic {
+  z-index: 40 !important;
+}
+
+body.explore-mode #main-story .sticky-viz {
+  grid-template-rows: auto minmax(460px, 1fr) auto !important;
+}
+
+body.explore-mode #main-story .viz-header {
+  display: grid !important;
+  grid-template-columns: minmax(280px, 0.88fr) minmax(360px, 1.12fr) !important;
+  gap: clamp(0.85rem, 1.8vw, 1.5rem) !important;
+}
+
+body.explore-mode #main-story .controls {
+  display: grid !important;
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  grid-template-areas:
+    "year year year"
+    "scenario metric bubbles" !important;
+}
+
+body.explore-mode #main-story .chart-wrap,
+body.explore-mode #main-story #main-chart {
+  min-height: min(58vh, 620px) !important;
+  max-height: none !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+body.explore-mode #main-story .chart-wrap {
+  display: grid !important;
+}
+
+body.explore-mode #main-story #main-chart .map-layer,
+body.explore-mode #main-story #main-chart path.state {
+  display: initial !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+@media (max-width: 980px) {
+  #main-story .viz-header,
+  body.explore-mode #main-story .viz-header {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+  }
+
+  body.explore-mode #main-story .controls {
+    grid-template-columns: 1fr !important;
+    grid-template-areas:
+      "scenario"
+      "year"
+      "metric"
+      "bubbles" !important;
+  }
+}
+
+@media (max-width: 780px) {
+  #main-story .legend-row {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+  #main-story #legend,
+  #main-story #map-note {
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+  #impact-scroll .impact-frame,
+  #main-story #impact-scroll .impact-frame {
+    padding: 5rem 1.25rem 3rem !important;
+  }
+  #impact-scroll .impact-panel,
+  #main-story #impact-scroll .impact-panel {
+    grid-template-columns: 1fr !important;
+    align-content: center !important;
+    gap: 1.1rem !important;
+    padding-top: 4.5rem !important;
+  }
+  #impact-scroll .impact-panel-icon,
+  #main-story #impact-scroll .impact-panel-icon {
+    justify-content: flex-start !important;
+  }
+  #impact-scroll .impact-panel-copy h3,
+  #main-story #impact-scroll .impact-panel-copy h3 {
+    font-size: clamp(2.15rem, 12vw, 3.7rem) !important;
+  }
+}
+
+/* ============================================================
+   FINAL DISPLAY REPAIR v2
+   Current intended scroll order:
+   Step 01-06 main plot -> full-page impact -> Step 07 Explore.
+   Keep impact inside the story flow, but make it behave like its own
+   page and prevent the sticky plot from showing behind it.
+   ============================================================ */
+#main-story > .story {
+  pointer-events: none !important;
+}
+
+#main-story > .story > .step {
+  min-height: 100vh !important;
+  display: block !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+#main-story > .story > .step * {
+  display: none !important;
+}
+
+#main-story #impact-scroll {
+  pointer-events: auto !important;
+  isolation: isolate !important;
+}
+
+body.impact-section-active #main-story > .graphic {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  transition: opacity 0.2s ease !important;
+}
+
+body.impact-section-active:not(.explore-mode) #main-story #impact-scroll {
+  z-index: 80 !important;
+}
+
+body.explore-mode #main-story > .graphic {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  z-index: 90 !important;
+}
+
+/* Explore page: force the map/controls to use the full viewport plot area. */
+body.explore-mode #main-story .sticky-viz {
+  height: 100vh !important;
+  min-height: 100vh !important;
+  grid-template-rows: auto minmax(0, 1fr) auto !important;
+}
+
+body.explore-mode #main-story .chart-wrap {
+  display: grid !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  place-items: stretch !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+body.explore-mode #main-story #main-chart {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 460px !important;
+  max-height: calc(100vh - 220px) !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+body.explore-mode #main-story .viz-header {
+  width: 100% !important;
+  max-width: none !important;
+  display: grid !important;
+  grid-template-columns: minmax(260px, 0.9fr) minmax(420px, 1.1fr) !important;
+  align-items: start !important;
+  gap: clamp(0.8rem, 1.8vw, 1.5rem) !important;
+}
+
+body.explore-mode #main-story .controls {
+  display: grid !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  grid-template-areas:
+    "year year year"
+    "scenario metric bubbles" !important;
+}
+
+body.explore-mode #main-story .controls label:nth-child(1) { grid-area: scenario !important; }
+body.explore-mode #main-story .controls label:nth-child(2) { grid-area: year !important; }
+body.explore-mode #main-story .controls label:nth-child(3) { grid-area: metric !important; }
+body.explore-mode #main-story .controls label:nth-child(4) { grid-area: bubbles !important; }
+
+/* Non-explore story mode: boxes span the plot width rather than locking to a narrow card. */
+body:not(.explore-mode) #main-story .viz-header,
+body:not(.explore-mode) #main-story .legend-row {
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+}
+
+body:not(.explore-mode) #main-story .viz-title-block,
+body:not(.explore-mode) #main-story #chart-subtitle {
+  max-width: min(78rem, 100%) !important;
+}
+
+@media (max-width: 1100px) {
+  body.explore-mode #main-story .viz-header {
+    grid-template-columns: 1fr !important;
+  }
+  body.explore-mode #main-story .controls {
+    grid-template-columns: 1fr !important;
+    grid-template-areas:
+      "scenario"
+      "year"
+      "metric"
+      "bubbles" !important;
+  }
+}
+
+/* ============================================================
+   HOTFIX: make the Impact section actually visible.
+   Previous repair hid the sticky graphic as soon as the impact
+   section slightly intersected the viewport, which could leave a
+   blank page before the impact frame reached the viewport. Keep the
+   main graphic below the impact layer instead of hiding it; the
+   impact section has its own opaque full-page background.
+   ============================================================ */
+#main-story > .story {
+  z-index: 120 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+#main-story #impact-scroll {
+  display: block !important;
+  position: relative !important;
+  z-index: 220 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  transform: none !important;
+  contain: none !important;
+}
+
+#main-story #impact-scroll .impact-frame {
+  display: grid !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  z-index: 230 !important;
+}
+
+#main-story #impact-scroll .impact-frame-inner,
+#main-story #impact-scroll .impact-stage,
+#main-story #impact-scroll .impact-triggers,
+#main-story #impact-scroll .impact-trigger {
+  visibility: visible !important;
+}
+
+#main-story #impact-scroll .impact-frame-inner {
+  display: block !important;
+}
+
+#main-story #impact-scroll .impact-stage {
+  display: grid !important;
+}
+
+#main-story #impact-scroll .impact-panel {
+  display: grid !important;
+  visibility: visible !important;
+}
+
+#main-story #impact-scroll .impact-panel.is-active {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+#main-story #impact-scroll .impact-panel-copy,
+#main-story #impact-scroll .impact-panel-copy h3,
+#main-story #impact-scroll .impact-panel-copy p,
+#main-story #impact-scroll .impact-panel-tag,
+#main-story #impact-scroll .impact-frame-head,
+#main-story #impact-scroll .impact-frame-hint,
+#main-story #impact-scroll .impact-rail,
+#main-story #impact-scroll .impact-rail-fill,
+#main-story #impact-scroll .impact-panel-icon,
+#main-story #impact-scroll .impact-panel-icon svg {
+  visibility: visible !important;
+}
+
+/* Do not blank the plot while impact is approaching. The impact layer
+   is above it and covers it with a full-screen background. */
+body.impact-section-active:not(.explore-mode) #main-story > .graphic {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: none !important;
+  z-index: 2 !important;
+}
+
+body.impact-section-active:not(.explore-mode) #main-story #impact-scroll {
+  z-index: 260 !important;
+}
+
+body.explore-mode #main-story > .graphic {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  z-index: 300 !important;
+}
+
+/* ============================================================
+   FINAL HOTFIX v3: Impact must render as real pages.
+   The previous sticky/scrollama impact frame was too fragile inside
+   the main-story overlay. Make the impact section a normal sequence
+   of full-screen narrative pages, matching the opening/transition
+   page style and requiring no sticky card to appear.
+   ============================================================ */
+#main-story #impact-scroll {
+  display: block !important;
+  position: relative !important;
+  z-index: 500 !important;
+  width: 100% !important;
+  min-height: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  background: linear-gradient(180deg, #fff8f0 0%, #f7f9f9 46%, #edf2f4 100%) !important;
+  isolation: isolate !important;
+}
+
+#main-story #impact-scroll .impact-frame {
+  display: block !important;
+  position: relative !important;
+  top: auto !important;
+  height: auto !important;
+  min-height: auto !important;
+  width: 100% !important;
+  padding: 0 !important;
+  z-index: 501 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  background: transparent !important;
+}
+
+#main-story #impact-scroll .impact-frame-inner {
+  display: block !important;
+  position: relative !important;
+  width: 100% !important;
+  max-width: none !important;
+  height: auto !important;
+  min-height: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: visible !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+#main-story #impact-scroll .impact-frame-inner::before,
+#main-story #impact-scroll .impact-frame-inner::after {
+  display: none !important;
+}
+
+#main-story #impact-scroll .impact-frame-head {
+  position: sticky !important;
+  top: 1rem !important;
+  left: auto !important;
+  right: auto !important;
+  width: min(1120px, calc(100% - 2rem)) !important;
+  margin: 0 auto !important;
+  padding: 1rem 0 0 !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: baseline !important;
+  z-index: 520 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: none !important;
+}
+
+#main-story #impact-scroll .impact-stage {
+  display: block !important;
+  position: relative !important;
+  width: 100% !important;
+  height: auto !important;
+  min-height: auto !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+#main-story #impact-scroll .impact-panel,
+#main-story #impact-scroll .impact-panel.is-active,
+#main-story #impact-scroll .impact-panel.is-past {
+  display: grid !important;
+  position: relative !important;
+  inset: auto !important;
+  min-height: 100vh !important;
+  width: 100% !important;
+  grid-template-columns: minmax(84px, 150px) minmax(0, 920px) !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: clamp(1.2rem, 4vw, 4rem) !important;
+  padding: clamp(5rem, 9vh, 7rem) clamp(1.25rem, 6vw, 5rem) clamp(4rem, 8vh, 6rem) !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none !important;
+  pointer-events: auto !important;
+  background:
+    radial-gradient(circle at 82% 18%, rgba(196, 81, 44, 0.12), transparent 22rem),
+    radial-gradient(circle at 14% 84%, rgba(136, 178, 196, 0.16), transparent 26rem),
+    linear-gradient(180deg, rgba(255, 248, 240, 0.96) 0%, rgba(247, 249, 249, 0.96) 100%) !important;
+}
+
+#main-story #impact-scroll .impact-panel:nth-child(even) {
+  background:
+    radial-gradient(circle at 18% 22%, rgba(196, 81, 44, 0.10), transparent 24rem),
+    radial-gradient(circle at 88% 78%, rgba(136, 178, 196, 0.14), transparent 26rem),
+    linear-gradient(180deg, rgba(247, 249, 249, 0.97) 0%, rgba(237, 242, 244, 0.97) 100%) !important;
+}
+
+#main-story #impact-scroll .impact-panel-icon,
+#main-story #impact-scroll .impact-panel-icon svg,
+#main-story #impact-scroll .impact-panel-copy,
+#main-story #impact-scroll .impact-panel-tag,
+#main-story #impact-scroll .impact-panel-copy h3,
+#main-story #impact-scroll .impact-panel-copy p,
+#main-story #impact-scroll .impact-panel-copy a {
+  display: revert !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+#main-story #impact-scroll .impact-panel-icon {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+#main-story #impact-scroll .impact-panel-icon svg {
+  display: block !important;
+  width: clamp(86px, 10vw, 140px) !important;
+  height: auto !important;
+  overflow: visible !important;
+}
+
+#main-story #impact-scroll .impact-panel-copy {
+  width: 100% !important;
+  max-width: 920px !important;
+}
+
+#main-story #impact-scroll .impact-panel-copy h3 {
+  margin: 0 0 1rem !important;
+  color: var(--text) !important;
+  font-size: clamp(2.4rem, 5.6vw, 5.8rem) !important;
+  line-height: 0.95 !important;
+  letter-spacing: -0.075em !important;
+  text-wrap: balance !important;
+}
+
+#main-story #impact-scroll .impact-panel-copy p {
+  width: min(760px, 100%) !important;
+  max-width: 760px !important;
+  margin: 0 !important;
+  color: var(--muted) !important;
+  font-size: clamp(1rem, 1.42vw, 1.28rem) !important;
+  line-height: 1.62 !important;
+}
+
+#main-story #impact-scroll .impact-panel-tag,
+#main-story #impact-scroll .impact-frame-head .step-number {
+  color: var(--accent-dark) !important;
+  font-size: 0.74rem !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.16em !important;
+  text-transform: uppercase !important;
+}
+
+#main-story #impact-scroll .impact-frame-hint {
+  color: var(--muted) !important;
+  font-size: 0.7rem !important;
+  letter-spacing: 0.14em !important;
+  text-transform: uppercase !important;
+  opacity: 0.72 !important;
+}
+
+#main-story #impact-scroll .impact-rail {
+  position: sticky !important;
+  top: calc(100vh - 1.4rem) !important;
+  left: 0 !important;
+  width: min(620px, calc(100% - 3rem)) !important;
+  height: 4px !important;
+  margin: 0 auto !important;
+  z-index: 521 !important;
+  background: rgba(143, 47, 27, 0.14) !important;
+  border-radius: 999px !important;
+}
+
+#main-story #impact-scroll .impact-rail-fill {
+  display: block !important;
+  height: 100% !important;
+  background: var(--accent) !important;
+  border-radius: 999px !important;
+}
+
+#main-story #impact-scroll .impact-triggers,
+#main-story #impact-scroll .impact-trigger {
+  display: none !important;
+}
+
+/* Keep the sticky chart underneath the real impact pages and then restore it for Explore. */
+body:not(.explore-mode) #main-story > .graphic {
+  z-index: 2 !important;
+}
+
+body.explore-mode #main-story > .graphic {
+  z-index: 700 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+
+@media (max-width: 780px) {
+  #main-story #impact-scroll .impact-panel,
+  #main-story #impact-scroll .impact-panel.is-active,
+  #main-story #impact-scroll .impact-panel.is-past {
+    grid-template-columns: 1fr !important;
+    align-content: center !important;
+    gap: 1.1rem !important;
+    padding-inline: 1.35rem !important;
+  }
+
+  #main-story #impact-scroll .impact-panel-icon {
+    justify-content: flex-start !important;
+  }
+
+  #main-story #impact-scroll .impact-panel-copy h3 {
+    font-size: clamp(2.15rem, 11vw, 3.9rem) !important;
+  }
+}
+
+/* ============================================================
+   SCROLL-BACK HOTFIX
+   When scrolling upward from Explore into Impact, the body can still
+   have .explore-mode from the last scrollama step. Force Impact to sit
+   above the sticky plot whenever the impact section is actually visible.
+   ============================================================ */
+body.impact-section-active #main-story #impact-scroll {
+  z-index: 1200 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+
+body.impact-section-active #main-story #impact-scroll .impact-panel,
+body.impact-section-active #main-story #impact-scroll .impact-panel * {
+  visibility: visible !important;
+}
+
+body.impact-section-active #main-story > .graphic,
+body.impact-section-active.explore-mode #main-story > .graphic {
+  z-index: 1 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: none !important;
+}
+
+body.impact-section-active #main-story .controls,
+body.impact-section-active.explore-mode #main-story .controls {
+  display: none !important;
+}
+
+body:not(.impact-section-active).explore-mode #main-story > .graphic {
+  z-index: 700 !important;
+  pointer-events: auto !important;
+}
+
+/* ============================================================
+   IMPACT SPACING TWEAK
+   Move the Impact header closer to the top and reduce the vertical
+   distance between the impact pages.
+   ============================================================ */
+#main-story #impact-scroll .impact-frame-head {
+  top: 0.2rem !important;
+  padding-top: 0.35rem !important;
+}
+
+#main-story #impact-scroll .impact-panel,
+#main-story #impact-scroll .impact-panel.is-active,
+#main-story #impact-scroll .impact-panel.is-past {
+  min-height: 76vh !important;
+  align-items: start !important;
+  padding-top: clamp(4.1rem, 8vh, 5.4rem) !important;
+  padding-bottom: clamp(2.2rem, 5vh, 3.4rem) !important;
+  gap: clamp(0.9rem, 2.6vw, 2.4rem) !important;
+}
+
+#main-story #impact-scroll .impact-panel-copy h3 {
+  margin-bottom: 0.72rem !important;
+}
+
+#main-story #impact-scroll .impact-rail {
+  top: calc(100vh - 0.95rem) !important;
+}
+
+@media (max-width: 780px) {
+  #main-story #impact-scroll .impact-frame-head {
+    top: 0.15rem !important;
+    width: calc(100% - 1.4rem) !important;
+  }
+
+  #main-story #impact-scroll .impact-panel,
+  #main-story #impact-scroll .impact-panel.is-active,
+  #main-story #impact-scroll .impact-panel.is-past {
+    min-height: 82vh !important;
+    padding-top: 4.8rem !important;
+    padding-bottom: 2.4rem !important;
+  }
+}
+
+/* ============================================================
+   IMPACT TEXT + BACKGROUND CONTINUITY FIX
+   Make the impact pages feel like one continuous starting-style
+   section instead of separate color cards, and tighten the copy
+   spacing inside each impact page.
+   ============================================================ */
+#main-story #impact-scroll {
+  background:
+    radial-gradient(circle at 82% 10%, rgba(196, 81, 44, 0.10), transparent 24rem),
+    radial-gradient(circle at 12% 64%, rgba(136, 178, 196, 0.14), transparent 30rem),
+    linear-gradient(180deg, #fff8f0 0%, #f7f9f9 46%, #edf2f4 100%) !important;
+  background-attachment: local !important;
+}
+
+#main-story #impact-scroll .impact-panel,
+#main-story #impact-scroll .impact-panel.is-active,
+#main-story #impact-scroll .impact-panel.is-past,
+#main-story #impact-scroll .impact-panel:nth-child(even) {
+  background: transparent !important;
+  min-height: 70vh !important;
+  padding-top: clamp(3.6rem, 7vh, 4.9rem) !important;
+  padding-bottom: clamp(1.65rem, 3.6vh, 2.45rem) !important;
+  gap: clamp(0.8rem, 2.1vw, 1.9rem) !important;
+}
+
+#main-story #impact-scroll .impact-panel-copy {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0 !important;
+}
+
+#main-story #impact-scroll .impact-panel-tag {
+  display: block !important;
+  margin: 0 0 0.38rem !important;
+  line-height: 1.1 !important;
+}
+
+#main-story #impact-scroll .impact-panel-copy h3 {
+  margin: 0 0 0.45rem !important;
+  line-height: 0.98 !important;
+}
+
+#main-story #impact-scroll .impact-panel-copy p {
+  margin: 0 !important;
+  line-height: 1.48 !important;
+}
+
+#main-story #impact-scroll .impact-panel-copy p a {
+  display: inline !important;
+}
+
+#main-story #impact-scroll .impact-panel-icon {
+  padding-top: 0.28rem !important;
+}
+
+@media (max-width: 780px) {
+  #main-story #impact-scroll .impact-panel,
+  #main-story #impact-scroll .impact-panel.is-active,
+  #main-story #impact-scroll .impact-panel.is-past,
+  #main-story #impact-scroll .impact-panel:nth-child(even) {
+    min-height: 76vh !important;
+    padding-top: 4.25rem !important;
+    padding-bottom: 1.9rem !important;
+    gap: 0.75rem !important;
+  }
+
+  #main-story #impact-scroll .impact-panel-tag {
+    margin-bottom: 0.32rem !important;
+  }
+
+  #main-story #impact-scroll .impact-panel-copy h3 {
+    margin-bottom: 0.42rem !important;
+  }
+
+  #main-story #impact-scroll .impact-panel-copy p {
+    line-height: 1.45 !important;
+  }
+}
+
+/* ============================================================
+   FINAL IMPACT SPACING REQUEST
+   Keep the Impact section title centered. Keep the title-to-first-
+   item spacing as-is, but cut the spacing between later impact
+   items roughly in half.
+   ============================================================ */
+#main-story #impact-scroll .impact-frame-head {
+  justify-content: center !important;
+  text-align: center !important;
+  top: 0.2rem !important;
+}
+
+#main-story #impact-scroll .impact-frame-head .step-number {
+  margin-inline: auto !important;
+}
+
+#main-story #impact-scroll .impact-frame-hint {
+  position: absolute !important;
+  right: 0 !important;
+  top: 0.95rem !important;
+}
+
+/* Preserve the gap from the centered Impact title to the first panel. */
+#main-story #impact-scroll .impact-panel:first-child {
+  min-height: 70vh !important;
+  padding-top: clamp(3.6rem, 7vh, 4.9rem) !important;
+  padding-bottom: clamp(1.65rem, 3.6vh, 2.45rem) !important;
+}
+
+/* Compress all following impact panels so there is much less page-to-page blank space. */
+#main-story #impact-scroll .impact-panel:not(:first-child),
+#main-story #impact-scroll .impact-panel.is-active:not(:first-child),
+#main-story #impact-scroll .impact-panel.is-past:not(:first-child),
+#main-story #impact-scroll .impact-panel:nth-child(even):not(:first-child) {
+  min-height: max(35vh, 340px) !important;
+  padding-top: clamp(1.05rem, 2.7vh, 1.85rem) !important;
+  padding-bottom: clamp(1.05rem, 2.7vh, 1.85rem) !important;
+  align-items: center !important;
+}
+
+#main-story #impact-scroll .impact-panel:not(:first-child) .impact-panel-tag {
+  margin-bottom: 0.19rem !important;
+}
+
+#main-story #impact-scroll .impact-panel:not(:first-child) .impact-panel-copy h3 {
+  margin-bottom: 0.22rem !important;
+}
+
+#main-story #impact-scroll .impact-panel:not(:first-child) .impact-panel-copy p {
+  line-height: 1.38 !important;
+}
+
+@media (max-width: 780px) {
+  #main-story #impact-scroll .impact-frame-head {
+    width: calc(100% - 1.4rem) !important;
+  }
+
+  #main-story #impact-scroll .impact-frame-hint {
+    display: none !important;
+  }
+
+  #main-story #impact-scroll .impact-panel:first-child {
+    min-height: 76vh !important;
+    padding-top: 4.25rem !important;
+    padding-bottom: 1.9rem !important;
+  }
+
+  #main-story #impact-scroll .impact-panel:not(:first-child),
+  #main-story #impact-scroll .impact-panel.is-active:not(:first-child),
+  #main-story #impact-scroll .impact-panel.is-past:not(:first-child),
+  #main-story #impact-scroll .impact-panel:nth-child(even):not(:first-child) {
+    min-height: max(42vh, 360px) !important;
+    padding-top: 1.05rem !important;
+    padding-bottom: 1.05rem !important;
+  }
+}
+
+/* ============================================================
+   IMPACT TITLE + SPACING + TYPE FIX
+   Center the Impact section title in its own page area, reduce the
+   oversized impact headings, and loosen the spacing after the first
+   item by about 50% compared with the last compact version.
+   ============================================================ */
+#main-story #impact-scroll .impact-frame-head {
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  width: 100% !important;
+  min-height: clamp(280px, 44vh, 440px) !important;
+  margin: 0 !important;
+  padding: 0 clamp(1.25rem, 6vw, 5rem) !important;
+  display: grid !important;
+  place-items: center !important;
+  justify-content: center !important;
+  align-items: center !important;
+  text-align: center !important;
+  pointer-events: none !important;
+  z-index: 520 !important;
+}
+
+#main-story #impact-scroll .impact-frame-head .step-number {
+  margin: 0 !important;
+  color: var(--text) !important;
+  font-size: clamp(3rem, 8vw, 6rem) !important;
+  line-height: 0.95 !important;
+  letter-spacing: -0.07em !important;
+  text-transform: none !important;
+  font-weight: 900 !important;
+}
+
+#main-story #impact-scroll .impact-frame-hint {
+  display: none !important;
+}
+
+/* Keep the first impact item close to the centered Impact title. */
+#main-story #impact-scroll .impact-panel:first-child,
+#main-story #impact-scroll .impact-panel.is-active:first-child,
+#main-story #impact-scroll .impact-panel.is-past:first-child {
+  min-height: 58vh !important;
+  padding-top: clamp(1.8rem, 4vh, 3rem) !important;
+  padding-bottom: clamp(2.2rem, 5vh, 3.8rem) !important;
+}
+
+/* Increase spacing after the first item by roughly half from the last compact version. */
+#main-story #impact-scroll .impact-panel:not(:first-child),
+#main-story #impact-scroll .impact-panel.is-active:not(:first-child),
+#main-story #impact-scroll .impact-panel.is-past:not(:first-child),
+#main-story #impact-scroll .impact-panel:nth-child(even):not(:first-child) {
+  min-height: max(52vh, 500px) !important;
+  padding-top: clamp(1.55rem, 4vh, 2.8rem) !important;
+  padding-bottom: clamp(1.55rem, 4vh, 2.8rem) !important;
+  align-items: center !important;
+}
+
+/* Smaller, more readable impact typography. */
+#main-story #impact-scroll .impact-panel-copy h3 {
+  font-size: clamp(2.05rem, 4.35vw, 4.45rem) !important;
+  line-height: 1.02 !important;
+  letter-spacing: -0.06em !important;
+  margin-bottom: 0.42rem !important;
+}
+
+#main-story #impact-scroll .impact-panel-copy p {
+  font-size: clamp(0.98rem, 1.2vw, 1.16rem) !important;
+  line-height: 1.45 !important;
+  max-width: 720px !important;
+}
+
+#main-story #impact-scroll .impact-panel-tag {
+  font-size: 0.7rem !important;
+  margin-bottom: 0.26rem !important;
+}
+
+@media (max-width: 780px) {
+  #main-story #impact-scroll .impact-frame-head {
+    min-height: clamp(240px, 38vh, 360px) !important;
+    padding-inline: 1.35rem !important;
+  }
+
+  #main-story #impact-scroll .impact-frame-head .step-number {
+    font-size: clamp(2.8rem, 15vw, 4.8rem) !important;
+  }
+
+  #main-story #impact-scroll .impact-panel:first-child,
+  #main-story #impact-scroll .impact-panel.is-active:first-child,
+  #main-story #impact-scroll .impact-panel.is-past:first-child {
+    min-height: 62vh !important;
+    padding-top: 1.4rem !important;
+    padding-bottom: 2.2rem !important;
+  }
+
+  #main-story #impact-scroll .impact-panel:not(:first-child),
+  #main-story #impact-scroll .impact-panel.is-active:not(:first-child),
+  #main-story #impact-scroll .impact-panel.is-past:not(:first-child),
+  #main-story #impact-scroll .impact-panel:nth-child(even):not(:first-child) {
+    min-height: max(56vh, 430px) !important;
+    padding-top: 1.35rem !important;
+    padding-bottom: 1.35rem !important;
+  }
+
+  #main-story #impact-scroll .impact-panel-copy h3 {
+    font-size: clamp(1.95rem, 9.5vw, 3.55rem) !important;
+  }
+
+  #main-story #impact-scroll .impact-panel-copy p {
+    font-size: 0.98rem !important;
+  }
+}
+
+/* ============================================================
+   IMPACT HEADING / PARAGRAPH GAP FIX
+   Move the paragraph down roughly one text row under the large title.
+   ============================================================ */
+#main-story #impact-scroll .impact-panel-copy h3 {
+  margin-bottom: 0 !important;
+}
+
+#main-story #impact-scroll .impact-panel-copy p {
+  margin-top: clamp(0.8rem, 1.35vw, 1.15rem) !important;
+}
+
+@media (max-width: 780px) {
+  #main-story #impact-scroll .impact-panel-copy p {
+    margin-top: 0.7rem !important;
+  }
+}
+
+/* ============================================================
+   BUBBLE PLOT REPLACEMENT FROM REFERENCE ZIP
+   Match Plot 06 and Explore bubble styling/interaction.
+   ============================================================ */
+body.explore-mode .bubble-toggle-label {
+  min-width: 0 !important;
+}
+
+body.explore-mode .bubble-toggle-control {
+  display: grid !important;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 0.5rem !important;
+  min-height: 2.25rem !important;
+  padding: 0.32rem 0.54rem !important;
+  border: 1px solid rgba(79, 143, 192, 0.22) !important;
+  background: rgba(255, 255, 255, 0.82) !important;
+}
+
+body.explore-mode .bubble-toggle-control input {
+  appearance: none;
+  -webkit-appearance: none;
+  position: relative;
+  width: 2.3rem !important;
+  height: 1.22rem !important;
+  margin: 0 !important;
+  border-radius: 999px;
+  border: 1px solid rgba(95, 107, 115, 0.34);
+  background: rgba(95, 107, 115, 0.20);
+  cursor: pointer;
+  transition: background 0.16s ease, border-color 0.16s ease;
+}
+
+body.explore-mode .bubble-toggle-control input::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0.16rem;
+  width: 0.82rem;
+  height: 0.82rem;
+  border-radius: 50%;
+  background: white;
+  box-shadow: 0 1px 4px rgba(23, 32, 42, 0.22);
+  transform: translateY(-50%);
+  transition: left 0.16s ease;
+}
+
+body.explore-mode .bubble-toggle-control input:checked {
+  background: rgba(79, 143, 192, 0.80);
+  border-color: rgba(79, 143, 192, 0.95);
+}
+
+body.explore-mode .bubble-toggle-control input:checked::after {
+  left: 1.25rem;
+}
+
+body.explore-mode .bubble-toggle-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.explore-bubble-layer {
+  pointer-events: all !important;
+}
+
+.explore-exposure-bubble {
+  pointer-events: all !important;
+  cursor: pointer !important;
+  vector-effect: non-scaling-stroke;
+  fill: rgba(196,81,44,0.34) !important;
+  stroke: rgba(143,47,27,0.78) !important;
+  stroke-width: 1.3px !important;
+  mix-blend-mode: normal !important;
+  transition: fill 0.16s ease, stroke-width 0.16s ease, filter 0.16s ease;
+}
+
+.explore-exposure-bubble:hover,
+.explore-exposure-bubble:hover:not(.selected) {
+  fill: rgba(196,81,44,0.46) !important;
+  stroke: #ffd43b !important;
+  stroke-width: 2.8px !important;
+  filter: drop-shadow(0 0 5px rgba(255,212,59,0.9)) !important;
+}
+
+.explore-exposure-bubble.selected {
+  fill: rgba(255,212,59,0.42) !important;
+  stroke: #ffd43b !important;
+  stroke-width: 3.4px !important;
+  filter: drop-shadow(0 0 5px rgba(255,212,59,0.9)) !important;
+}
+
+.explore-selected-bubble-halo {
+  pointer-events: none !important;
+  fill: rgba(255,212,59,0.12) !important;
+  stroke: #ffd43b !important;
+  stroke-width: 2.6px !important;
+  filter: drop-shadow(0 0 5px rgba(255,212,59,0.75)) !important;
+  mix-blend-mode: normal !important;
+}
+
+
+/* ============================================================
+   FINAL BUBBLE / WRITEUP POLISH
+   Keep Explore bubbles on by default, match the Plot 06 bubble-size
+   reference card, move it right, and keep the Writeup button above
+   the Explore control panel.
+   ============================================================ */
+.writeup-link {
+  z-index: 99999 !important;
+  top: 1rem !important;
+  right: 1rem !important;
+  background: rgba(255, 255, 255, 0.92) !important;
+  border-color: rgba(143, 47, 27, 0.22) !important;
+  box-shadow: 0 10px 28px rgba(40, 55, 70, 0.16) !important;
+}
+
+body.explore-mode .writeup-link {
+  z-index: 99999 !important;
+}
+
+.explore-bubble-legend-in-map {
+  pointer-events: none !important;
+}
+
+.explore-bubble-legend-in-map .bubble-size-legend-card text {
+  paint-order: stroke !important;
+  stroke: rgba(255,255,255,0.82) !important;
+  stroke-width: 2px !important;
+  stroke-linejoin: round !important;
+}
+
+
+/* Keep the final hot-day loop header compact so the chart does not visibly shrink. */
+.sticky-viz.hotday-final-header .viz-header {
+  gap: 0.72rem;
+}
+
+.sticky-viz.hotday-final-header .viz-title-block {
+  min-width: 0;
+}
+
+#chart-title.hotday-final-title {
+  font-size: clamp(0.98rem, 1.28vw, 1.28rem);
+  line-height: 1.02;
+  letter-spacing: -0.05em;
+}
+
+#chart-subtitle.hotday-final-subtitle {
+  max-width: 820px;
+  margin-top: 0.22rem;
+  font-size: 0.74rem;
+  line-height: 1.24;
+}
+
+/* ============================================================
+   Stable chart header height
+   Keep title/subtitle wrapping from changing plot height.
+   ============================================================ */
+#main-story .sticky-viz {
+  grid-template-rows: 104px minmax(360px, 1fr) auto !important;
+}
+
+#main-story .sticky-viz .viz-header {
+  min-height: 104px !important;
+  height: 104px !important;
+  align-items: flex-start !important;
+}
+
+#main-story .sticky-viz .viz-title-block {
+  min-width: 0;
+  width: 100%;
+}
+
+#main-story #chart-title,
+#main-story #chart-subtitle {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 900px) {
+  #main-story .sticky-viz {
+    grid-template-rows: 118px minmax(320px, 1fr) auto !important;
+  }
+
+  #main-story .sticky-viz .viz-header {
+    min-height: 118px !important;
+    height: 118px !important;
+  }
+}
+
+
+/* Final targeted scenario-select fix: Explore controls must stay interactive even if the Impact section is partly in view. */
+body.explore-mode #main-story .controls,
+body.explore-mode #main-story .controls *,
+body.explore-mode #scenario-select,
+body.explore-mode #metric-select,
+body.explore-mode #year-slider,
+body.explore-mode #bubble-toggle {
+  pointer-events: auto !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Explore controls should only float above the page when we are actually on
+   Explore. If Impact is active during scroll-back, keep the controls hidden and
+   let the Impact page receive pointer events. */
+body.explore-mode.impact-section-active #main-story .controls {
+  display: none !important;
+  pointer-events: none !important;
+}
+
+body.explore-mode:not(.impact-section-active) #main-story #impact-scroll,
+body.explore-mode:not(.impact-section-active) #main-story #impact-scroll * {
+  pointer-events: none !important;
+}
+
+body.impact-section-active #main-story #impact-scroll,
+body.impact-section-active #main-story #impact-scroll * {
+  pointer-events: auto !important;
+}
+
+/* ============================================================
+   FINAL FIX — Explore controls click-through after Impact
+   Impact is a full-width scroll section. Some previous overrides could leave
+   the Impact layer or .impact-section-active styles above the sticky Explore
+   plot after scrolling down/up. These last rules make the ownership explicit:
+   Explore mode = controls/map receive pointer events; Impact-only mode =
+   Impact receives pointer events.
+   ============================================================ */
+body.explore-mode #main-story > .graphic {
+  opacity: 1 !important;
+  visibility: visible !important;
+  z-index: 5000 !important;
+  pointer-events: auto !important;
+}
+
+body.explore-mode #main-story .sticky-viz,
+body.explore-mode #main-story .viz-header,
+body.explore-mode #main-story .chart-wrap,
+body.explore-mode #main-story #main-chart,
+body.explore-mode #main-story .legend-row {
+  pointer-events: auto !important;
+}
+
+body.explore-mode #main-story #map-controls,
+body.explore-mode #main-story #map-controls *,
+body.explore-mode #main-story .controls,
+body.explore-mode #main-story .controls * {
+  pointer-events: auto !important;
+}
+
+body.explore-mode #main-story .controls {
+  display: grid !important;
+  position: relative !important;
+  z-index: 7000 !important;
+}
+
+body.explore-mode #main-story #scenario-select,
+body.explore-mode #main-story #metric-select,
+body.explore-mode #main-story #year-slider,
+body.explore-mode #main-story #bubble-toggle {
+  pointer-events: auto !important;
+  position: relative !important;
+  z-index: 7100 !important;
+}
+
+/* Once the Explore article owns the viewport, the previous full-width Impact
+   section must stop catching clicks, even if its sticky frame is still nearby
+   in the DOM/stacking context. */
+body.explore-mode #main-story #impact-scroll,
+body.explore-mode #main-story #impact-scroll * {
+  pointer-events: none !important;
+}
+
+body.explore-mode #main-story #impact-scroll {
+  z-index: 0 !important;
+}
+
+/* During the real Impact section, keep the Explore plot underneath and inert. */
+body.impact-section-active:not(.explore-mode) #main-story > .graphic {
+  z-index: 1 !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+body.impact-section-active:not(.explore-mode) #main-story #impact-scroll,
+body.impact-section-active:not(.explore-mode) #main-story #impact-scroll * {
+  pointer-events: auto !important;
+}
+
+body.impact-section-active:not(.explore-mode) #main-story #impact-scroll {
+  z-index: 6000 !important;
+}
+
+
+/* ============================================================
+   FINAL SELECT FIX v4 — Explore controls are the top interactive layer.
+   Root conflict: #impact-scroll sits inside #main-story .story and several
+   previous overrides gave the impact pages high z-index/pointer-events even
+   after Explore became active. Also, changing layout on select pointerdown
+   made the browser's native dropdown cancel. JS now avoids that; these CSS
+   rules make the layer ownership explicit.
+   ============================================================ */
+body.explore-mode:not(.impact-section-active) #main-story > .graphic {
+  z-index: 9999 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+
+body.explore-mode:not(.impact-section-active) #main-story .sticky-viz {
+  position: relative !important;
+  z-index: 10000 !important;
+  pointer-events: auto !important;
+}
+
+body.explore-mode:not(.impact-section-active) #main-story .viz-header {
+  position: relative !important;
+  z-index: 10020 !important;
+  pointer-events: auto !important;
+}
+
+body.explore-mode:not(.impact-section-active) #main-story #map-controls,
+body.explore-mode:not(.impact-section-active) #main-story #map-controls label {
+  display: grid !important;
+  position: relative !important;
+  z-index: 10040 !important;
+  pointer-events: auto !important;
+  user-select: auto !important;
+}
+
+body.explore-mode:not(.impact-section-active) #scenario-select,
+body.explore-mode:not(.impact-section-active) #metric-select,
+body.explore-mode:not(.impact-section-active) #year-slider,
+body.explore-mode:not(.impact-section-active) #bubble-toggle {
+  position: relative !important;
+  z-index: 10050 !important;
+  pointer-events: auto !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  user-select: auto !important;
+}
+
+body.explore-mode:not(.impact-section-active) #main-story > .story {
+  z-index: 1 !important;
+  pointer-events: none !important;
+}
+
+body.explore-mode:not(.impact-section-active) #main-story #impact-scroll,
+body.explore-mode:not(.impact-section-active) #main-story #impact-scroll *,
+body.explore-mode:not(.impact-section-active) #main-story .impact-panel,
+body.explore-mode:not(.impact-section-active) #main-story .impact-panel * {
+  pointer-events: none !important;
+}
+
+body.explore-mode:not(.impact-section-active) #main-story #impact-scroll {
+  z-index: 0 !important;
+}
+
+body.impact-section-active:not(.explore-mode) #main-story > .graphic {
+  z-index: 1 !important;
+  pointer-events: none !important;
+}
+
+body.impact-section-active:not(.explore-mode) #main-story > .story,
+body.impact-section-active:not(.explore-mode) #main-story #impact-scroll {
+  z-index: 999 !important;
+  pointer-events: auto !important;
+}
+
+/* ============================================================
+   SCROLL JUMP FIX — stable Impact <-> Explore handoff
+   Keep scroll anchoring from choosing a changing sticky/control element as
+   the anchor, and keep both sections in normal document flow. The JS now only
+   toggles ownership classes once per animation frame; these CSS rules prevent
+   the class handoff from changing layout height or causing a visible jump.
+   ============================================================ */
+#main-story,
+#main-story > .graphic,
+#main-story .sticky-viz,
+#main-story .story,
+#main-story .story .step,
+#main-story #impact-scroll,
+#main-story #impact-scroll *,
+#main-story .step[data-step="6"] {
+  overflow-anchor: none !important;
+}
+
+#main-story.scrolly {
+  contain: layout paint !important;
+}
+
+#main-story #impact-scroll {
+  contain: layout paint !important;
+  transform: translateZ(0) !important;
+  backface-visibility: hidden !important;
+}
+
+#main-story > .graphic {
+  transform: translateZ(0) !important;
+  backface-visibility: hidden !important;
+}
+
+/* Do not let Impact ownership hide or resize the sticky graphic; it only
+   changes pointer ownership. Hiding the sticky layer during the handoff was
+   the main source of the visual jump when scrolling up/down near Explore. */
+body.impact-section-active #main-story > .graphic,
+body.impact-section-active.explore-mode #main-story > .graphic,
+body.impact-section-active:not(.explore-mode) #main-story > .graphic {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+}
+
+body.impact-section-active #main-story .controls,
+body.impact-section-active.explore-mode #main-story .controls {
+  pointer-events: none !important;
+}
+
+body.explore-mode:not(.impact-section-active) #main-story > .graphic,
+body.explore-mode:not(.impact-section-active) #main-story .sticky-viz {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+
+/* Keep the Explore trigger as a stable 100vh landing page after Impact. */
+#main-story .story > .step[data-step="6"] {
+  min-height: 100vh !important;
+  height: 100vh !important;
+}
+
+
+/* ============================================================
+   HOVER LAYER HOTFIX
+   Keep hover feedback and the tooltip above every sticky/impact/explore layer.
+   The earlier Impact/Explore z-index fixes put several sections near 700-1200,
+   while the tooltip was only z-index:1000, so it could appear underneath.
+   ============================================================ */
+html body #tooltip.tooltip,
+body #tooltip.tooltip,
+#tooltip.tooltip {
+  position: fixed !important;
+  z-index: 2147483647 !important;
+  pointer-events: none !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: translateZ(0) !important;
+  isolation: isolate !important;
+}
+
+#tooltip.tooltip[hidden] {
+  display: none !important;
+}
+
+/* Hover/selected outlines should visually sit above the exposure overlay. */
+body.explore-mode #main-story #main-chart .state.hovered,
+body.explore-mode #main-story #main-chart path.state.hovered,
+body.explore-mode #main-story #main-chart .state.selected,
+body.explore-mode #main-story #main-chart path.state.selected {
+  stroke: #ffd43b !important;
+  stroke-dasharray: none !important;
+  filter: drop-shadow(0 0 8px rgba(255, 212, 59, 0.92)) !important;
+}
+
+body.explore-mode #main-story #main-chart .state.hovered:not(.selected),
+body.explore-mode #main-story #main-chart path.state.hovered:not(.selected) {
+  stroke-width: 3.4 !important;
+}
+
+body.explore-mode #main-story #main-chart .state.selected,
+body.explore-mode #main-story #main-chart path.state.selected {
+  stroke-width: 4.4 !important;
+}
+
+/* Keep the translucent exposure layer from stealing hover priority over states. */
+body.explore-mode #main-story #main-chart .explore-bubble-layer,
+body.explore-mode #main-story #main-chart .explore-exposure-bubble {
+  pointer-events: none !important;
+}
+
+
+/* ============================================================
+   FINAL HANDOFF FIX: prevent previous plot / fallback flash
+   Impact is a full-page section between the story plot and Explore. During
+   Impact ownership, keep the sticky graphic in the layout but fade its content
+   out immediately so the previous plot step does not appear behind the Impact
+   frame during the scroll handoff. Explore restores it when its own step is
+   reached. This avoids the earlier jump caused by display/height changes.
+   ============================================================ */
+body.impact-section-active:not(.explore-mode) #main-story > .graphic {
+  opacity: 0 !important;
+  visibility: visible !important;
+  pointer-events: none !important;
+  z-index: 0 !important;
+  transition: opacity 0.08s linear !important;
+}
+
+body.impact-section-active:not(.explore-mode) #main-story .sticky-viz,
+body.impact-section-active:not(.explore-mode) #main-story .viz-header,
+body.impact-section-active:not(.explore-mode) #main-story .chart-wrap,
+body.impact-section-active:not(.explore-mode) #main-story .legend-row {
+  opacity: 0 !important;
+  visibility: visible !important;
+  pointer-events: none !important;
+}
+
+body.impact-section-active:not(.explore-mode) #main-story #impact-scroll {
+  z-index: 120 !important;
+}
+
+body.explore-mode:not(.impact-section-active) #main-story > .graphic,
+body.explore-mode:not(.impact-section-active) #main-story .sticky-viz,
+body.explore-mode:not(.impact-section-active) #main-story .viz-header,
+body.explore-mode:not(.impact-section-active) #main-story .chart-wrap,
+body.explore-mode:not(.impact-section-active) #main-story .legend-row {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* ============================================================
+   FINAL IMPACT SPACING TUNE
+   Reduce the blank landing space above the Impact content by about half,
+   while keeping a small breathing buffer after the last Impact panel before
+   Explore begins. This preserves the earlier select / hover / handoff fixes.
+   ============================================================ */
+#main-story #impact-scroll .impact-frame-head {
+  min-height: clamp(140px, 22vh, 220px) !important;
+  padding-top: clamp(0.8rem, 2vh, 1.4rem) !important;
+  padding-bottom: clamp(0.45rem, 1.4vh, 0.9rem) !important;
+}
+
+#main-story #impact-scroll .impact-frame-head .step-number {
+  font-size: clamp(2.6rem, 7vw, 5.2rem) !important;
+}
+
+#main-story #impact-scroll .impact-panel:first-child,
+#main-story #impact-scroll .impact-panel.is-active:first-child,
+#main-story #impact-scroll .impact-panel.is-past:first-child {
+  min-height: 54vh !important;
+  padding-top: clamp(0.95rem, 2.3vh, 1.8rem) !important;
+  padding-bottom: clamp(2.2rem, 4.8vh, 3.4rem) !important;
+}
+
+#main-story #impact-scroll .impact-panel:last-child,
+#main-story #impact-scroll .impact-panel.is-active:last-child,
+#main-story #impact-scroll .impact-panel.is-past:last-child {
+  padding-bottom: clamp(4.6rem, 11vh, 7.5rem) !important;
+}
+
+#main-story #impact-scroll {
+  padding-bottom: clamp(4rem, 12vh, 7rem) !important;
+}
+
+@media (max-width: 780px) {
+  #main-story #impact-scroll .impact-frame-head {
+    min-height: clamp(120px, 18vh, 180px) !important;
+  }
+
+  #main-story #impact-scroll .impact-panel:first-child,
+  #main-story #impact-scroll .impact-panel.is-active:first-child,
+  #main-story #impact-scroll .impact-panel.is-past:first-child {
+    min-height: 56vh !important;
+    padding-top: 0.9rem !important;
+  }
+
+  #main-story #impact-scroll {
+    padding-bottom: clamp(3rem, 9vh, 5.5rem) !important;
+  }
+}
+
+/* FINAL IMPACT BOTTOM BUFFER TUNE
+   Keep the current top spacing, but double the breathing room after the
+   Impact section before Explore begins. */
+#main-story #impact-scroll .impact-panel:last-child,
+#main-story #impact-scroll .impact-panel.is-active:last-child,
+#main-story #impact-scroll .impact-panel.is-past:last-child {
+  padding-bottom: clamp(9.2rem, 22vh, 15rem) !important;
+}
+
+#main-story #impact-scroll {
+  padding-bottom: clamp(8rem, 24vh, 14rem) !important;
+}
+
+@media (max-width: 700px) {
+  #main-story #impact-scroll {
+    padding-bottom: clamp(6rem, 18vh, 11rem) !important;
+  }
+}
