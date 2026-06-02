@@ -8929,3 +8929,52 @@ body.explore-mode #main-story .controls {
     max-width: 100% !important;
   }
 }
+
+/* Latest Explore polish: smaller header/controls, larger map area. */
+body.explore-mode #main-story .viz-header {
+  padding: 1.05rem 1.45rem !important;
+  row-gap: 0.55rem !important;
+  max-width: min(960px, 76vw) !important;
+}
+
+body.explore-mode #main-story .viz-title-block h2,
+body.explore-mode .viz-header h2 {
+  font-size: clamp(1.55rem, 2.05vw, 2.05rem) !important;
+  line-height: 0.98 !important;
+  margin-bottom: 0.22rem !important;
+}
+
+body.explore-mode #main-story .viz-title-block p,
+body.explore-mode #chart-subtitle {
+  font-size: clamp(0.82rem, 1vw, 0.98rem) !important;
+  line-height: 1.25 !important;
+  max-width: 760px !important;
+}
+
+body.explore-mode #main-story .controls {
+  width: min(760px, 100%) !important;
+  max-width: min(760px, 100%) !important;
+  gap: 0.45rem !important;
+}
+
+body.explore-mode #main-story .controls label {
+  padding: 0.55rem 0.65rem !important;
+  border-radius: 14px !important;
+  font-size: 0.68rem !important;
+}
+
+body.explore-mode #main-story .controls select,
+body.explore-mode #main-story .bubble-toggle-control {
+  min-height: 2.15rem !important;
+  padding: 0.48rem 0.58rem !important;
+  border-radius: 12px !important;
+  font-size: 0.92rem !important;
+}
+
+body.explore-mode #main-story .controls label:nth-child(2) input[type="range"] {
+  height: 1.2rem !important;
+}
+
+body.explore-mode #main-story .chart-wrap {
+  margin-top: -0.25rem !important;
+}

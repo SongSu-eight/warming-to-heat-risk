@@ -4616,7 +4616,7 @@ function drawBubbleSizeLegendCard(container, options = {}) {
     title = "BUBBLE SIZE",
     subtitle = "exposure proxy",
     maxValue = 1,
-    valueRatios = [1, 0.35],
+    valueRatios = [1, 0.5, 0.2],
     radiusScale = d3.scaleSqrt().domain([0, Math.max(1, maxValue)]).range([3, 12]),
     titleColor = "#8f2f1b",
     fill = "rgba(196,81,44,0.18)",
@@ -5051,9 +5051,9 @@ function renderAnimatedExposureMap() {
     x: 708,
     y: 348,
     width: 212,
-    height: 112,
+    height: 124,
     maxValue: legendMax,
-    valueRatios: [1, 0.35],
+    valueRatios: [1, 0.5, 0.2],
     radiusScale: radius,
     titleColor: "#8f2f1b",
     fill: "rgba(196,81,44,0.18)",
@@ -7270,6 +7270,14 @@ function renderMap(transitionDuration = 750) {
     mapG = svg.append("g").attr("class", "map-layer");
   }
 
+  // Explore view has extra controls above the map, so use more of the SVG area:
+  // make the map larger and shift it left/up while keeping bubbles attached to states.
+  if (currentStep === stepSettings.length - 1) {
+    mapG.attr("transform", "translate(-72,-18) scale(1.12)");
+  } else {
+    mapG.attr("transform", null);
+  }
+
   const filtered = stateData.filter((d) =>
     d.year === currentState.year &&
     d.scenario === currentState.scenario
@@ -7398,10 +7406,11 @@ function drawExploreExposureBubbles(mapG, dataByState, transitionDuration = 350)
   const bubbleData = statesGeo.features
     .map((feature) => {
       const stateName = getFeatureStateName(feature);
-      const exposure = exposureByState.get(normalizeStateName(stateName));
-      const row = dataByState.get(normalizeStateName(stateName));
+      const normalizedStateName = normalizeStateName(stateName);
+      const exposure = exposureByState.get(normalizedStateName);
+      const row = dataByState.get(normalizedStateName);
       const centroid = path.centroid(feature);
-      return { feature, stateName, exposure, row, x: centroid[0], y: centroid[1] };
+      return { feature, stateName, normalizedStateName, exposure, row, x: centroid[0], y: centroid[1] };
     })
     .filter((d) => d.exposure && Number.isFinite(d.x) && Number.isFinite(d.y));
 
@@ -7413,21 +7422,57 @@ function drawExploreExposureBubbles(mapG, dataByState, transitionDuration = 350)
         .attr("cx", (d) => d.x)
         .attr("cy", (d) => d.y)
         .attr("r", 0)
-        .attr("fill", "rgba(79, 143, 192, 0.055)")
-        .attr("stroke", "rgba(23, 32, 42, 0.46)")
-        .attr("stroke-width", 0.85)
-        .attr("pointer-events", "none"),
+        // Match the reference zip / Plot 06 bubble style: warm translucent fill, red-brown outline.
+        .attr("fill", "rgba(196,81,44,0.34)")
+        .attr("stroke", "rgba(143,47,27,0.78)")
+        .attr("stroke-width", 1.3)
+        .attr("pointer-events", "all")
+        .style("cursor", "pointer"),
       (update) => update,
       (exit) => exit.transition().duration(180).attr("r", 0).remove()
     );
 
   bubbles
-    .classed("selected", (d) => selectedStateName === normalizeStateName(d.stateName))
-    .attr("fill", (d) => selectedStateName === normalizeStateName(d.stateName)
-      ? "rgba(255, 212, 59, 0.22)"
-      : "rgba(79, 143, 192, 0.055)")
-    .attr("stroke", (d) => selectedStateName === normalizeStateName(d.stateName) ? "#ffd43b" : "rgba(23, 32, 42, 0.46)")
-    .attr("stroke-width", (d) => selectedStateName === normalizeStateName(d.stateName) ? 2.15 : 0.85)
+    .classed("selected", (d) => selectedStateName === d.normalizedStateName)
+    .attr("fill", (d) => selectedStateName === d.normalizedStateName
+      ? "rgba(255,212,59,0.42)"
+      : "rgba(196,81,44,0.34)")
+    .attr("stroke", (d) => selectedStateName === d.normalizedStateName ? "#ffd43b" : "rgba(143,47,27,0.78)")
+    .attr("stroke-width", (d) => selectedStateName === d.normalizedStateName ? 3.4 : 1.3)
+    .attr("filter", (d) => selectedStateName === d.normalizedStateName ? "drop-shadow(0 0 5px rgba(255,212,59,0.9))" : null)
+    .attr("pointer-events", "all")
+    .style("cursor", "pointer")
+    .on("mouseenter", function(event, d) {
+      d3.select(this).raise();
+      d3.select(this)
+        .attr("stroke", "#ffd43b")
+        .attr("stroke-width", selectedStateName === d.normalizedStateName ? 3.4 : 2.8)
+        .attr("filter", "drop-shadow(0 0 5px rgba(255,212,59,0.9))")
+        .attr("fill", selectedStateName === d.normalizedStateName ? "rgba(255,212,59,0.42)" : "rgba(196,81,44,0.46)");
+      showExposureBubbleTooltip(event, d);
+    })
+    .on("mousemove", function(event, d) {
+      showExposureBubbleTooltip(event, d);
+    })
+    .on("mouseleave", function(event, d) {
+      d3.select(this)
+        .attr("stroke", selectedStateName === d.normalizedStateName ? "#ffd43b" : "rgba(143,47,27,0.78)")
+        .attr("stroke-width", selectedStateName === d.normalizedStateName ? 3.4 : 1.3)
+        .attr("filter", selectedStateName === d.normalizedStateName ? "drop-shadow(0 0 5px rgba(255,212,59,0.9))" : null)
+        .attr("fill", selectedStateName === d.normalizedStateName ? "rgba(255,212,59,0.42)" : "rgba(196,81,44,0.34)");
+      hideTooltip();
+    })
+    .on("click", function(event, d) {
+      selectedStateName = d.normalizedStateName;
+      if (!statePicker.empty()) statePicker.property("value", selectedStateName);
+      updateSelectedStateCard(d.stateName, d.row);
+      mapG.selectAll(".state")
+        .classed("selected", (feature) => selectedStateName === normalizeStateName(getFeatureStateName(feature)));
+      drawExploreExposureBubbles(mapG, dataByState, 120);
+      if (currentStep === stepSettings.length - 1) {
+        scrollToStateDetailSection();
+      }
+    })
     .transition()
     .duration(transitionDuration)
     .ease(d3.easeCubicOut)
@@ -7435,36 +7480,7 @@ function drawExploreExposureBubbles(mapG, dataByState, transitionDuration = 350)
     .attr("cy", (d) => d.y)
     .attr("r", (d) => radius(d.exposure.exposureMillions));
 
-  const selectedBubbleData = selectedStateName
-    ? bubbleData.filter((d) => selectedStateName === normalizeStateName(d.stateName))
-    : [];
-
-  const halo = bubbleLayer.selectAll("circle.explore-selected-bubble-halo")
-    .data(selectedBubbleData, (d) => d.stateName)
-    .join(
-      (enter) => enter.append("circle")
-        .attr("class", "explore-selected-bubble-halo")
-        .attr("cx", (d) => d.x)
-        .attr("cy", (d) => d.y)
-        .attr("r", 0)
-        .attr("fill", "rgba(255, 212, 59, 0.08)")
-        .attr("stroke", "#ffd43b")
-        .attr("stroke-width", 2.3)
-        .attr("pointer-events", "none"),
-      (update) => update,
-      (exit) => exit.transition().duration(180).attr("r", 0).remove()
-    );
-
-  halo
-    .transition()
-    .duration(transitionDuration)
-    .ease(d3.easeCubicOut)
-    .attr("cx", (d) => d.x)
-    .attr("cy", (d) => d.y)
-    .attr("r", (d) => Math.max(radius(d.exposure.exposureMillions) + 2.3, 7.5));
-
-  halo.raise();
-  bubbles.filter((d) => selectedStateName === normalizeStateName(d.stateName)).raise();
+  bubbles.filter((d) => selectedStateName === d.normalizedStateName).raise();
 }
 
 function showExposureBubbleTooltip(event, d) {
@@ -7806,12 +7822,12 @@ function drawExploreBubbleLegendInMap(shouldShow) {
     .attr("class", "explore-bubble-legend-in-map");
 
   drawBubbleSizeLegendCard(bubbleLegend, {
-    x: 732,
-    y: 392,
-    width: 202,
-    height: 94,
+    x: 762,
+    y: 368,
+    width: 154,
+    height: 104,
     maxValue: maxExposure,
-    valueRatios: [1, 0.35],
+    valueRatios: [1, 0.5, 0.2],
     radiusScale: radius,
     titleColor: "#8f2f1b",
     fill: "rgba(196,81,44,0.16)",
