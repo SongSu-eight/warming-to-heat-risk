@@ -956,7 +956,7 @@ body.no-tooltip .tooltip {
   display: none !important;
 }
 
-body.no-tooltip .state {
+body.no-tooltip:not(.explore-mode) .state {
   pointer-events: none;        
 }
 
@@ -11884,4 +11884,66 @@ body.explore-mode:not(.impact-section-active) #main-story .legend-row {
   #main-story #impact-scroll {
     padding-bottom: clamp(6rem, 18vh, 11rem) !important;
   }
+}
+
+/* Remove the underline under the impact section title link. */
+#main-story #impact-scroll .impact-panel-copy h3 a,
+#impact-scroll .impact-panel-copy h3 a {
+  text-decoration: none !important;
+  text-decoration-line: none !important;
+  background-image: none !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+}
+
+
+/* FINAL PATCH: keep Explore exposure bubbles visual-only so they do not block
+   the underlying state hover/click interactions. The JS still raises the
+   bubble layer for visibility, but pointer events pass through to states. */
+.explore-bubble-layer,
+.explore-exposure-bubble,
+body.explore-mode #main-story #main-chart .explore-bubble-layer,
+body.explore-mode #main-story #main-chart .explore-exposure-bubble {
+  pointer-events: none !important;
+}
+
+
+/* Explore interaction fix: keep state shapes as the event target.
+   Bubbles are visual only here, so hovering/clicking a state uses the
+   same map-level interaction pattern as the exposure plot. */
+body.explore-mode #main-story #main-chart path.state {
+  pointer-events: all !important;
+  cursor: pointer !important;
+}
+body.explore-mode #main-story #main-chart .explore-bubble-layer,
+body.explore-mode #main-story #main-chart .explore-exposure-bubble,
+body.explore-mode #main-story #main-chart .explore-selected-bubble-halo {
+  pointer-events: none !important;
+}
+
+/* Final underline cleanup for Impact panel 01.
+   Remove the underline from the explanatory sentence link too
+   so both the title link and the 'A very hot summer day...' link
+   match the clean screenshot treatment. */
+#main-story #impact-scroll .impact-panel-copy p a,
+#impact-scroll .impact-panel-copy p a {
+  text-decoration: none !important;
+  text-decoration-line: none !important;
+  text-decoration-thickness: 0 !important;
+  text-underline-offset: 0 !important;
+  background-image: none !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+}
+
+
+/* Panel 01 title cleanup: render the heading as plain text so there is
+   no residual wrapped-link underline/row under "Hot days × people = exposure". */
+#main-story #impact-scroll .impact-title-arrow,
+#impact-scroll .impact-title-arrow {
+  display: inline-block !important;
+  margin-left: 0.22em !important;
+  font-size: 0.6em !important;
+  vertical-align: 0.25em !important;
+  color: rgba(196, 81, 44, 0.75) !important;
 }
