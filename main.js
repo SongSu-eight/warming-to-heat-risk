@@ -5147,7 +5147,6 @@ function renderAnimatedExposureMap() {
     .attr("stroke-width", 0.8)
     .style("cursor", "pointer")
     .on("mouseenter", function(event, feature) {
-      d3.select(this).raise();
       const stateName = normalizeStateName(getFeatureStateName(feature));
       const row = currentExposureRows.find((d) => d.state === stateName);
       if (!row) return;
@@ -5278,6 +5277,8 @@ function renderAnimatedExposureMap() {
 
   function applyExposureHighlight() {
     const activeStates = getActiveExposureStates();
+    // Keep exposure bubbles visible above state fills during hover/click highlights.
+    bubbleLayer.raise();
     mapG.selectAll("path.exposure-map-state")
       .attr("stroke", (feature) => activeStates.has(normalizeStateName(getFeatureStateName(feature))) ? "#ffd43b" : "white")
       .attr("stroke-width", (feature) => {
@@ -7555,10 +7556,12 @@ function renderMap(transitionDuration = 750) {
           .on("mouseenter", function (event, feature) {
             const stateName = normalizeStateName(getFeatureStateName(feature));
             mapG.selectAll(".state").classed("hovered", false);
-            d3.select(this).raise();
             if (selectedStateName !== stateName) {
               d3.select(this).classed("hovered", true);
             }
+            // Match the exposure plot logic: states own hover/click, while the
+            // bubble layer stays visible above the fill but does not steal events.
+            mapG.select("g.explore-bubble-layer").raise();
           })
           .on("mousemove", function (event, feature) {
             const stateName = getFeatureStateName(feature);
@@ -7570,6 +7573,8 @@ function renderMap(transitionDuration = 750) {
             hideTooltip();
           })
           .on("click", function (event, feature) {
+            event.preventDefault();
+            event.stopPropagation();
             const stateName = getFeatureStateName(feature);
             const normalized = normalizeStateName(stateName);
             const row = dataByState.get(normalized);
@@ -7581,11 +7586,11 @@ function renderMap(transitionDuration = 750) {
             }
 
             updateSelectedStateCard(stateName, row);
-            renderMap(220);
-
-            if (currentStep === stepSettings.length - 1) {
-              scrollToStateDetailSection();
-            }
+            mapG.selectAll("path.state")
+              .classed("hovered", false)
+              .classed("selected", (f) => selectedStateName === normalizeStateName(getFeatureStateName(f)));
+            drawExploreExposureBubbles(mapG, dataByState, 120);
+            showTooltip(event, stateName, row, metric);
           }),
       (update) => update
     );
@@ -7670,8 +7675,8 @@ function drawExploreExposureBubbles(mapG, dataByState, transitionDuration = 350)
         .attr("fill", "rgba(196,81,44,0.34)")
         .attr("stroke", "rgba(143,47,27,0.78)")
         .attr("stroke-width", 1.3)
-        .attr("pointer-events", "all")
-        .style("cursor", "pointer"),
+        .attr("pointer-events", "none")
+        .style("cursor", "default"),
       (update) => update,
       (exit) => exit.transition().duration(180).attr("r", 0).remove()
     );
@@ -7684,8 +7689,8 @@ function drawExploreExposureBubbles(mapG, dataByState, transitionDuration = 350)
     .attr("stroke", (d) => selectedStateName === normalizeStateName(d.stateName) ? "#ffd43b" : "rgba(143,47,27,0.78)")
     .attr("stroke-width", (d) => selectedStateName === normalizeStateName(d.stateName) ? 3.4 : 1.3)
     .attr("filter", (d) => selectedStateName === normalizeStateName(d.stateName) ? "drop-shadow(0 0 5px rgba(255,212,59,0.9))" : null)
-    .attr("pointer-events", "all")
-    .style("cursor", "pointer")
+    .attr("pointer-events", "none")
+    .style("cursor", "default")
     .on("mouseenter", function(event, d) {
       d3.select(this).raise();
       d3.select(this)
@@ -7712,6 +7717,7 @@ function drawExploreExposureBubbles(mapG, dataByState, transitionDuration = 350)
       updateSelectedStateCard(d.stateName, d.row);
       mapG.selectAll(".state")
         .classed("selected", (feature) => selectedStateName === normalizeStateName(getFeatureStateName(feature)));
+      mapG.select("g.explore-bubble-layer").raise();
       drawExploreExposureBubbles(mapG, dataByState, 120);
       if (currentStep === stepSettings.length - 1) {
         scrollToStateDetailSection();
@@ -7754,6 +7760,7 @@ function drawExploreExposureBubbles(mapG, dataByState, transitionDuration = 350)
 
   halo.raise();
   bubbles.filter((d) => selectedStateName === normalizeStateName(d.stateName)).raise();
+  bubbleLayer.raise();
 }
 
 function showExposureBubbleTooltip(event, d) {
