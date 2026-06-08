@@ -8727,17 +8727,23 @@ function pulseViz() {
     const exploreStep = document.querySelector(`#main-story > .story > .step[data-step="${stepSettings.length - 1}"]`);
     const exploreRect = exploreStep ? exploreStep.getBoundingClientRect() : null;
 
-    // Handoff fix: do not wait until a mid-screen probe reaches Impact.
-    // The old center-probe logic left step 06 / fallback visible for about
-    // half a screen before Impact became the owner. Since Impact is a full-page
-    // section, activate it as soon as it is visibly entering the viewport.
-    const impactVisible = impactRect.top <= viewportH * 0.92 && impactRect.bottom >= viewportH * 0.08;
-    const exploreVisible = exploreRect && exploreRect.top <= viewportH * 0.72 && exploreRect.bottom >= viewportH * 0.18;
+    // Stable Impact -> Explore handoff. The Explore step can become visible
+    // while the last Impact panel is still in the viewport because both live
+    // inside the same scrolly story column. If Explore owns the page too early,
+    // the map renders under the final Impact text and creates the overlap shown
+    // at the boundary. Keep Impact as the owner until its bottom has almost left
+    // the viewport; only then allow Explore to take over.
+    const impactVisible = impactRect.top <= viewportH * 0.92 && impactRect.bottom >= viewportH * 0.02;
+    const impactStillCovering = impactRect.top <= viewportH * 0.98 && impactRect.bottom > viewportH * 0.12;
+    const exploreVisible = exploreRect &&
+      exploreRect.top <= viewportH * 0.72 &&
+      exploreRect.bottom >= viewportH * 0.18 &&
+      !impactStillCovering;
 
-    if (exploreVisible) {
-      applyImpactLayerOwner("explore");
-    } else if (impactVisible) {
+    if (impactStillCovering || (impactVisible && !exploreVisible)) {
       applyImpactLayerOwner("impact");
+    } else if (exploreVisible) {
+      applyImpactLayerOwner("explore");
     } else {
       applyImpactLayerOwner("story");
     }

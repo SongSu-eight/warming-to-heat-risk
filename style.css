@@ -11947,3 +11947,51 @@ body.explore-mode #main-story #main-chart .explore-selected-bubble-halo {
   vertical-align: 0.25em !important;
   color: rgba(196, 81, 44, 0.75) !important;
 }
+
+/* ============================================================
+   FINAL STABLE HANDOFF PATCH — Impact -> Explore only
+   This patch fixes the boundary where the last Impact text could remain
+   visible over the Explore map. It does not use display:none, so the document
+   height stays stable and the existing Explore controls/hover behavior remain
+   unchanged.
+   ============================================================ */
+#main-story #impact-scroll {
+  transition: opacity 140ms ease, visibility 140ms ease !important;
+}
+
+body.explore-mode #main-story #impact-scroll,
+body.explore-mode #main-story #impact-scroll * {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+body.explore-mode #main-story #impact-scroll {
+  z-index: 0 !important;
+}
+
+body.impact-section-active:not(.explore-mode) #main-story #impact-scroll,
+body.impact-section-active:not(.explore-mode) #main-story #impact-scroll * {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+body.impact-section-active:not(.explore-mode) #main-story > .graphic,
+body.impact-section-active:not(.explore-mode) #main-story .sticky-viz,
+body.impact-section-active:not(.explore-mode) #main-story .viz-header,
+body.impact-section-active:not(.explore-mode) #main-story .chart-wrap,
+body.impact-section-active:not(.explore-mode) #main-story .legend-row {
+  opacity: 0 !important;
+  visibility: visible !important;
+  pointer-events: none !important;
+}
+
+body.explore-mode:not(.impact-section-active) #main-story > .graphic,
+body.explore-mode:not(.impact-section-active) #main-story .sticky-viz,
+body.explore-mode:not(.impact-section-active) #main-story .viz-header,
+body.explore-mode:not(.impact-section-active) #main-story .chart-wrap,
+body.explore-mode:not(.impact-section-active) #main-story .legend-row {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
