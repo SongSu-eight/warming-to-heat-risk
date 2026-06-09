@@ -12077,3 +12077,81 @@ body.explore-mode:not(.impact-section-active) #main-story .legend-row {
   border-radius: 28px !important;
   box-shadow: 0 24px 70px rgba(23, 32, 42, 0.18) !important;
 }
+
+
+/* TAKEAWAY TWO-LINE TITLE PATCH */
+#impact-scroll .impact-takeaway-panel .takeaway-two-line-title {
+  max-width: min(1180px, 92vw) !important;
+  font-size: clamp(2.15rem, 4.25vw, 4.9rem) !important;
+  line-height: 1.08 !important;
+}
+
+#impact-scroll .impact-takeaway-panel .takeaway-two-line-title span {
+  display: block;
+  white-space: nowrap;
+}
+
+@media (max-width: 900px) {
+  #impact-scroll .impact-takeaway-panel .takeaway-two-line-title span {
+    white-space: normal;
+  }
+}
+
+
+/* VIDEO LINK BUTTON PATCH
+   Add a video button next to the existing writeup button. */
+.video-link {
+  position: fixed;
+  top: 1.6rem;
+  right: 8.55rem;
+  z-index: 100;
+  padding: 0.55rem 0.9rem;
+  border: 1px solid rgba(143, 47, 27, 0.18);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.62);
+  color: var(--accent-dark);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 24px rgba(40, 55, 70, 0.08);
+  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.video-link:hover {
+  background: rgba(255, 255, 255, 0.9);
+  transform: translateY(-1px);
+  box-shadow: 0 12px 30px rgba(40, 55, 70, 0.12);
+}
+
+@media (max-width: 680px) {
+  .video-link {
+    top: 1rem;
+    right: 7.1rem;
+    padding: 0.45rem 0.75rem;
+    font-size: 0.65rem;
+  }
+}
+
+
+/* VIDEO WRITEUP ALIGN PATCH
+   Keep the Video and Writeup buttons exactly aligned. */
+.video-link,
+.writeup-link {
+  top: 1.6rem !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 2.15rem !important;
+  line-height: 1 !important;
+}
+
+@media (max-width: 680px) {
+  .video-link,
+  .writeup-link {
+    top: 1rem !important;
+    min-height: 1.95rem !important;
+  }
+}
