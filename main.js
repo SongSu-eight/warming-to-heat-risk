@@ -33,19 +33,6 @@ const scenarioLabels = {
 
 const scenarioOrder = ["ssp126", "ssp245", "ssp585"];
 
-const DEFAULT_STATE_NAMES = [
-  "Alabama", "Arizona", "Arkansas", "California", "Colorado", "Connecticut",
-  "Delaware", "Florida", "Georgia", "Idaho", "Illinois", "Indiana", "Iowa",
-  "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts",
-  "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska",
-  "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York",
-  "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon",
-  "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota",
-  "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington",
-  "West Virginia", "Wisconsin", "Wyoming"
-];
-
-
 const metricLabels = {
   summer_tas_c_change_from_observed_2020: "Summer average temperature change after 2020 baseline alignment",
   summer_hot_days_35c_change_from_observed_2020: "Extra very hot summer days",
@@ -79,9 +66,9 @@ const stepSettings = [
     year: 2020,
     scenario: "ssp245",
     metric: "summer_tas_c_change_from_observed_2020",
-    title: "Average temperature shows the trend, but not how that warming is felt.",
+    title: "Average warming can look small and abstract",
     subtitle:
-      "By 2100, high emissions lead to the steepest rise in annual average temperature. But annual averages do not show whether that warming means a few extra warm days or many more very hot summer days.",
+      "Observed annual temperature anchors the 2000–2020 baseline, then CMIP6 projections show how average temperature changes through 2100.",
     note:
       "If we only look at average temperature, climate risk can feel like just a few degrees."
   },
@@ -90,9 +77,9 @@ const stepSettings = [
     year: 2100,
     scenario: "ssp585",
     metric: "summer_hot_days_35c_change_from_observed_2020",
-    title: "Turning average warming into calendar days",
+    title: "Averages hide extra very hot days",
     subtitle:
-      "The annual average trend becomes more concrete when we count extra very hot summer days, defined as days with daily highs above 35°C.",
+      "Average temperature is only the first layer. Daily heat becomes easier to feel when more summer days rise above 35°C.",
     note:
       "Both the °C figure and the very hot day count use centered 5-year rolling averages and baseline alignment.",
   },
@@ -101,11 +88,11 @@ const stepSettings = [
     year: 2100,
     scenario: "ssp585",
     metric: "summer_hot_days_35c_change_from_observed_2020",
-    title: "Extra very hot days rise unevenly across states",
+    title: "Extra Very hot days do not land evenly",
     subtitle:
-      "As the timeline moves forward, some states gain many more very hot summer days than others, even under the same high-emissions pathway.",
+      "The same national warming story turns into different very-hot-day patterns across states.",
     note:
-      "",
+      "Color shows baseline-aligned 5-year average increases in very hot summer days under high emissions.",
   },
   {
     view: "exposure-layer-cards",
@@ -114,18 +101,18 @@ const stepSettings = [
     metric: "summer_hot_days_35c_change_from_observed_2020",
     title: "Carry your selected state into exposure",
     subtitle:
-      "Exposure combines extra very hot days with projected population, then compares your state with the highest-exposure benchmark.",
+      "Exposure combines added very hot days with projected population, then compares your state with the highest-exposure benchmark.",
     note:
-      "Exposure proxy = extra very hot summer days × projected population. It is not a health-outcome prediction.",
+      "Exposure proxy = added very hot summer days × projected population. It is not a health-outcome prediction.",
   },
   {
     view: "animated-exposure-map",
     year: 2100,
     scenario: "ssp585",
     metric: "summer_hot_days_35c_change_from_observed_2020",
-    title: "Where do very hot days affect the most people?",
+    title: "Exposure grows where heat meets people",
     subtitle:
-      "Let\'s combine total very hot summer days with projected population and map where exposure becomes largest across the U.S.",
+      "Now that exposure is defined, the map shows where very hot days and exposed population combine across the U.S.",
     note:
       "Fill = very hot summer days. Bubble size = exposure proxy. 2000–2020 uses observed hot days; 2030–2100 uses high-emissions projections.",
   },
@@ -134,20 +121,20 @@ const stepSettings = [
     year: 2100,
     scenario: "ssp585",
     metric: "summer_hot_days_35c_change_from_observed_2020",
-    title: "By 2100, national heat exposure increases sharply",
+    title: "By 2100, U.S. heat exposure becomes much larger",
     subtitle:
-      "Each sun represents the same amount of exposure. One exposure unit means one person experiencing one extra very hot summer day.",
+      "Each sun represents the same amount of heat exposure. One exposure unit means one person experiencing one additional 35°C+ summer day.",
     note:
-      "2020 baseline = observed 2020 hot-day hazard × population projection baseline. 2100 high-emissions projection = projected 2100 hot-day hazard × projected 2100 population.",
+      "2020 baseline = observed 2020 hot-day hazard × population projection baseline. 2100 projection = projected 2100 hot-day hazard × projected 2100 population.",
   },
   {
     view: "map",
     year: 2100,
     scenario: "ssp585",
     metric: "summer_hot_days_35c_change_from_observed_2020",
-    title: "Explore states and climate metrics yourself",
+    title: "Compare states and metrics yourself",
     subtitle:
-      "Use the controls to compare average warming, extra very hot days, and exposure across states. Very hot days are defined as days with daily highs above 35°C.",
+      "Use the controls to compare average warming with extra very hot days. Very hot means daily highs above 35°C.",
     note:
       "Explore mode: color shows the selected climate metric. Hover previews values; click selects a state for detail.",
   },
@@ -289,11 +276,6 @@ const projection = d3.geoAlbersUsa()
 const path = d3.geoPath(projection);
 
 svg.attr("viewBox", `0 0 ${width} ${height}`);
-
-// Fast path: bind the intro state dropdown before the large data files finish loading.
-// The data-backed list replaces this fallback inside init(), but users can open
-// and type in the state menu immediately on page load.
-setupIntroExpectation();
 
 init();
 
@@ -525,18 +507,16 @@ function setupStateChangeContinue() {
 }
 
 function setupIntroExpectation() {
-  const dataBackedStateNames = Array.from(
+  knownStateNames = Array.from(
     new Set([
       ...allMonthlyData.map((d) => normalizeStateName(d.state)),
       ...stateData.map((d) => normalizeStateName(d.state)),
     ].filter(isSelectableStateName))
   ).sort(d3.ascending);
 
-  knownStateNames = (dataBackedStateNames.length ? dataBackedStateNames : DEFAULT_STATE_NAMES).sort(d3.ascending);
-
   if (hometownStateInput.empty() || expectationTempInput.empty()) return;
 
-  renderStateSuggestions(hometownStateInput.property("value"), false);
+  renderStateSuggestions("");
 
   const onIntroInput = () => {
     hometownStateInput.classed("is-invalid", false);
@@ -546,11 +526,11 @@ function setupIntroExpectation() {
 
   hometownStateInput.on("input", () => {
     onIntroInput();
-    renderStateSuggestions(hometownStateInput.property("value"), true);
+    renderStateSuggestions(hometownStateInput.property("value"));
   });
 
   hometownStateInput.on("focus", () => {
-    renderStateSuggestions(hometownStateInput.property("value"), true);
+    renderStateSuggestions(hometownStateInput.property("value"));
   });
 
   hometownStateInput.on("keydown", (event) => {
@@ -577,16 +557,14 @@ function setupIntroExpectation() {
   hometownStateInput.on("change", trySubmitIntroExpectation);
 }
 
-function renderStateSuggestions(query, forceOpen = false) {
+function renderStateSuggestions(query) {
   if (stateSuggestions.empty()) return;
   const cleaned = normalizeStateName(query || "").toLowerCase();
   const matches = knownStateNames
     .filter((name) => !cleaned || name.toLowerCase().includes(cleaned));
-  const inputIsFocused = document.activeElement === hometownStateInput.node();
-  const shouldOpen = Boolean(matches.length) && !introCompleted && (forceOpen || inputIsFocused || Boolean(cleaned));
 
   stateSuggestions
-    .classed("is-open", shouldOpen)
+    .classed("is-open", Boolean(matches.length) && !introCompleted)
     .selectAll("button.state-suggestion-item")
     .data(matches, (d) => d)
     .join(
@@ -651,7 +629,7 @@ function updateIntroPrompt() {
   const rawExpectation = expectationTempInput.property("value").trim();
 
   if (!rawState && !rawExpectation) {
-    introFormNote.html("<em>Enter the projected annual average temperature in °C, not the amount of warming.</em>");
+    introFormNote.html("<em>Enter a 2100 annual average temperature in °C, not the amount of warming.</em>");
   } else if (!rawState) {
     introFormNote.html("<em>Please enter your hometown state to continue.</em>");
   } else if (!rawExpectation) {
@@ -785,20 +763,26 @@ function renderExpectationResult(result) {
   const projectionMin = d3.min(projectionValues);
   const projectionMax = d3.max(projectionValues);
 
-  const scenarioAdjective = scenarioPhrase.replace(" emissions", "-emissions");
-  const scenarioDescriptor =
-    closest.scenario === "ssp585"
-      ? "the warmest pathway in this dataset"
-      : closest.scenario === "ssp126"
-        ? "the coolest pathway in this dataset"
-        : "the middle pathway in this dataset";
+  let titleText;
+  if (status === "correct") {
+    titleText = `You nailed the 2100 annual temperature for ${stateName}.`;
+  } else if (status === "very close") {
+    titleText = `Your estimate is very close to the projection for ${stateName}.`;
+  } else if (status === "approaching") {
+    titleText = `Your estimate is near one projection for ${stateName}.`;
+  } else {
+    titleText = `Your estimate is much ${closest.diff < 0 ? "cooler" : "warmer"} than the projection for ${stateName}.`;
+  }
 
-  const titleText = `Your estimate is close to ${stateName}’s ${scenarioAdjective} projection.`;
-  const bodyText = `You estimated ${stateName}’s 2100 annual average temperature at ${formatTemp(expectation)}. In the CMIP6 projections, that is closest to the ${scenarioAdjective} pathway, ${scenarioDescriptor}.`;
+  const rangeSentence = `You guessed ${stateName} would average ${formatTemp(expectation)} by 2100.`;
+  const comparisonSentence =
+    diffAbs < 0.05
+      ? `That matches the closest ${scenarioPhrase} projection.`
+      : `That lands near the ${scenarioPhrase} projection, so your estimate is close to the ${closest.diff > 0 ? "warmest" : "coolest"} pathway in this dataset.`;
 
   expectationResultSection.attr("hidden", null);
   expectationResultTitle.text(titleText);
-  expectationResultText.text(bodyText);
+  expectationResultText.text(`${rangeSentence} ${comparisonSentence}`);
 
   const allValues = [expectation, ...projectionValues];
 
@@ -3136,7 +3120,7 @@ function renderTranslationCard() {
     .attr("font-size", 17)
     .attr("font-weight", 800)
     .attr("opacity", 0)
-    .text("The same 2100 high-emissions future may look small in degrees, but becomes clearer when shown as extra very hot days on the calendar.");
+    .text("The same 2100 high-emissions future may look small in degrees, but becomes tangible as calendar days.");
 
   takeaway.transition()
     .delay(1600)
@@ -3601,7 +3585,7 @@ function renderStateHotdaySmallMultiples() {
     .attr("text-anchor", "middle")
     .attr("fill", "#5f6b73")
     .attr("font-size", 10.6)
-    .text("5-year avg. extra very hot summer days");
+    .text("5-year avg. added very hot summer days");
 
   if (positionedLeftPanels.length && positionedRightPanels.length) {
     const dividerX = rightX - 14;
@@ -3704,8 +3688,8 @@ function renderStateHotdaySmallMultiples() {
 
   updateYear(START_YEAR, true);
 
-  const finalHotdayTitle = "The fastest-warming states are not always the states with the most very hot days";
-  const finalHotdaySubtitle = "By 2100, North Dakota shows the largest average temperature increase, while Mississippi gains the most very hot summer days. Average warming and heat exposure tell different parts of the story.";
+  const finalHotdayTitle = "But trend is not the same for average temperature change.";
+  const finalHotdaySubtitle = "By 2100, the fastest-warming states are not always the ones gaining the most very hot days. Average temperature can sometimes act as an anti-indicator of daily heat exposure.";
   const defaultHotdayTitle = stepSettings[currentStep]?.title || "Extra very hot days do not land evenly";
   const defaultHotdaySubtitle = stepSettings[currentStep]?.subtitle || "The same national warming story turns into different very-hot-day patterns across states.";
 
@@ -3913,7 +3897,7 @@ function renderStateHotdaySmallMultiples() {
   legendContainer
     .append("div")
     .attr("class", "legend-caption")
-    .text(" The right panel highlights the state with the largest hot-day increase.");
+    .text("Color shows 5-year average added very hot summer days. Left: earlier warming states; right: largest hot-day increase.");
 }
 
 
@@ -4135,7 +4119,7 @@ function renderThresholdExplanation() {
     const finalDays = Math.max(0, finalRow?.days ?? 0);
 
     const role = d.kind?.includes("top-hotday")
-      ? "Largest increase in very hot summer days"
+      ? "Most very hot summer days added"
       : d.kind?.includes("top-temperature")
         ? "Fastest average-temperature increase"
         : "Your state";
@@ -4385,7 +4369,7 @@ function renderThresholdExplanation() {
       .attr("fill", "#5f6b73")
       .attr("font-size", 11.2)
       .attr("font-weight", 750)
-      .text("5-year avg. extra very hot summer days");
+      .text("5-year avg. added very hot summer days");
   });
 
   panel.transition()
@@ -4522,7 +4506,7 @@ function renderRiskTransition() {
   legendContainer
     .append("div")
     .attr("class", "legend-caption")
-    .text("Next: a static 2100 map of baseline-aligned 5-year average extra very hot summer days.");
+    .text("Next: a static 2100 map of baseline-aligned 5-year average added very hot summer days.");
 }
 
 function renderCompareLineChart() {
@@ -5000,7 +4984,7 @@ function renderAnimatedExposureColorLegend(color, maxHotDays) {
   legendContainer
     .append("div")
     .attr("class", "legend-caption")
-    .text("Fill = total very hot summer days. Bubble size = exposure proxy based on very hot days × population. Use Replay or the slider to inspect years.");
+    .text("Fill = total very hot summer days. Bubble size = exposure proxy. Use Replay or the slider to inspect years.");
 }
 
 function formatPopulationMillions(value) {
@@ -5142,7 +5126,7 @@ function renderAnimatedExposureMap() {
   const maxHotDays = d3.max(allRows, (d) => d.hotDays) || 1;
   const radius = d3.scaleSqrt().domain([0, maxExposure]).range([1.5, 24]);
   // This animated exposure map uses total very-hot-day hazard for fill, not the
-  // Explore metric's extra-very-hot-day change scale.
+  // Explore metric's added-hot-day change scale.
   const color = d3.scaleSequential()
     .domain([0, maxHotDays])
     .interpolator(interpolateHotDaysWhiteToRed)
@@ -5196,13 +5180,13 @@ function renderAnimatedExposureMap() {
     .attr("font-size", 23)
     .attr("font-weight", 950)
     .attr("letter-spacing", "-0.04em")
-    .text("From observed very hot days to projected exposure");
+    .text("Observed very hot days → projected exposure");
   labelG.append("text")
     .attr("y", 48)
     .attr("fill", "#5f6b73")
     .attr("font-size", 12.5)
     .attr("font-weight", 650)
-    .text("Fill = total very hot summer days. Bubble size = exposure proxy based on very hot days × population.");
+    .text("Fill = total very hot summer days. Bubble size = exposure proxy.");
 
   const yearText = g.append("text")
     .attr("x", 858)
@@ -5706,7 +5690,7 @@ function renderExposureLayerCards() {
     const cols = [
       {
         x: 26,
-        label: "EXTRA VERY HOT DAYS",
+        label: "ADDED HOT DAYS",
         value: `${d3.format("+.1f")(d.addedHotDays)} d`,
         color: "#c4512c",
         track: "rgba(196,81,44,0.13)",
@@ -6077,7 +6061,7 @@ function renderUSExposureComparison() {
     {
       key: "2100",
       stage: "STEP 2",
-      label: "2100 high-emissions projection",
+      label: "2100 projection",
       value: total2100,
       hot: hot2100,
       color: "#cf6e48",
@@ -6105,7 +6089,7 @@ function renderUSExposureComparison() {
     .attr("font-size", 26)
     .attr("font-weight", 950)
     .attr("letter-spacing", "-0.05em")
-    .text("Compare national exposure in 2020 and 2100");
+    .text("Watch the increase from 2020 to 2100");
 
   const key = g.append("g").attr("transform", "translate(210,91)");
   key.append("rect")
@@ -6590,7 +6574,7 @@ function renderExposureEquation() {
 
   const headerY = 124;
   const cols = [220, 455, 690];
-  const labels = ["extra very hot days", "projected people", "exposure proxy"];
+  const labels = ["added hot days", "projected people", "exposure proxy"];
   g.selectAll("text.exposure-build-header")
     .data(labels)
     .join("text")
@@ -6802,7 +6786,7 @@ function renderExposureBubbles() {
     .attr("text-anchor", "middle")
     .attr("fill", "#5f6b73")
     .attr("font-size", 12)
-    .text("Extra very hot summer days, baseline-aligned 5-year average");
+    .text("Added very hot summer days, baseline-aligned 5-year average");
 
   g.append("text")
     .attr("x", -innerHeight / 2)
@@ -6831,7 +6815,7 @@ function renderExposureBubbles() {
     .attr("stroke-width", 1.5)
     .on("mousemove", (event, d) => {
       tooltip
-        .html(`<h3>${d.state}</h3><p>Extra very hot days: <strong>${d3.format("+.1f")(d.hazard)}</strong></p><p>Population layer: <strong>${d3.format(".1f")(d.populationMillions)}M</strong></p><p>Exposure: <strong>${formatExposureMillions(d.exposureMillions)}</strong></p>`)
+        .html(`<h3>${d.state}</h3><p>Added hot days: <strong>${d3.format("+.1f")(d.hazard)}</strong></p><p>Population layer: <strong>${d3.format(".1f")(d.populationMillions)}M</strong></p><p>Exposure: <strong>${formatExposureMillions(d.exposureMillions)}</strong></p>`)
         .style("left", `${event.clientX + 14}px`)
         .style("top", `${event.clientY + 14}px`)
         .attr("hidden", null);
@@ -6865,7 +6849,7 @@ function renderExposureBubbles() {
   legendContainer
     .append("div")
     .attr("class", "legend-caption")
-    .text("Bubble size and color show exposure = extra very hot days × projected population. Hover for details.");
+    .text("Bubble size and color show exposure = added hot days × projected population. Hover for details.");
 }
 
 function renderExposureContrast() {
@@ -6926,7 +6910,7 @@ function renderExposureContrast() {
     .attr("y", 69)
     .attr("fill", "#5f6b73")
     .attr("font-size", 12)
-    .text("Sorted by extra very hot days × projected population");
+    .text("Sorted by added hot days × projected population");
 
   const hazardX = d3.scaleLinear().domain([0, d3.max(topHazard, (d) => d.hazard) || 1]).range([0, 180]);
   const exposureX = d3.scaleLinear().domain([0, d3.max(topExposure, (d) => d.exposureMillions) || 1]).range([0, 180]);
@@ -7607,6 +7591,12 @@ function renderMap(transitionDuration = 750) {
               .classed("selected", (f) => selectedStateName === normalizeStateName(getFeatureStateName(f)));
             drawExploreExposureBubbles(mapG, dataByState, 120);
             showTooltip(event, stateName, row, metric);
+
+            // In Explore mode, a state click should carry the selected state
+            // into the Daily Life Detail section right below the map.
+            if (currentStep === stepSettings.length - 1) {
+              scrollToStateDetailSection();
+            }
           }),
       (update) => update
     );
@@ -7943,7 +7933,7 @@ function renderMonthlyChart(stateName) {
     .attr("fill", "#5f6b73")
     .attr("font-size", 11)
     .attr("font-weight", 800)
-    .text(`${stateName}: extra very hot summer days by month in ${currentState.year}`);
+    .text(`${stateName}: added very hot summer days by month in ${currentState.year}`);
 
   g.append("text")
     .attr("x", innerWidth)
@@ -8073,7 +8063,7 @@ function drawLegend(color, metric) {
     .attr("font-size", 9.5)
     .attr("font-weight", 900)
     .attr("letter-spacing", "0.08em")
-    .text(isExplore ? "COLOR = SELECTED METRIC" : "");
+    .text(isExplore ? "COLOR = SELECTED CLIMATE METRIC" : "");
 
   legend.append("rect")
     .attr("x", 8)
@@ -8146,7 +8136,7 @@ function updateMapNote(filtered, metric) {
   let baseNote = setting?.note || "Hover over a state to see details.";
   if (currentStep === stepSettings.length - 1) {
     baseNote = showExposureBubbles
-      ? "Explore mode: color shows the selected metric; bubbles show exposure. Hover to preview values, or click a state to keep it selected."
+      ? "Explore mode: color shows the selected climate metric; bubbles show exposure. Hover previews values; click selects a state with a solid yellow outline."
       : "Explore mode: hover previews values; click selects a state with a solid yellow outline for local detail. Turn on bubbles to overlay exposure.";
   }
 
@@ -8238,7 +8228,7 @@ function setupInitialSelectedStateCard() {
 
   selectedStateTitle.text("Choose a state.");
   selectedStateSummary.text(
-    "Use the dropdown above, or click a state in the main map, to compare average warming, extra very hot days, and the monthly pattern."
+    "Use the dropdown above, or click a state in the main map, to compare average warming, added very hot days, and the monthly pattern."
   );
   selectedStateWarming.text("[ +X °C ]");
   selectedStateHotdays.text("[ +Y days ]");
@@ -8304,7 +8294,7 @@ function updateSelectedStateCard(stateName, row) {
   if (!snapshotStateTitle.empty()) {
     snapshotStateTitle.text(stateName);
     snapshotStateText.text(
-      `${stateName} turns the national pattern into a local question: how many extra very hot summer days appear by ${currentState.year} relative to the 2020 baseline?`
+      `${stateName} turns the national pattern into a local question: how many very hot summer days are added by ${currentState.year} relative to the 2020 baseline?`
     );
     snapshotScenario.text(scenarioLabels[currentState.scenario]);
     snapshotYear.text(currentState.year);

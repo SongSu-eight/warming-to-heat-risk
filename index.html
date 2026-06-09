@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>When Average Warming Becomes Daily Heat Risk</title>
+  <title>When Average Warming Becomes Daily Risk</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -111,30 +111,30 @@
     </div>
 
     <div class="hero-inner">
-      <p class="eyebrow">Observed history + CMIP6 projections · 2000–2100</p>
-      <h1>When Average Warming<br />Becomes Daily Heat Risk</h1>
+      <p class="eyebrow">Observed history + CMIP6 climate projections · 2000–2100</p>
+      <h1>When Average Warming<br />Becomes Daily Risk</h1>
       <p class="subtitle">
-        A 1&deg;C average increase can sound small. But it can translate into more very hot days, changing how heat is experienced in daily life.
+        A 1&deg;C average increase sounds small. But daily life changes when more days cross extreme heat thresholds.
       </p>
 
       <div class="expectation-intro" id="expectation-intro">
-        <p class="expectation-prompt">Start with your own estimate: what annual average temperature might your state reach by 2100?</p>
+        <p class="expectation-prompt">Guess the annual average temperature your state might reach by 2100.</p>
         <div class="expectation-form" aria-label="Hometown climate expectation form">
           <label class="expectation-field">
-            <span>Your state</span>
+            <span>Your hometown state</span>
             <input id="hometown-state-input" type="text" placeholder="Choose or type your state" autocomplete="off" aria-autocomplete="list" aria-controls="state-suggestions" />
             <div id="state-suggestions" class="state-suggestions" role="listbox" aria-label="State suggestions"></div>
           </label>
 
           <label class="expectation-field">
-            <span>Your 2100 annual average temperature estimate</span>
+            <span>Expected 2100 annual avg temp</span>
             <input id="expectation-temp-input" type="number" step="0.1" placeholder="e.g. 30" inputmode="decimal" />
           </label>
         </div>
-        <p class="intro-form-note" id="intro-form-note"><em>Enter the projected annual average temperature in °C, not the amount of warming.</em></p>
+        <p class="intro-form-note" id="intro-form-note"><em>Enter a 2100 annual average temperature in °C, not the amount of warming.</em></p>
       </div>
 
-      <p class="scroll-cue intro-locked-cue" id="intro-scroll-cue">Enter your estimate to continue</p>
+      <p class="scroll-cue intro-locked-cue" id="intro-scroll-cue">complete the boxes to continue</p>
     </div>
   </section>
 
@@ -206,7 +206,7 @@
 
     <div class="expectation-result-card">
       <div class="expectation-result-copy">
-        <p class="eyebrow">Estimate check</p>
+        <p class="eyebrow">Your forecast check</p>
         <h2 id="expectation-result-title">Your expectation compared with CMIP6 projections</h2>
         <p id="expectation-result-text"></p>
       </div>
@@ -244,9 +244,9 @@
 
   <section id="us-transition" class="us-transition" aria-label="Transition from state comparison to national pattern">
     <div class="us-transition-inner">
-      <p class="eyebrow">From one state to the whole country</p>
-      <h2>Average warming is only the starting point, and it appears across the U.S.</h2>
-      <p>But average temperature is still an abstract metric. Next, we translate warming into extra very hot summer days, defined as summer days with daily highs above 35&deg;C.</p>
+      <p class="eyebrow">From your state to the country</p>
+      <h2>Warming is not limited to a few states.</h2>
+      <p>It appears across the whole U.S. But annual average temperature is only the first layer.<br />Let's translate that warming into extra very hot summer days.</p>
     </div>
   </section>
 
@@ -328,9 +328,9 @@
 
       <article class="step" data-step="1">
         <p class="step-number">02 · But</p>
-        <h2>Turning average warming into calendar days.</h2>
+        <h2>Averages hide extra very hot days.</h2>
         <p>
-          The annual average trend becomes more concrete when we count extra very hot summer days, defined as days with daily highs above 35°C.
+          Average temperature is only the first layer. Daily heat becomes easier to feel when more summer days rise above 35°C.
         </p>
       </article>
 
@@ -344,9 +344,9 @@
 
       <article class="step" data-step="3">
         <p class="step-number">04 · Therefore</p>
-        <h2>Where do very hot days affect the most people?.</h2>
+        <h2>Exposure grows where heat meets people.</h2>
         <p>
-          Extra very hot days matter more when more people are exposed. The next view combines extra very hot summer days with projected population.
+          Added very hot days matter more when more people are exposed. The next view combines added 35°C+ summer days with projected population.
         </p>
       </article>
 
@@ -354,13 +354,13 @@
         <p class="step-number">05 · Exposure</p>
         <h2>Carry your selected state into exposure.</h2>
         <p>
-          Exposure are built from extra very hot days and projected population, then compared with the national benchmark.
+          Exposure are built from added very hot days and projected population, then compared with the national benchmark.
         </p>
       </article>
 
       <article class="step" data-step="5">
         <p class="step-number">06 · U.S. comparison</p>
-        <h2>By 2100, national heat exposure increases sharply.</h2>
+        <h2>By 2100, U.S. heat exposure becomes much larger.</h2>
         <p>
           Each sun represents the same amount of heat exposure. One exposure-day means one person experiencing one additional 35°C+ summer day.
         </p>
@@ -379,10 +379,7 @@
     <div class="impact-frame-inner">
 
       <div class="impact-frame-head">
-        <div class="impact-frame-title">
-          <p class="step-number">Impact</p>
-          <p class="impact-link-hint">Click the linked titles below to view sources.</p>
-        </div>
+        <p class="step-number">Impact</p>
         <p class="impact-frame-hint">Scroll to continue</p>
       </div>
 
@@ -407,7 +404,7 @@
           <div class="impact-panel-icon"><svg id="impact-icon-1"></svg></div>
           <div class="impact-panel-copy">
             <span class="impact-panel-tag">01 · Population exposure</span>
-            <h3>Hot days × people = exposure</h3>
+            <h3>Hot days × people = exposure <span class="impact-title-arrow" aria-hidden="true">↗</span></h3>
             <p>
               <a href="https://www.epa.gov/climatechange-science/extreme-heat"
                 target="_blank"
@@ -517,7 +514,7 @@
 
       <article class="step" data-step="6">
         <p class="step-number">07 · Explore</p>
-        <h2>Explore states and climate metrics yourself.</h2>
+        <h2>Compare states and metrics yourself.</h2>
         <p>
           Use the controls to switch scenario, year, metric, and exposure bubbles. Hover states to preview values, then click a state to carry it into the local detail section.
         </p>
@@ -531,7 +528,7 @@
       <p class="eyebrow">Daily life detail</p>
       <h2>Now explore your state.</h2>
       <p>
-        Choose a state to compare warming with extra very hot summer days, then see when those extra very hot days appear during the year.
+        Choose a state to compare warming with added very hot summer days, then see when those added days appear during the year.
       </p>
     </div>
 
@@ -592,7 +589,7 @@
         <p class="eyebrow">Next: monthly breakdown</p>
         <h3>Which months account for the largest increases?</h3>
         <p>
-          These extra very hot days are not spread evenly across the year. The monthly view shows which months account for the largest increases.
+          These added very hot days are not spread evenly across the year. The monthly view shows which months account for the largest increases.
         </p>
       </div>
 
