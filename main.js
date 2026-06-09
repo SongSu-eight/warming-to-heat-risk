@@ -33,6 +33,19 @@ const scenarioLabels = {
 
 const scenarioOrder = ["ssp126", "ssp245", "ssp585"];
 
+const DEFAULT_STATE_NAMES = [
+  "Alabama", "Arizona", "Arkansas", "California", "Colorado", "Connecticut",
+  "Delaware", "Florida", "Georgia", "Idaho", "Illinois", "Indiana", "Iowa",
+  "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts",
+  "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska",
+  "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York",
+  "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon",
+  "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota",
+  "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington",
+  "West Virginia", "Wisconsin", "Wyoming"
+];
+
+
 const metricLabels = {
   summer_tas_c_change_from_observed_2020: "Summer average temperature change after 2020 baseline alignment",
   summer_hot_days_35c_change_from_observed_2020: "Extra very hot summer days",
@@ -277,6 +290,11 @@ const path = d3.geoPath(projection);
 
 svg.attr("viewBox", `0 0 ${width} ${height}`);
 
+// Fast path: bind the intro state dropdown before the large data files finish loading.
+// The data-backed list replaces this fallback inside init(), but users can open
+// and type in the state menu immediately on page load.
+setupIntroExpectation();
+
 init();
 
 async function init() {
@@ -507,16 +525,18 @@ function setupStateChangeContinue() {
 }
 
 function setupIntroExpectation() {
-  knownStateNames = Array.from(
+  const dataBackedStateNames = Array.from(
     new Set([
       ...allMonthlyData.map((d) => normalizeStateName(d.state)),
       ...stateData.map((d) => normalizeStateName(d.state)),
     ].filter(isSelectableStateName))
   ).sort(d3.ascending);
 
+  knownStateNames = (dataBackedStateNames.length ? dataBackedStateNames : DEFAULT_STATE_NAMES).sort(d3.ascending);
+
   if (hometownStateInput.empty() || expectationTempInput.empty()) return;
 
-  renderStateSuggestions("");
+  renderStateSuggestions(hometownStateInput.property("value"), false);
 
   const onIntroInput = () => {
     hometownStateInput.classed("is-invalid", false);
@@ -526,11 +546,11 @@ function setupIntroExpectation() {
 
   hometownStateInput.on("input", () => {
     onIntroInput();
-    renderStateSuggestions(hometownStateInput.property("value"));
+    renderStateSuggestions(hometownStateInput.property("value"), true);
   });
 
   hometownStateInput.on("focus", () => {
-    renderStateSuggestions(hometownStateInput.property("value"));
+    renderStateSuggestions(hometownStateInput.property("value"), true);
   });
 
   hometownStateInput.on("keydown", (event) => {
@@ -557,14 +577,16 @@ function setupIntroExpectation() {
   hometownStateInput.on("change", trySubmitIntroExpectation);
 }
 
-function renderStateSuggestions(query) {
+function renderStateSuggestions(query, forceOpen = false) {
   if (stateSuggestions.empty()) return;
   const cleaned = normalizeStateName(query || "").toLowerCase();
   const matches = knownStateNames
     .filter((name) => !cleaned || name.toLowerCase().includes(cleaned));
+  const inputIsFocused = document.activeElement === hometownStateInput.node();
+  const shouldOpen = Boolean(matches.length) && !introCompleted && (forceOpen || inputIsFocused || Boolean(cleaned));
 
   stateSuggestions
-    .classed("is-open", Boolean(matches.length) && !introCompleted)
+    .classed("is-open", shouldOpen)
     .selectAll("button.state-suggestion-item")
     .data(matches, (d) => d)
     .join(
