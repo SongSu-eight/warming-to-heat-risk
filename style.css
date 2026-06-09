@@ -11995,3 +11995,85 @@ body.explore-mode:not(.impact-section-active) #main-story .legend-row {
   visibility: visible !important;
   pointer-events: auto !important;
 }
+
+
+/* FINAL IMPACT UI WORDING PATCH
+   - Remove the horizontal rail that crossed the 01 impact panel.
+   - Add a small source-link hint under the big Impact title.
+   - Keep panel links clickable while the header itself remains non-interactive. */
+#main-story #impact-scroll .impact-rail,
+#main-story #impact-scroll .impact-rail-fill,
+#impact-scroll .impact-rail,
+#impact-scroll .impact-rail-fill {
+  display: none !important;
+}
+
+#main-story #impact-scroll .impact-frame-title,
+#impact-scroll .impact-frame-title {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: clamp(0.35rem, 0.8vw, 0.65rem) !important;
+}
+
+#main-story #impact-scroll .impact-link-hint,
+#impact-scroll .impact-link-hint {
+  margin: 0 !important;
+  max-width: min(760px, 86vw) !important;
+  color: rgba(95, 107, 115, 0.82) !important;
+  font-size: clamp(0.95rem, 1.45vw, 1.25rem) !important;
+  line-height: 1.45 !important;
+  letter-spacing: 0.01em !important;
+  font-weight: 500 !important;
+}
+
+@media (max-width: 780px) {
+  #main-story #impact-scroll .impact-link-hint,
+  #impact-scroll .impact-link-hint {
+    font-size: 0.92rem !important;
+    max-width: 86vw !important;
+  }
+}
+
+
+/* CURRENT VERSION TAKEAWAY BEFORE MAP PATCH
+   Places the final takeaway after Impact and before the Explore map
+   without changing the earlier project sections. */
+#impact-scroll .impact-takeaway-panel {
+  grid-template-columns: minmax(0, 1fr) !important;
+  padding-inline: clamp(1.2rem, 4vw, 4rem) !important;
+}
+
+#impact-scroll .impact-takeaway-panel .impact-panel-icon {
+  display: none !important;
+}
+
+#impact-scroll .impact-takeaway-panel .impact-panel-copy {
+  max-width: min(1060px, 88vw) !important;
+}
+
+#impact-scroll .impact-takeaway-panel .impact-panel-tag {
+  color: #ffb18f !important;
+}
+
+#impact-scroll .impact-takeaway-panel h3 {
+  max-width: min(1040px, 88vw) !important;
+  color: #ffffff !important;
+  font-size: clamp(2.6rem, 5.8vw, 5.8rem) !important;
+  line-height: 1.02 !important;
+  letter-spacing: -0.06em !important;
+}
+
+#impact-scroll .impact-takeaway-panel p {
+  max-width: min(840px, 82vw) !important;
+  color: rgba(255, 255, 255, 0.88) !important;
+  font-size: clamp(1.05rem, 1.45vw, 1.35rem) !important;
+  line-height: 1.6 !important;
+}
+
+#impact-scroll .impact-takeaway-panel.is-active {
+  background: #17202a !important;
+  border-radius: 28px !important;
+  box-shadow: 0 24px 70px rgba(23, 32, 42, 0.18) !important;
+}
