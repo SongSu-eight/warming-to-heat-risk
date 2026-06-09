@@ -125,16 +125,16 @@ const stepSettings = [
     subtitle:
       "Each sun represents the same amount of exposure. One exposure unit means one person experiencing one extra very hot summer day.",
     note:
-      "2020 baseline = observed 2020 very-hot-day hazard × population projection baseline. 2100 high-emissions projection = projected 2100 very-hot-day hazard × projected 2100 population.",
+      "2020 baseline = observed 2020 hot-day hazard × population projection baseline. 2100 high-emissions projection = projected 2100 hot-day hazard × projected 2100 population.",
   },
   {
     view: "map",
     year: 2100,
     scenario: "ssp585",
     metric: "summer_hot_days_35c_change_from_observed_2020",
-    title: "Compare states and metrics yourself",
+    title: "Explore states and climate metrics yourself",
     subtitle:
-      "Use the controls to compare average warming with extra very hot days. Very hot means daily highs above 35°C.",
+      "Use the controls to compare average warming, extra very hot days, and exposure across states. Very hot days are defined as days with daily highs above 35°C.",
     note:
       "Explore mode: color shows the selected climate metric. Hover previews values; click selects a state for detail.",
   },
@@ -8051,7 +8051,7 @@ function drawLegend(color, metric) {
     .attr("font-size", 9.5)
     .attr("font-weight", 900)
     .attr("letter-spacing", "0.08em")
-    .text(isExplore ? "COLOR = SELECTED CLIMATE METRIC" : "");
+    .text(isExplore ? "COLOR = SELECTED METRIC" : "");
 
   legend.append("rect")
     .attr("x", 8)
@@ -8124,7 +8124,7 @@ function updateMapNote(filtered, metric) {
   let baseNote = setting?.note || "Hover over a state to see details.";
   if (currentStep === stepSettings.length - 1) {
     baseNote = showExposureBubbles
-      ? "Explore mode: color shows the selected climate metric; bubbles show exposure. Hover previews values; click selects a state with a solid yellow outline."
+      ? "Explore mode: color shows the selected metric; bubbles show exposure. Hover to preview values, or click a state to keep it selected."
       : "Explore mode: hover previews values; click selects a state with a solid yellow outline for local detail. Turn on bubbles to overlay exposure.";
   }
 
