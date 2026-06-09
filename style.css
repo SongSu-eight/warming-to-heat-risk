@@ -12155,3 +12155,16 @@ body.explore-mode:not(.impact-section-active) #main-story .legend-row {
     min-height: 1.95rem !important;
   }
 }
+
+
+/* TAKEAWAY ONE-LINE TITLE PATCH
+   Remove the forced two-line styling from the final takeaway title. */
+#impact-scroll .impact-takeaway-panel .takeaway-two-line-title,
+#impact-scroll .impact-takeaway-panel h3 {
+  white-space: normal !important;
+}
+
+#impact-scroll .impact-takeaway-panel .takeaway-two-line-title span {
+  display: inline !important;
+  white-space: normal !important;
+}
